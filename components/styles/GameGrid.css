@@ -1,0 +1,18 @@
+body {
+  --gap-between: 6px;
+  --margin-bottom: 9px;
+  --key-height: 45px;
+  --grid-padding-top: 12px;
+  --grid-padding-bottom: 24px;
+  --grid-max-height: calc(var(--margin-bottom)*3 + var(--key-height)*3 + var(--grid-padding-bottom) + var(--grid-padding-top));
+}
+
+.game-grid {
+  /* Must match the keyboard max-height */
+  margin-bottom: 10px;
+}
+
+.daily-word-message {
+  text-align: center;
+  margin: 0;
+}

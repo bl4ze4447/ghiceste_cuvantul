@@ -1,0 +1,46 @@
+.level-div {
+display: flex;
+justify-content: space-between; 
+align-items: center;
+width: 305px; 
+padding: 0 10px;
+}
+.container {
+    display: flex;
+    justify-content: center; 
+    width: 100%; 
+  }
+.level-div > p {
+margin-left: 10px;
+margin-right: 10px;
+margin-top: 0;
+margin-bottom: 0;
+}
+
+.icon-text {
+display: flex;
+text-align: center;
+justify-content: center;
+align-items: center;
+margin: 0;
+}
+
+.icon-text > * {
+margin: 0;
+padding: 0;
+}
+
+.wrong-ico {
+color: red;
+margin-left: 10px;
+}
+
+.check-ico {
+color: green;
+margin-right: 10px;
+}
+
+.center-text {
+flex-grow: 1;
+text-align: center;  
+}

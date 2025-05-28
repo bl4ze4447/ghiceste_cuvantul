@@ -1,0 +1,12 @@
+.daily-word-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+.fa-cloud-sun {
+    color: #FCD116;
+    font-size: 1.8rem;
+    margin-right: 5px;
+}

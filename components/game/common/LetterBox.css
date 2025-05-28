@@ -1,0 +1,47 @@
+body {
+  --max-width-of-row: calc(calc(55+4+3) * 5); /*NUM_OF_LETTERS * (LETTER_BOX HEIGHT + MARGIN) not margin*2 to leave some space*/
+}
+
+.letter-box {
+  width: 54px;
+  height: 54px;
+  font-size: 1.75rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 3px;
+  transform-style: preserve-3d;
+  user-select: none;
+}
+
+.letter-bounce {
+  scale: 1.2;
+}
+
+.empty-letter {
+  border: 2px solid rgb(58, 58, 60);
+  background-color: rgb(18, 18, 18);
+}
+.wrong-letter {
+  background-color: rgb(58, 58, 58);
+  border: 2px solid rgb(58, 58, 58);
+}
+.guessed-letter {
+  background-color: rgb(83, 141, 78);
+  border: 2px solid rgb(83, 141, 78);
+}
+.half-letter {
+  background-color: rgb(181, 159, 59);
+  border: 2px solid rgb(181, 159, 59);
+}
+
+.letter-flip {
+  rotate: x 360deg;
+}
+
+.letter {
+  backface-visibility: hidden;
+  user-select: none;
+}
+

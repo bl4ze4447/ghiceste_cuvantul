@@ -1,0 +1,23 @@
+.game-row {
+  display: flex;
+  justify-content: center;
+}
+
+@keyframes GameRowAnimationBad {
+  0% {
+    transform: translateX(0);
+  }
+  33% { 
+    transform: translateX(-3px);
+  }
+  66% {
+    transform: translateX(3px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.bounce-bad {
+  animation: GameRowAnimationBad 185ms linear 0ms 3 normal both;
+}
