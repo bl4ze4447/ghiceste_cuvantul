@@ -3,7 +3,7 @@
 import Keyboard                     from "../../components/Keyboard";
 import LevelBar                     from "../../components/game/level_related/LevelBar";
 import GameGridLevel                from "../../components/game/level_related/GameGridLevel";
-import { GuessStatus }              from "../../constants/constants";
+import { GameType, GuessStatus }              from "../../constants/constants";
 import { usePersistentStats }       from "../../hooks/usePersistentStats"
 
 
@@ -22,7 +22,11 @@ function LevelGame() {
 
     const { currentLevel,     setCurrentLevel,
             numOfWrongWords,  setNumOfWrongWords,
-            numOfRightWords,  setNumOfRightWords }  = usePersistentStats();
+            numOfRightWords,  setNumOfRightWords,
+            currentRow,       setCurrentRow,
+            words,            setWords,
+            guessStatuses,    setGuessStatuses,
+            gameStatus,       setGameStatus}  = usePersistentStats(GameType.LEVEL);
     const consumeFirstKey                           = useCallback(() => { setVirtualKeys(vk => vk.slice(1)) }, [setVirtualKeys]);
     const incrementLevel                            = useCallback(() => { setCurrentLevel((lvl) => lvl+1) }, [setCurrentLevel]);
     const incrementRights                           = useCallback(() => { setNumOfRightWords((rg) => rg+1) }, [setNumOfRightWords]);
@@ -44,8 +48,15 @@ function LevelGame() {
             incrementLevel={incrementLevel}
             incrementRights={incrementRights}
             incrementWrongs={incrementWrongs}
-            rights={numOfRightWords} 
-            wrongs={numOfWrongWords} />
+            currentRow={currentRow} 
+            setCurrentRow={setCurrentRow}
+            words={words}
+            setWords={setWords}
+            guessStatuses={guessStatuses}
+            setGuessStatuses={setGuessStatuses}
+            gameStatus={gameStatus}
+            setGameStatus={setGameStatus}
+            />
         <Keyboard 
             setVirtualKeys={setVirtualKeys} 
             usedKeys={usedKeys} />

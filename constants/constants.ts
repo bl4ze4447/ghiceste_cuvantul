@@ -21,6 +21,11 @@ export enum ModalAnswer {
     YES
 };
 
+export enum GameType {
+    LEVEL,
+    DAILY
+}
+
 // Milliseconds
 export const TimesCSS = {
     LETTER_FLIP_DELAY: 300, // Found in LetterBox.js

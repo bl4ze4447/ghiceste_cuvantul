@@ -9,43 +9,61 @@ import {
 } from '../../../constants/constants';
 import { getWordByLevel }           from '../../../utils/words_manip';
 import { WORDLIST }                 from '../../../constants/wordlist';
-import { usePersistentGameState }   from '../../../hooks/usePersistentGameState';
 import Info                         from '../../Info';
 
 import { 
     useCallback, 
     useEffect, 
     useMemo, 
-    useState 
+    useState ,
 } from 'react';
 import dayjs                        from 'dayjs';
 import utc                          from 'dayjs/plugin/utc';
 import timezone                     from 'dayjs/plugin/timezone';
-import { usePathname }              from 'next/navigation';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 interface GameGridLevelProps {
-  virtualKeys: string[];
-  consumeFirstKey: Function;
-  blockingAnimation: boolean;
-  setBlockingAnimation: React.Dispatch<React.SetStateAction<boolean>>;
-  setUsedKeys: React.Dispatch<React.SetStateAction<GuessStatus[]>>;
-  currentLevel: number;
-  incrementLevel: Function;
-  incrementRights: Function;
-  incrementWrongs: Function;
-  rights: number;
-  wrongs: number;
+    virtualKeys: string[];
+    consumeFirstKey: Function;
+    blockingAnimation: boolean;
+    setBlockingAnimation: React.Dispatch<React.SetStateAction<boolean>>;
+    setUsedKeys: React.Dispatch<React.SetStateAction<GuessStatus[]>>;
+    currentLevel: number;
+    incrementLevel: Function;
+    incrementRights: Function;
+    incrementWrongs: Function;
+    currentRow: number, 
+    setCurrentRow: React.Dispatch<React.SetStateAction<number>>,
+    words: string[],
+    setWords: React.Dispatch<React.SetStateAction<string[]>>,
+    guessStatuses: boolean[],
+    setGuessStatuses: React.Dispatch<React.SetStateAction<boolean[]>>,
+    gameStatus: GameStatus,
+    setGameStatus: React.Dispatch<React.SetStateAction<GameStatus>>
 }
 
-const GameGridLevel: React.FC<GameGridLevelProps> = ({virtualKeys, consumeFirstKey, blockingAnimation, setBlockingAnimation, setUsedKeys, currentLevel, incrementLevel, incrementRights, incrementWrongs, rights, wrongs}) => {
+const GameGridLevel: React.FC<GameGridLevelProps> = ({
+    virtualKeys, 
+    consumeFirstKey, 
+    blockingAnimation, 
+    setBlockingAnimation, 
+    setUsedKeys, 
+    currentLevel, 
+    incrementLevel, 
+    incrementRights, 
+    incrementWrongs, 
+    currentRow, 
+    setCurrentRow,
+    words,
+    setWords,
+    guessStatuses,
+    setGuessStatuses,
+    gameStatus,
+    setGameStatus
+}) => {
     const secretWord                            = useMemo(() => getWordByLevel(currentLevel), [currentLevel]);
-    const [currentRow,      setCurrentRow]      = useState(0);
-    const [words,           setWords]           = useState(Array(Settings.MAX_ROWS).fill(''));
-    const [guessStatuses,   setGuessStatuses]   = useState(Array(Settings.MAX_ROWS).fill(false));
-    const [gameStatus,      setGameStatus]      = useState(GameStatus.PLAYING);
     const [badWord,         setBadWord]         = useState(false);
     const [playAudio,       setPlayAudio]       = useState(true);
     const turnOffAnimation                      = useCallback(() => { setBlockingAnimation(false) }, [setBlockingAnimation]);
@@ -61,24 +79,6 @@ const GameGridLevel: React.FC<GameGridLevelProps> = ({virtualKeys, consumeFirstK
     const turnOffBadWord = useCallback(() => { 
         setBadWord(false);
     }, [setBadWord]);
-
-    const pathname = usePathname();
-    usePersistentGameState(
-        currentRow,
-        words,
-        guessStatuses,
-        gameStatus,
-        rights,
-        wrongs,
-        currentLevel,
-        setCurrentRow,
-        setWords,
-        setGuessStatuses,
-        setGameStatus,
-        setPlayAudio,
-        pathname,
-        true
-    );
 
     const handleGameKeyPress = useCallback((key: string) => {
         if (!playAudio) setPlayAudio(true);
