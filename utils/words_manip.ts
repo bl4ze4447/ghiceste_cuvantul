@@ -25,7 +25,7 @@ export function getDailyWord() {
 }
 
 export function getWordByLevel(level: number) {
-    return SECRET_WORDS[level % SECRET_WORDS.length];
+    return SECRET_WORDS[(level-1) % SECRET_WORDS.length];
 }
 
 export function getGuessStatuses(word: string, secret: string) {
