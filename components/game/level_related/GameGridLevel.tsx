@@ -157,16 +157,6 @@ const GameGridLevel: React.FC<GameGridLevelProps> = ({
             setGameStatus(GameStatus.PLAYING);
         }, 4000);
     }, [gameStatus, incrementLevel, setGameStatus, incrementRights, incrementWrongs, setUsedKeys, playAudio, setCurrentRow, setGuessStatuses, setWords]);
-    
-    useEffect(() => {
-        if (restoreText.length === 8) {
-            const data = restoreText.split('.');
-            localStorage.setItem('level-current',         data[0]);
-            localStorage.setItem('level-wrongs',          data[1]);
-            localStorage.setItem('level-rights',          data[2]);
-            setRestoreText('');
-        }
-    }, [restoreText]);
 
     return (
         <>
@@ -189,14 +179,6 @@ const GameGridLevel: React.FC<GameGridLevelProps> = ({
             ))}
         </div>
         <Info message={`Cuvântul era`} important={secretWord} hide={gameStatus === GameStatus.PLAYING} hideText={gameStatus === GameStatus.PLAYING} />
-        <div className="ml-20 mr-20">
-            <input
-                className="google-inputs"
-                type="text"
-                value={restoreText}
-                onChange={(ev) => setRestoreText(ev.target.value)}
-            />
-        </div>
         </>
     )
 }
