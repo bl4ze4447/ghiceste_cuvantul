@@ -1,6 +1,16 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+import {Exo_2, Bungee} from 'next/font/google';
+
+const exo2 = Exo_2({
+  subsets: ["latin"]  
+});
+const bungee = Bungee({
+  weight: "400",
+  subsets: ["latin"]  
+});
+
 export const metadata: Metadata = {
   title: "Ghicește cuvântul",
   description: "Descoperă cuvântul zilei sau încearcă să ajungi la nivele mai mari ca prietenii tai!",
@@ -27,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ro">
+    <html lang="ro" className={`${exo2.className} ${bungee.className}`}>
       <body>
         {children}
       </body>

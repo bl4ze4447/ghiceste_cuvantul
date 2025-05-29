@@ -153,7 +153,7 @@ const GameGridLevel: React.FC<GameGridLevelProps> = ({
 
             setGameStatus(GameStatus.PLAYING);
         }, 4000);
-    }, [gameStatus, incrementLevel, setGameStatus, incrementRights, incrementWrongs, setUsedKeys, playAudio]);
+    }, [gameStatus, incrementLevel, setGameStatus, incrementRights, incrementWrongs, setUsedKeys, playAudio, setCurrentRow, setGuessStatuses, setWords]);
     
     return (
         <>
