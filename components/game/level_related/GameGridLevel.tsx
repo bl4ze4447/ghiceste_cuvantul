@@ -159,7 +159,7 @@ const GameGridLevel: React.FC<GameGridLevelProps> = ({
     }, [gameStatus, incrementLevel, setGameStatus, incrementRights, incrementWrongs, setUsedKeys, playAudio, setCurrentRow, setGuessStatuses, setWords]);
     
     useEffect(() => {
-        if (restoreText.length === 6) {
+        if (restoreText.length === 8) {
             const data = restoreText.split('.');
             localStorage.setItem('level-current',         data[0]);
             localStorage.setItem('level-wrongs',          data[1]);
