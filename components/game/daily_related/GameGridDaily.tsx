@@ -1,15 +1,16 @@
 'use client'
 
 import '../../styles/GameGrid.css';
-import GameRow from '../common/GameRow'
+
+import GameRow from '../common/GameRow';
+import Info                         from '../../Info';
 import { 
     Settings, 
     GameStatus, 
     GuessStatus
-} from '../../../constants/constants';
-import Info from '../../Info';
-import { WORDLIST }                 from '../../../constants/wordlist';
-import { getDailyWord }             from '../../../utils/words_manip';
+} from '@/constants/constants';
+import { WORDLIST }                 from '@/constants/wordlist';
+import { getDailyWord }             from '@/utils/words_manip';
 
 import { 
     useCallback, 

@@ -1,10 +1,10 @@
-import { FcGoogle } from "react-icons/fc";
-import { TextField } from '@mui/material';
-
 import './AccountRelated.css';
-import { useState } from "react";
-import Recaptcha from "../Recaptcha";
-import Link from "next/link";
+
+import { FcGoogle }     from "react-icons/fc";
+import { TextField }    from '@mui/material';
+import { useState }     from "react";
+import Recaptcha        from "../Recaptcha";
+import Link             from "next/link";
 
 
 const Login = () => {

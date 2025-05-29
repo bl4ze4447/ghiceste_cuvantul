@@ -1,6 +1,5 @@
 import Recaptcha from "../Recaptcha";
 
-
 function AccountStatus() {
     return (
         <>

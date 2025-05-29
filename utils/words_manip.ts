@@ -10,11 +10,13 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 export function getWordOffsetedBy(days: number) {
-    const now = dayjs().tz("Europe/Bucharest").subtract(days, 'day'); 
-    const localMidnight = now.startOf('day'); 
-    
-    const daysSinceEpoch = Math.floor(localMidnight.valueOf() / 86400000);
-    const rand = cyrb53(daysSinceEpoch.toString());
+    // Get the current day offseted by the days parameter
+    const now               = dayjs().tz("Europe/Bucharest").subtract(days, 'day'); 
+    const localMidnight     = now.startOf('day'); 
+    const daysSinceEpoch    = Math.floor(localMidnight.valueOf() / 86400000);
+
+    // Hash the days for a 'randomized' index
+    const rand              = cyrb53(daysSinceEpoch.toString());
     return SECRET_WORDS[rand % SECRET_WORDS.length];
 }
 
@@ -28,31 +30,35 @@ export function getWordByLevel(level: number) {
 
 export function getGuessStatuses(word: string, secret: string) {
     word = word.toUpperCase();
-    let secretArr: string[] = [...secret.toUpperCase()];
-    let states = Array(Settings.MAX_LETTERS).fill(GuessStatus.GRAY);
 
+    let guessStatuses       = Array(Settings.MAX_LETTERS).fill(GuessStatus.GRAY);
+    let secretArr: string[] = [...secret.toUpperCase()];
+
+    // Mark all of the correct ones with green and replace them with an impossible character '!'
+    // We replace instead of removing because the index used to access both guessStatuses
+    // and secretArr would not match after
     word.split('').forEach((ch, idx) => {
         if (ch === secretArr[idx]) {
-            states[idx] = GuessStatus.GREEN;
-            secretArr[idx] = '!';
+            guessStatuses[idx]  = GuessStatus.GREEN;
+            secretArr[idx]      = '!';
         }
     });
 
+    // Now mark all of remaining partially-correct ones with orange
     word.split('').forEach((ch, idx) => {
         const pos = secretArr.indexOf(ch);
-        if (pos !== -1 && states[idx] !== GuessStatus.GREEN) {
-            states[idx] = GuessStatus.YELLOW;
-            secretArr[pos] = '!';
+        if (pos !== -1 && guessStatuses[idx] !== GuessStatus.GREEN) {
+            guessStatuses[idx]  = GuessStatus.YELLOW;
+            secretArr[pos]      = '!';
         }
     });
 
-    return states;
+    return guessStatuses;
 }
 
 const rowOneKeys    = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'];
 const rowTwoKeys    = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l',];
 const rowThreeKeys  = ['!', 'z', 'x', 'c', 'v', 'b', 'n', 'm', '!'];
-
 const keyMap = [
     ...rowOneKeys,
     ...rowTwoKeys,
@@ -65,9 +71,9 @@ export function getKeyPos(key: string) {
 
 export function getLetterClass(state: GuessStatus, isKeyboard: boolean) {
     switch (state) {
-        case GuessStatus.GREEN: return `guessed-letter${isKeyboard === true ? '-key ' : ''}`;
-        case GuessStatus.YELLOW: return `half-letter${isKeyboard === true ? '-key ' : ''}`;
-        case GuessStatus.GRAY: return `wrong-letter${isKeyboard  === true ? '-key ' : ''}`;
-        default: return `empty-letter${isKeyboard === true ? '-key ' : ''}`;
+        case GuessStatus.GREEN:     return `guessed-letter${isKeyboard === true ? '-key ' : ''}`;
+        case GuessStatus.YELLOW:    return `half-letter${isKeyboard === true ? '-key ' : ''}`;
+        case GuessStatus.GRAY:      return `wrong-letter${isKeyboard  === true ? '-key ' : ''}`;
+        default:                    return `empty-letter${isKeyboard === true ? '-key ' : ''}`;
     }
 }

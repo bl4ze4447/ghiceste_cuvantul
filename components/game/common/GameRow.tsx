@@ -7,11 +7,11 @@ import {
     GuessStatus, 
     TimesCSS, 
     GameStatus 
-} from '../../../constants/constants';
+} from '@/constants/constants';
 import { 
     getGuessStatuses, 
     getKeyPos 
-} from '../../../utils/words_manip';
+} from '@/utils/words_manip';
 
 import { 
     useEffect, 
@@ -33,7 +33,19 @@ interface GameRowProps {
   beforeCurrentRow: boolean;
 }
 
-const GameRow: React.FC<GameRowProps> = ({word, secretWord, turnOffAnimation, reveal, setGameStatus, isCurrentRow, isLastRow, setUsedKeys, shouldBounce, turnOffBounce, beforeCurrentRow}) => {
+const GameRow: React.FC<GameRowProps> = ({
+    word, 
+    secretWord, 
+    turnOffAnimation, 
+    reveal, 
+    setGameStatus, 
+    isCurrentRow, 
+    isLastRow,
+    setUsedKeys, 
+    shouldBounce, 
+    turnOffBounce, 
+    beforeCurrentRow
+}) => {
     const guessStatuses = useMemo(() => reveal ? getGuessStatuses(word, secretWord) : Array(Settings.MAX_LETTERS).fill(GuessStatus.EMPTY), [reveal, word, secretWord]);
 
     useEffect(() => {

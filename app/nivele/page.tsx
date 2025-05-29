@@ -1,10 +1,13 @@
 "use client"
 
-import Keyboard                     from "../../components/Keyboard";
-import LevelBar                     from "../../components/game/level_related/LevelBar";
-import GameGridLevel                from "../../components/game/level_related/GameGridLevel";
-import { GameType, GuessStatus }              from "../../constants/constants";
-import { usePersistentStats }       from "../../hooks/usePersistentStats"
+import Keyboard                     from "@/components/Keyboard";
+import LevelBar                     from "@/components/game/level_related/LevelBar";
+import GameGridLevel                from "@/components/game/level_related/GameGridLevel";
+import { usePersistentStats }       from "@/hooks/usePersistentStats"
+import { 
+    GameType, 
+    GuessStatus 
+} from "@/constants/constants";
 
 
 import { 

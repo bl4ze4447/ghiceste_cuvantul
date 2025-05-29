@@ -1,7 +1,8 @@
 'use client'
 
-import { ModalAnswer } from '../constants/constants';
 import './styles/ConfirmModal.css';
+
+import { ModalAnswer } from '@/constants/constants';
 
 interface ConfirmModalProps {
   action: string;
@@ -9,7 +10,11 @@ interface ConfirmModalProps {
   invertColors: boolean;
 }
 
-const ConfirmModal: React.FC<ConfirmModalProps> = ({action, setModalResult, invertColors}) => {
+const ConfirmModal: React.FC<ConfirmModalProps> = ({
+    action, 
+    setModalResult, 
+    invertColors
+}) => {
     return (
         <section>
             <div className="modal">

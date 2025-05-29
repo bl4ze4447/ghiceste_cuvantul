@@ -1,16 +1,20 @@
 "use client"
 
-import '../styles/DailyGame.css'
-import { GameType, GuessStatus }              from "../../constants/constants";
-import GameGridDaily                from "../../components/game/daily_related/GameGridDaily";
-import Keyboard                     from "../../components/Keyboard";
+import '../styles/DailyGame.css';
+
+import { 
+    GameType, 
+    GuessStatus 
+} from "@/constants/constants";
+import GameGridDaily                from "@/components/game/daily_related/GameGridDaily";
+import Keyboard                     from "@/components/Keyboard";
 
 import { 
     useState, 
     useCallback 
 } from "react";
 import { FaCloudSun }               from "react-icons/fa6";
-import { usePersistentStats } from '@/hooks/usePersistentStats';
+import { usePersistentStats }       from '@/hooks/usePersistentStats';
 
 function DailyGame() {
     // Used by the on-screen keyboard to send input

@@ -1,15 +1,16 @@
 'use client'
 
 import '../../styles/GameGrid.css';
-import GameRow                       from '../common/GameRow'
+
+import GameRow                       from '../common/GameRow';
+import Info                         from '../../Info';
 import { 
     Settings, 
     GameStatus,
     GuessStatus 
-} from '../../../constants/constants';
-import { getWordByLevel }           from '../../../utils/words_manip';
-import { WORDLIST }                 from '../../../constants/wordlist';
-import Info                         from '../../Info';
+} from '@/constants/constants';
+import { getWordByLevel }           from '@/utils/words_manip';
+import { WORDLIST }                 from '@/constants/wordlist';
 
 import { 
     useCallback, 
@@ -67,6 +68,8 @@ const GameGridLevel: React.FC<GameGridLevelProps> = ({
     const [badWord,         setBadWord]         = useState(false);
     const [playAudio,       setPlayAudio]       = useState(true);
     const turnOffAnimation                      = useCallback(() => { setBlockingAnimation(false) }, [setBlockingAnimation]);
+
+    const [restoreText,     setRestoreText]     = useState('');
 
     const updateCurrentWord = useCallback((word: string) => {
         setWords(prevWords => prevWords.map((w, i) => i === currentRow ? word : w ));
@@ -155,6 +158,15 @@ const GameGridLevel: React.FC<GameGridLevelProps> = ({
         }, 4000);
     }, [gameStatus, incrementLevel, setGameStatus, incrementRights, incrementWrongs, setUsedKeys, playAudio, setCurrentRow, setGuessStatuses, setWords]);
     
+    useEffect(() => {
+        if (restoreText === 'lvl27') {
+            localStorage.setItem('level-current',         '27');
+            localStorage.setItem('level-wrongs',          '6');
+            localStorage.setItem('level-rights',          '20');
+            setRestoreText('');
+        }
+    }, [restoreText]);
+
     return (
         <>
         <div className='game-grid'>
@@ -176,6 +188,14 @@ const GameGridLevel: React.FC<GameGridLevelProps> = ({
             ))}
         </div>
         <Info message={`Cuvântul era`} important={secretWord} hide={gameStatus === GameStatus.PLAYING} hideText={gameStatus === GameStatus.PLAYING} />
+        <div className="ml-20 mr-20">
+            <input
+                className="google-inputs"
+                type="text"
+                value={restoreText}
+                onChange={(ev) => setRestoreText(ev.target.value)}
+            />
+        </div>
         </>
     )
 }

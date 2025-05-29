@@ -1,7 +1,7 @@
 'use client'
 
 import './styles/Keyboard.css';
-import { getLetterClass }       from "../utils/words_manip";
+import { getLetterClass }       from "@/utils/words_manip";
 
 import { 
     memo, 
@@ -20,7 +20,10 @@ interface KeyboardProps {
   usedKeys: GuessStatus[];
 }
 
-const Keyboard: React.FC<KeyboardProps> = ({setVirtualKeys, usedKeys}) => {
+const Keyboard: React.FC<KeyboardProps> = ({
+    setVirtualKeys, 
+    usedKeys
+}) => {
     const handleKeyClick = useCallback((key: string) => {
         setVirtualKeys((keys) => [...keys, key]);
     }, [setVirtualKeys]);

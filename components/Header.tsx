@@ -1,5 +1,6 @@
-import Image from 'next/image';
 import romanianFlag from '../public/romanian_flag.png';
+
+import Image        from 'next/image';
 
 const Header = () => {
     return (

@@ -1,8 +1,9 @@
 'use client'
 
 import './LetterBox.css';
-import { GuessStatus, TimesCSS }             from '../../../constants/constants';
-import { getLetterClass }       from '../../../utils/words_manip';
+
+import { GuessStatus, TimesCSS }    from '@/constants/constants';
+import { getLetterClass }           from '@/utils/words_manip';
 
 import { 
     useEffect, 
@@ -16,7 +17,12 @@ interface LetterBoxProps {
   reveal: boolean;
 }
 
-const LetterBox: React.FC<LetterBoxProps> = ({character, guessStatus, position, reveal}) => {
+const LetterBox: React.FC<LetterBoxProps> = ({
+    character, 
+    guessStatus, 
+    position, 
+    reveal
+}) => {
     const [bounce, setBounce] = useState(character !== '');
 
     useEffect(() => {

@@ -1,7 +1,10 @@
-import type { Metadata } from "next";
 import "./globals.css";
 
-import {Exo_2, Bungee} from 'next/font/google';
+import {
+  Exo_2, 
+  Bungee
+} from 'next/font/google';
+import type { Metadata }  from "next";
 
 const exo2 = Exo_2({
   subsets: ["latin"]  

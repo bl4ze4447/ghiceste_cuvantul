@@ -11,7 +11,11 @@ interface LevelBarProps {
   numOfRightWords: number,
 }
 
-const LevelBar: React.FC<LevelBarProps> = ({ currentLevel, numOfWrongWords, numOfRightWords }) => {
+const LevelBar: React.FC<LevelBarProps> = ({ 
+  currentLevel, 
+  numOfWrongWords, 
+  numOfRightWords 
+}) => {
     return (
       <div className='container' style={{marginTop: '30px'}}>
         <div className='level-div'>

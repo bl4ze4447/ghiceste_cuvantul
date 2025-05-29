@@ -7,7 +7,12 @@ interface InfoProps {
   hideText: boolean;
 }
 
-const Info: React.FC<InfoProps> = ({message, important, hide, hideText}) => {
+const Info: React.FC<InfoProps> = ({
+    message, 
+    important, 
+    hide, 
+    hideText
+}) => {
     return (
         <section className='info-div-wrapper'>
             <div className={`info-div ${hide ? 'hide' : ''}`}>

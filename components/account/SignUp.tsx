@@ -1,9 +1,10 @@
-import { FcGoogle } from "react-icons/fc";
-import { TextField } from '@mui/material';
-
 import './AccountRelated.css';
-import { useState } from "react";
-import Recaptcha from "../Recaptcha";
+
+import { FcGoogle }     from "react-icons/fc";
+import { TextField }    from '@mui/material';
+
+import { useState }     from "react";
+import Recaptcha        from "../Recaptcha";
 
 const SignUp = () => {
     const [nickname, setNickname]   = useState('');
