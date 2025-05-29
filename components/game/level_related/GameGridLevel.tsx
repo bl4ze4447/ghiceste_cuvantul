@@ -69,8 +69,6 @@ const GameGridLevel: React.FC<GameGridLevelProps> = ({
     const [playAudio,       setPlayAudio]       = useState(true);
     const turnOffAnimation                      = useCallback(() => { setBlockingAnimation(false) }, [setBlockingAnimation]);
 
-    const [restoreText,     setRestoreText]     = useState('');
-
     const updateCurrentWord = useCallback((word: string) => {
         setWords(prevWords => prevWords.map((w, i) => i === currentRow ? word : w ));
     }, [currentRow, setWords]);
