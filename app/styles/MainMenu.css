@@ -5,11 +5,11 @@
     border-radius: 10px 10px 10px 10px;
     color: white;
     border: white 1px solid;
-    background: #191919;
+    background: #537D5D;
     cursor:pointer;  
     margin: 5px 0 5px 0;
     background-size: 1px calc(1.1rem*16);
-    background: radial-gradient(rgba(23, 23, 23, 1) 0%, rgba(28, 28, 28, 1) 43%, rgba(23, 23, 23, 1) 100%);
+    background: linear-gradient(135deg, #1E4E5F 0%, #0F2F3A 100%);
     width: calc(1.1rem * 15);
     transition: scale 100ms ease-out;
     text-decoration: none;

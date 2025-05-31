@@ -14,26 +14,29 @@ body {
   transform-style: preserve-3d;
   user-select: none;
 }
+.letter-box p {
+  color: white;
+}
 
 .letter-bounce {
   scale: 1.2;
 }
 
 .empty-letter {
-  border: 2px solid rgb(58, 58, 60);
-  background-color: rgb(18, 18, 18);
+  background-color: #2A5368;
+  border: 3px solid #18303c;
 }
 .wrong-letter {
-  background-color: rgb(58, 58, 58);
-  border: 2px solid rgb(58, 58, 58);
+  background-color: #5c7680;
+  border: 3px solid #34474e;
 }
 .guessed-letter {
-  background-color: rgb(83, 141, 78);
-  border: 2px solid rgb(83, 141, 78);
+  background-color: #2ea200;
+  border: 3px solid #1e6a00;
 }
 .half-letter {
-  background-color: rgb(181, 159, 59);
-  border: 2px solid rgb(181, 159, 59);
+  background-color: #e6b800;
+  border: 3px solid #a68501;
 }
 
 .letter-flip {

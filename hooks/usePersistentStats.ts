@@ -69,6 +69,27 @@ export function usePersistentStats(gameType: GameType) {
       }
     }
 
+    // If Settings.MAX_ROWS changed between saves of the data then just reset data
+    if (savedWords          !== null) {
+      let wordsArray: string[]  = JSON.parse(savedWords) as string[];
+      if (wordsArray.length != Settings.MAX_ROWS) {
+          savedRow            = '0';
+          savedWords          = JSON.stringify(Array(Settings.MAX_ROWS).fill(''));
+          savedGuessStatuses  = JSON.stringify(Array(Settings.MAX_ROWS).fill(false));
+          savedGameStatus     = String(GameStatus.PLAYING);
+      }
+    }
+    // Same for savedGuessStatuses
+    if (savedGuessStatuses  !== null) {
+      let gsArray: boolean[]    = JSON.parse(savedGuessStatuses) as boolean[];
+      if (gsArray.length != Settings.MAX_ROWS) {
+          savedRow            = '0';
+          savedWords          = JSON.stringify(Array(Settings.MAX_ROWS).fill(''));
+          savedGuessStatuses  = JSON.stringify(Array(Settings.MAX_ROWS).fill(false));
+          savedGameStatus     = String(GameStatus.PLAYING);
+      }
+    }
+
     // Only update the values that we could read
     if (savedLevel  !== null) setCurrentLevel(Number(savedLevel));
     if (savedWrongs !== null) setNumOfWrongWords(Number(savedWrongs));
