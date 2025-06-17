@@ -34,10 +34,12 @@ interface GameGridDailyProps {
     rowsDisplayed: boolean[];
     runningState: RunningState;
     currentRow: number;
+    guessedDaily: boolean;
     wonDaily: number;
     lostDaily: number;
     blockingAnimation: boolean;
     consumeFirstKey: () => void;
+    setGuessedDaily: React.Dispatch<React.SetStateAction<boolean>>;
     setLostDaily: React.Dispatch<React.SetStateAction<number>>;
     setWonDaily: React.Dispatch<React.SetStateAction<number>>;
     setBlockingAnimation: React.Dispatch<React.SetStateAction<boolean>>;
@@ -54,10 +56,12 @@ const GameGridDaily: React.FC<GameGridDailyProps> = ({
     rowsDisplayed,
     runningState,
     currentRow,
+    guessedDaily,
     wonDaily,
     lostDaily,
     blockingAnimation,
     consumeFirstKey,
+    setGuessedDaily,
     setWonDaily,
     setLostDaily,
     setBlockingAnimation,
@@ -197,27 +201,15 @@ const GameGridDaily: React.FC<GameGridDailyProps> = ({
 
         const audio = runningState === RunningState.WON ? new Audio('/sounds/correct.mp3') : new Audio('/sounds/wrong.mp3');
         audio.play();
-        setTimeout(() => {            
-            if (runningState === RunningState.WON) setWonDaily((prev) => prev+1);
-            else setLostDaily((prev) => prev+1);
-            setNewGameStarted(true); 
-        }, 4000);
+        if (guessedDaily === false) {
+            setTimeout(() => {            
+                if (runningState === RunningState.WON) setWonDaily((prev) => prev+1);
+                else setLostDaily((prev) => prev+1);
+
+                setGuessedDaily(true);
+            }, 4000);
+        }
     }, [runningState, setRunningState, setLostDaily, setWonDaily, setUsedKeys, setCurrentRow, setRowsDisplayed, setWords]);
-
-    useEffect(() => {
-        if (!newGameStarted) return;
-
-        setBlockingAnimation(false);
-        setNewGameStarted(false);
-        // uploadGameData().then(() => {
-        //     disableBlockingAnimation();
-        //     setNewGameStarted(false);
-        // }).catch(() => {
-        //     disableBlockingAnimation();
-        //     setNewGameStarted(false);
-        // });
-
-    }, [setNewGameStarted, newGameStarted, disableBlockingAnimation, setBlockingAnimation]);
     
     return (
         <>

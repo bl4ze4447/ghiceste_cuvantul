@@ -28,9 +28,7 @@ function DailyGame() {
 
     const {
         loaded,
-        currentLevel,     setCurrentLevel,
-        lostLevels,       setLostLevels,
-        wonLevels,        setWonLevels,
+        guessedDaily,     setGuessedDaily,
         lostDaily,        setLostDaily,
         wonDaily,         setWonDaily,
         currentRow,       setCurrentRow,
@@ -67,6 +65,8 @@ function DailyGame() {
             rowsDisplayed={rowsDisplayed}
             setRowsDisplayed={setRowsDisplayed}
             runningState={runningState}
+            guessedDaily={guessedDaily}
+            setGuessedDaily={setGuessedDaily}
             wonDaily={wonDaily}
             setWonDaily={setWonDaily}
             lostDaily={lostDaily}

@@ -16,6 +16,7 @@ export function usePersistentStats(gameMode: GameMode) {
   const [lostLevels,      setLostLevels]      = useState(0);
   const [wonLevels,       setWonLevels]       = useState(0);
 
+  const [guessedDaily,    setGuessedDaily]    = useState(false);
   const [lostDaily,       setLostDaily]       = useState(0);
   const [wonDaily,        setWonDaily]        = useState(0);
 
@@ -28,8 +29,6 @@ export function usePersistentStats(gameMode: GameMode) {
     const savedLevel  = localStorage.getItem('level-current');
     let savedLostLevels = localStorage.getItem('level-lost');
     let savedWonLevels = localStorage.getItem('level-won');
-    const savedLostDaily = localStorage.getItem('daily-lost');
-    const savedWonDaily = localStorage.getItem('daily-won');
     if (localStorage.getItem('level-wrongs')) {
       savedLostLevels = localStorage.getItem('level-wrongs');
       localStorage.removeItem('level-wrongs');  
@@ -39,6 +38,11 @@ export function usePersistentStats(gameMode: GameMode) {
       localStorage.removeItem('level-rights');  
     }
 
+
+    const savedLostDaily = localStorage.getItem('daily-lost');
+    const savedWonDaily = localStorage.getItem('daily-won');
+
+    let savedGuessedDaily:  string | null;
     let savedRow:           string | null;
     let savedWords:         string | null;
     let savedRowsDisplayed: string | null;
@@ -63,13 +67,15 @@ export function usePersistentStats(gameMode: GameMode) {
           savedRow            = '0';
           savedWords          = JSON.stringify(Array(Settings.MAX_ROWS).fill(''));
           savedRowsDisplayed  = JSON.stringify(Array(Settings.MAX_ROWS).fill(false));
-          savedRunningState     = String(RunningState.PLAYING);
+          savedRunningState   = String(RunningState.PLAYING);
+          savedGuessedDaily   = String(false);
         } else {
           // If not, we can read them from what we already have
           savedRow            = localStorage.getItem('daily-row');
           savedWords          = localStorage.getItem('daily-words');
           savedRowsDisplayed  = localStorage.getItem('daily-rows-displayed');
-          savedRunningState     = localStorage.getItem('daily-running-state');
+          savedRunningState   = localStorage.getItem('daily-running-state');
+          savedGuessedDaily   = localStorage.getItem('daily-guessed');
         }
         break;
       }
@@ -77,7 +83,9 @@ export function usePersistentStats(gameMode: GameMode) {
         savedRow            = localStorage.getItem('level-row');
         savedWords          = localStorage.getItem('level-words');
         savedRowsDisplayed  = localStorage.getItem('level-rows-displayed');
-        savedRunningState     = localStorage.getItem('level-running-state');
+        savedRunningState   = localStorage.getItem('level-running-state');
+
+        savedGuessedDaily   = null;
         break;
       }
     }
@@ -89,7 +97,8 @@ export function usePersistentStats(gameMode: GameMode) {
           savedRow            = '0';
           savedWords          = JSON.stringify(Array(Settings.MAX_ROWS).fill(''));
           savedRowsDisplayed  = JSON.stringify(Array(Settings.MAX_ROWS).fill(false));
-          savedRunningState     = String(RunningState.PLAYING);
+          savedRunningState   = String(RunningState.PLAYING);
+          savedGuessedDaily   = String(false);
       }
     }
     // Same for savedGuessStatuses
@@ -99,7 +108,8 @@ export function usePersistentStats(gameMode: GameMode) {
           savedRow            = '0';
           savedWords          = JSON.stringify(Array(Settings.MAX_ROWS).fill(''));
           savedRowsDisplayed  = JSON.stringify(Array(Settings.MAX_ROWS).fill(false));
-          savedRunningState     = String(RunningState.PLAYING);
+          savedRunningState   = String(RunningState.PLAYING);
+          savedGuessedDaily   = String(false);
       }
     }
 
@@ -108,6 +118,7 @@ export function usePersistentStats(gameMode: GameMode) {
     if (savedLostLevels !== null) setLostLevels(Number(savedLostLevels));
     if (savedWonLevels !== null) setWonLevels(Number(savedWonLevels));
 
+    if (savedGuessedDaily !== null) setGuessedDaily(Boolean(savedGuessedDaily));
     if (savedLostDaily !== null) setLostDaily(Number(savedLostDaily));
     if (savedWonDaily !== null) setWonDaily(Number(savedWonDaily));
 
@@ -115,6 +126,7 @@ export function usePersistentStats(gameMode: GameMode) {
     if (savedWords          !== null) setWords(JSON.parse(savedWords) as string[]);
     if (savedRowsDisplayed  !== null) setRowsDisplayed(JSON.parse(savedRowsDisplayed) as boolean[]);
     if (savedRunningState     !== null) setRunningState(Number(savedRunningState));
+
 
     // We finished the initial loading for the game, update the loaded state
     setLoaded(true);
@@ -134,6 +146,7 @@ export function usePersistentStats(gameMode: GameMode) {
 
         localStorage.setItem('daily-valability',        daysSinceEpoch.toString());
         localStorage.setItem('daily-lost',              lostDaily.toString());
+        localStorage.setItem('daily-guessed',           guessedDaily.toString());
         localStorage.setItem('daily-won',               wonDaily.toString());        
         localStorage.setItem('daily-row',               currentRow.toString());
         localStorage.setItem('daily-words',             JSON.stringify(words));
@@ -171,6 +184,7 @@ export function usePersistentStats(gameMode: GameMode) {
     currentLevel, setCurrentLevel,
     lostLevels, setLostLevels,
     wonLevels, setWonLevels,
+    guessedDaily, setGuessedDaily,
     lostDaily, setLostDaily,
     wonDaily, setWonDaily,
     currentRow, setCurrentRow,

@@ -30,8 +30,6 @@ function LevelGame() {
         currentLevel,     setCurrentLevel,
         lostLevels,       setLostLevels,
         wonLevels,        setWonLevels,
-        lostDaily,        setLostDaily,
-        wonDaily,         setWonDaily,
         currentRow,       setCurrentRow,
         words,            setWords,
         rowsDisplayed,    setRowsDisplayed,
