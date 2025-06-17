@@ -6,8 +6,9 @@ import GameRow from '../common/GameRow';
 import Info                         from '../../Info';
 import { 
     Settings, 
-    GameStatus, 
-    GuessStatus
+    GameMode, 
+    GuessState,
+    RunningState
 } from '@/constants/constants';
 import { WORDLIST }                 from '@/constants/wordlist';
 import { getDailyWord }             from '@/utils/words_manip';
@@ -21,97 +22,160 @@ import {
 import dayjs                        from 'dayjs';
 import utc                          from 'dayjs/plugin/utc';
 import timezone                     from 'dayjs/plugin/timezone';
+import { authorizedFetch } from '@/utils/authorizedFetch';
+import { GameDailyDto } from '@/dto/game/gameDaily';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 interface GameGridDailyProps {
     virtualKeys: string[];
-    consumeFirstKey: Function;
+    words: string[];
+    rowsDisplayed: boolean[];
+    runningState: RunningState;
+    currentRow: number;
+    wonDaily: number;
+    lostDaily: number;
     blockingAnimation: boolean;
+    consumeFirstKey: () => void;
+    setLostDaily: React.Dispatch<React.SetStateAction<number>>;
+    setWonDaily: React.Dispatch<React.SetStateAction<number>>;
     setBlockingAnimation: React.Dispatch<React.SetStateAction<boolean>>;
-    setUsedKeys: React.Dispatch<React.SetStateAction<GuessStatus[]>>;
-    currentRow: number, 
-    setCurrentRow: React.Dispatch<React.SetStateAction<number>>,
-    words: string[],
-    setWords: React.Dispatch<React.SetStateAction<string[]>>,
-    guessStatuses: boolean[],
-    setGuessStatuses: React.Dispatch<React.SetStateAction<boolean[]>>,
-    gameStatus: GameStatus,
-    setGameStatus: React.Dispatch<React.SetStateAction<GameStatus>>
+    setUsedKeys: React.Dispatch<React.SetStateAction<GuessState[]>>;
+    setCurrentRow: React.Dispatch<React.SetStateAction<number>>;
+    setWords: React.Dispatch<React.SetStateAction<string[]>>;
+    setRowsDisplayed: React.Dispatch<React.SetStateAction<boolean[]>>;
+    setRunningState: React.Dispatch<React.SetStateAction<RunningState>>
 }
 
 const GameGridDaily: React.FC<GameGridDailyProps> = ({
-    virtualKeys, 
-    consumeFirstKey, 
-    blockingAnimation, 
-    setBlockingAnimation, 
-    setUsedKeys,
-    currentRow, 
-    setCurrentRow,
+    virtualKeys,
     words,
+    rowsDisplayed,
+    runningState,
+    currentRow,
+    wonDaily,
+    lostDaily,
+    blockingAnimation,
+    consumeFirstKey,
+    setWonDaily,
+    setLostDaily,
+    setBlockingAnimation,
+    setUsedKeys,
+    setCurrentRow,
     setWords,
-    guessStatuses,
-    setGuessStatuses,
-    gameStatus,
-    setGameStatus
+    setRowsDisplayed,
+    setRunningState
 }) => {
-    const secretWord                            = useMemo(() => getDailyWord(), []);
-    const [badWord,         setBadWord]         = useState(false);
-    const [playAudio,       setPlayAudio]       = useState(true);
-    const turnOffAnimation                      = useCallback(() => { setBlockingAnimation(false) }, [setBlockingAnimation]);
+    async function uploadGameData() {
+        try {
+            return;
+            const body: GameDailyDto = {
+                wonDaily: wonDaily,
+                lostDaily: lostDaily,
+                words: words,
+                currentRow: currentRow,
+                rowsDisplayed: rowsDisplayed,
+                runningState: runningState
+            };
 
+            const response = await authorizedFetch("http://localhost:5224/api/game/daily-last", {
+                method: "PUT",
+                headers: {
+                "Content-Type": "application/json"
+                },
+                credentials: 'include',
+                body: JSON.stringify(body)
+            });
+
+            if (!response.ok) {
+                // todo: show message
+            }
+        } catch (_) {
+            // todo: show message (probabil unauthorized, trebuie logat din nou utilizatorul)
+        }
+    }
+    async function fetchGameData() {
+        try {
+            const response = await authorizedFetch("http://localhost:5224/api/game/daily-last", {
+                method: "GET",
+                headers: {
+                "Content-Type": "application/json"
+                },
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                // todo
+            }
+
+            const data = await response.json();
+            const lastGame: GameDailyDto = data.game;
+
+            setWords(lastGame.words);
+            setCurrentRow(lastGame.currentRow);
+            setRunningState(lastGame.runningState);
+            setWonDaily(lastGame.wonDaily);
+            setLostDaily(lastGame.lostDaily);
+            setRowsDisplayed(lastGame.rowsDisplayed);
+            //todo: currentRow in database, modificat dto-urile in backend, modificat gameRow si persistentStats
+        } catch (_) {
+            // todo
+        }
+    }
+
+    const secretWord                            = useMemo(() => getDailyWord(), []);
+    const [newGameStarted, setNewGameStarted]   = useState(false);
+    const [isInvalidWord,   setIsInvalidWord]   = useState(false);
+
+    const disableBounceAnimation = useCallback(() => {
+        setIsInvalidWord(false);
+    }, [setIsInvalidWord]);
+    const disableBlockingAnimation = useCallback(() => { 
+        setBlockingAnimation(false) 
+    }, [setBlockingAnimation]);
     const updateCurrentWord = useCallback((word: string) => {
         setWords(prevWords => prevWords.map((w, i) => i === currentRow ? word : w ));
     }, [currentRow, setWords]);
+    const updateCurrentRowDisplay = useCallback((displayRow: boolean) => {
+        setRowsDisplayed(prev => prev.map((value, i) => i === currentRow ? displayRow : value));
+    }, [currentRow, setRowsDisplayed]); 
     
-    const updateCurrentGuessStatus = useCallback((guessStatus: boolean) => {
-        setGuessStatuses(prevGS => prevGS.map((gs, i) => i === currentRow ? guessStatus : gs));
-    }, [currentRow, setGuessStatuses]); 
-
-    const turnOffBadWord = useCallback(() => { 
-        setBadWord(false);
-    }, [setBadWord]);
-
-    const handleGameKeyPress = useCallback((key: string) => {
-        if (!playAudio) setPlayAudio(true);
-        if (currentRow === Settings.MAX_ROWS || gameStatus !== GameStatus.PLAYING || blockingAnimation) return;
+    const handleGameKeyPress = useCallback(async (key: string) => {
+        if (currentRow === Settings.MAX_ROWS || runningState !== RunningState.PLAYING || blockingAnimation) return;
 
         if (key === "Enter") {
             if (words[currentRow].length !== Settings.MAX_LETTERS) return;
-            if (!WORDLIST.includes(words[currentRow].toUpperCase()) && !WORDLIST.includes(words[currentRow])) {
+            if (!WORDLIST.includes(words[currentRow].toUpperCase())) {
                 // Make the entire row kind of bounce left-to-right, need a special state to be passed to the row
-                setBadWord(true);
+                setIsInvalidWord(true);
                 setBlockingAnimation(true);
                 return;
             }
 
             setCurrentRow(Math.min(currentRow + 1, Settings.MAX_ROWS));
-            updateCurrentGuessStatus(true);
+            updateCurrentRowDisplay(true);
             setBlockingAnimation(true);
+            // await updateLastGame();
             return;
         }
 
-        if (key === "Backspace") {
+        if (key === "Backspace") 
             updateCurrentWord(words[currentRow].slice(0, -1));
-        }
 
-        if (key.match(/^[a-zA-Z]$/) && words[currentRow].length < Settings.MAX_LETTERS) {
+
+        if (key.match(/^[a-zA-Z]$/) && words[currentRow].length < Settings.MAX_LETTERS)
             updateCurrentWord(words[currentRow] + key);
-        }
     }, [
         currentRow,
         words,
-        gameStatus,
+        runningState,
         blockingAnimation,
         setBlockingAnimation,
-        updateCurrentGuessStatus,
+        updateCurrentRowDisplay,
         updateCurrentWord,
         setCurrentRow,
-        playAudio
     ]);
-
-    // console.log("Debugging info: \ncurrentRow: %d\nwords: %s\nguessStatuses: %s\ngameStatus: %d", currentRow, JSON.stringify(words), JSON.stringify(guessStatuses), gameStatus);
 
     useEffect(() => {
         const onKeyDown = (e: KeyboardEvent) => { handleGameKeyPress(e.key); }
@@ -129,11 +193,40 @@ const GameGridDaily: React.FC<GameGridDailyProps> = ({
     }, [virtualKeys, consumeFirstKey, handleGameKeyPress]);
 
     useEffect(() => {
-        if (gameStatus === GameStatus.PLAYING || !playAudio) return;
+        if (runningState === RunningState.PLAYING) return;
 
-        const audio = gameStatus === GameStatus.WON ? new Audio('/sounds/correct.mp3') : new Audio('/sounds/wrong.mp3');
+        const audio = runningState === RunningState.WON ? new Audio('/sounds/correct.mp3') : new Audio('/sounds/wrong.mp3');
         audio.play();
-    }, [gameStatus, playAudio]);
+        setTimeout(() => {
+            // reset all data to initial state
+            setCurrentRow(0);
+            setWords(Array(Settings.MAX_ROWS).fill(''));
+            setRowsDisplayed(Array(Settings.MAX_ROWS).fill(false));
+            setRunningState(RunningState.PLAYING);
+            setUsedKeys((val) => val.map(() => GuessState.EMPTY));
+            
+            if (runningState === RunningState.WON) setWonDaily((prev) => prev+1);
+            else setLostDaily((prev) => prev+1);
+
+            setRunningState(RunningState.PLAYING);
+            setNewGameStarted(true); 
+        }, 4000);
+    }, [runningState, setRunningState, setLostDaily, setWonDaily, setUsedKeys, setCurrentRow, setRowsDisplayed, setWords]);
+
+    useEffect(() => {
+        if (!newGameStarted) return;
+
+        setBlockingAnimation(false);
+        setNewGameStarted(false);
+        // uploadGameData().then(() => {
+        //     disableBlockingAnimation();
+        //     setNewGameStarted(false);
+        // }).catch(() => {
+        //     disableBlockingAnimation();
+        //     setNewGameStarted(false);
+        // });
+
+    }, [setNewGameStarted, newGameStarted, disableBlockingAnimation, setBlockingAnimation]);
     
     return (
         <>
@@ -143,19 +236,19 @@ const GameGridDaily: React.FC<GameGridDailyProps> = ({
                     key={index}
                     word={word}
                     secretWord={secretWord}
-                    reveal={guessStatuses[index]}
-                    setGameStatus={setGameStatus}
-                    turnOffAnimation={turnOffAnimation}
+                    reveal={rowsDisplayed[index]}
+                    setRunningState={setRunningState}
+                    disableBlockingAnimation={disableBlockingAnimation}
                     isCurrentRow={currentRow === index+1}
                     isLastRow={currentRow === Settings.MAX_ROWS}
                     setUsedKeys={setUsedKeys}
-                    shouldBounce={badWord && currentRow === index}
-                    turnOffBounce={turnOffBadWord}
+                    shouldBounce={isInvalidWord && currentRow === index}
+                    disableBounceAnimation={disableBounceAnimation}
                     beforeCurrentRow={index+1 < currentRow}
                 />
             ))}
         </div>
-        <Info message={`Cuvântul era`} important={secretWord} hide={gameStatus === GameStatus.PLAYING} hideText={gameStatus === GameStatus.PLAYING} />
+        <Info message={`Cuvântul era`} important={secretWord} hide={runningState === RunningState.PLAYING} hideText={runningState === RunningState.PLAYING} />
         </>
     )
 }

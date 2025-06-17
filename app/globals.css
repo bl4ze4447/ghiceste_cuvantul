@@ -16,6 +16,10 @@ a {
   text-decoration: none;
 }
 
+.exo {
+    font-family: "Exo 2", sans-serif;
+}
+
 .grecaptcha-badge { 
   visibility: hidden !important;
 }

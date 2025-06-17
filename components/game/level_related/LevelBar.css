@@ -1,10 +1,22 @@
 .level-div {
-display: flex;
-justify-content: space-between; 
-align-items: center;
-width: 305px; 
-padding: 0 10px;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 330px;
+  padding: 0 10px;
+  border-bottom: 1px solid whitesmoke;
+  margin-bottom: 5px;
 }
+
+.center-text {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  white-space: nowrap;
+}
+
 .container {
     display: flex;
     justify-content: center; 
@@ -32,15 +44,15 @@ padding: 0;
 
 .wrong-ico {
 color: red;
-margin-left: 10px;
+margin-left: 6px;
 }
 
 .check-ico {
 color: green;
-margin-right: 10px;
+margin-right: 6px;
 }
 
-.center-text {
+/* .center-text {
 flex-grow: 1;
 text-align: center;  
-}
+} */

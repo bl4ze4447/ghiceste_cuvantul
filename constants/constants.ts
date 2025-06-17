@@ -1,10 +1,10 @@
-export enum GameStatus {
+export enum RunningState {
     WON,
     LOST,
     PLAYING
 };
   
-export enum GuessStatus {
+export enum GuessState {
     EMPTY,
     GRAY,
     YELLOW,
@@ -16,12 +16,18 @@ export enum Settings {
     MAX_ROWS = 6,
 };
 
+export enum AccountLoad {
+    LOADING,
+    LOGGED,
+    NOT_LOGGED
+}
+
 export enum ModalAnswer {
     NO,
     YES
 };
 
-export enum GameType {
+export enum GameMode {
     LEVEL,
     DAILY
 }

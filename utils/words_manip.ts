@@ -4,7 +4,7 @@ import timezone                     from 'dayjs/plugin/timezone';
 
 import { SECRET_WORDS }             from '../constants/wordlist';
 import { cyrb53 }                   from './utils';
-import { Settings, GuessStatus }    from '../constants/constants';
+import { Settings, GuessState }    from '../constants/constants';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -28,10 +28,10 @@ export function getWordByLevel(level: number) {
     return SECRET_WORDS[(level-1) % SECRET_WORDS.length];
 }
 
-export function getGuessStatuses(word: string, secret: string) {
+export function getGuessStates(word: string, secret: string) {
     word = word.toUpperCase();
 
-    let guessStatuses       = Array(Settings.MAX_LETTERS).fill(GuessStatus.GRAY);
+    let guessStatuses       = Array(Settings.MAX_LETTERS).fill(GuessState.GRAY);
     let secretArr: string[] = [...secret.toUpperCase()];
 
     // Mark all of the correct ones with green and replace them with an impossible character '!'
@@ -39,7 +39,7 @@ export function getGuessStatuses(word: string, secret: string) {
     // and secretArr would not match after
     word.split('').forEach((ch, idx) => {
         if (ch === secretArr[idx]) {
-            guessStatuses[idx]  = GuessStatus.GREEN;
+            guessStatuses[idx]  = GuessState.GREEN;
             secretArr[idx]      = '!';
         }
     });
@@ -47,8 +47,8 @@ export function getGuessStatuses(word: string, secret: string) {
     // Now mark all of remaining partially-correct ones with orange
     word.split('').forEach((ch, idx) => {
         const pos = secretArr.indexOf(ch);
-        if (pos !== -1 && guessStatuses[idx] !== GuessStatus.GREEN) {
-            guessStatuses[idx]  = GuessStatus.YELLOW;
+        if (pos !== -1 && guessStatuses[idx] !== GuessState.GREEN) {
+            guessStatuses[idx]  = GuessState.YELLOW;
             secretArr[pos]      = '!';
         }
     });
@@ -69,11 +69,11 @@ export function getKeyPos(key: string) {
     return keyMap.indexOf(key);
 }
 
-export function getLetterClass(state: GuessStatus, isKeyboard: boolean) {
+export function getLetterClass(state: GuessState, isKeyboard: boolean) {
     switch (state) {
-        case GuessStatus.GREEN:     return `guessed-letter${isKeyboard === true ? '-key ' : ''}`;
-        case GuessStatus.YELLOW:    return `half-letter${isKeyboard === true ? '-key ' : ''}`;
-        case GuessStatus.GRAY:      return `wrong-letter${isKeyboard  === true ? '-key ' : ''}`;
+        case GuessState.GREEN:     return `guessed-letter${isKeyboard === true ? '-key ' : ''}`;
+        case GuessState.YELLOW:    return `half-letter${isKeyboard === true ? '-key ' : ''}`;
+        case GuessState.GRAY:      return `wrong-letter${isKeyboard  === true ? '-key ' : ''}`;
         default:                    return `empty-letter${isKeyboard === true ? '-key ' : ''}`;
     }
 }

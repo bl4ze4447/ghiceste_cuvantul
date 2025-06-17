@@ -4,12 +4,12 @@ import './GameRow.css';
 import LetterBox from './LetterBox';
 import { 
     Settings, 
-    GuessStatus, 
+    GuessState, 
     TimesCSS, 
-    GameStatus 
+    RunningState 
 } from '@/constants/constants';
 import { 
-    getGuessStatuses, 
+    getGuessStates, 
     getKeyPos 
 } from '@/utils/words_manip';
 
@@ -20,57 +20,53 @@ import {
 } from 'react';
 
 interface GameRowProps {
-  word: string;
-  secretWord: string;
-  turnOffAnimation: Function,
-  reveal: boolean,
-  setGameStatus: React.Dispatch<React.SetStateAction<GameStatus>>;
-  isCurrentRow: boolean;
-  isLastRow: boolean;
-  setUsedKeys: React.Dispatch<React.SetStateAction<GuessStatus[]>>;
-  shouldBounce: boolean;
-  turnOffBounce: Function;
-  beforeCurrentRow: boolean;
+    secretWord: string;
+    word: string;
+    isCurrentRow: boolean;
+    isLastRow: boolean;
+    beforeCurrentRow: boolean;
+    shouldBounce: boolean;
+    reveal: boolean;
+    setUsedKeys: React.Dispatch<React.SetStateAction<GuessState[]>>;
+    setRunningState: React.Dispatch<React.SetStateAction<RunningState>>;
+    disableBlockingAnimation: () => void;
+    disableBounceAnimation: () => void;
 }
 
 const GameRow: React.FC<GameRowProps> = ({
-    word, 
     secretWord, 
-    turnOffAnimation, 
-    reveal, 
-    setGameStatus, 
+    word, 
     isCurrentRow, 
     isLastRow,
-    setUsedKeys, 
+    beforeCurrentRow,
     shouldBounce, 
-    turnOffBounce, 
-    beforeCurrentRow
+    reveal, 
+    setUsedKeys, 
+    setRunningState,
+    disableBlockingAnimation,
+    disableBounceAnimation
 }) => {
-    const guessStatuses = useMemo(() => reveal ? getGuessStatuses(word, secretWord) : Array(Settings.MAX_LETTERS).fill(GuessStatus.EMPTY), [reveal, word, secretWord]);
+    const guessStates = useMemo(() => reveal ? getGuessStates(word, secretWord) : Array(Settings.MAX_LETTERS).fill(GuessState.EMPTY), [reveal, word, secretWord]);
 
     useEffect(() => {
         if (reveal && isCurrentRow) {
             setTimeout(() => {
-                turnOffAnimation();
-                if (guessStatuses.every(gs => gs === GuessStatus.GREEN)) {
-                    setGameStatus(GameStatus.WON);
+                disableBlockingAnimation();
+                if (guessStates.every(gs => gs === GuessState.GREEN)) {
+                    setRunningState(RunningState.WON);
                 } else if (reveal && isLastRow) {
-                    setGameStatus(GameStatus.LOST);
+                    setRunningState(RunningState.LOST);
                 }
             }, TimesCSS.LETTER_FLIP_TRANSITION + (TimesCSS.LETTER_FLIP_DELAY-1) * Settings.MAX_LETTERS);
         }
 
         if (shouldBounce) {
             setTimeout(() => {
-                turnOffAnimation();
-                turnOffBounce();
+                disableBlockingAnimation();
+                disableBounceAnimation();
             }, TimesCSS.ROW_BAD_ANIMATION);
         }
-    }, [isCurrentRow, reveal, turnOffAnimation, shouldBounce, turnOffBounce, guessStatuses, isLastRow, setGameStatus]);
-
-    useEffect(() => {
-        
-    }, [reveal, setGameStatus, isLastRow, guessStatuses]);
+    }, [isCurrentRow, reveal, disableBlockingAnimation, shouldBounce, disableBounceAnimation, guessStates, isLastRow, setRunningState]);
 
     useEffect(() => {
         if ((reveal && isCurrentRow) || beforeCurrentRow) {
@@ -78,15 +74,15 @@ const GameRow: React.FC<GameRowProps> = ({
                 const newKeys = [...val];
                 word.split('').forEach((key, idx) => {
                     const pos = getKeyPos(key);
-                    if (Number(newKeys[pos]) < Number(guessStatuses[idx])) {
-                        newKeys[pos] = guessStatuses[idx];
+                    if (Number(newKeys[pos]) < Number(guessStates[idx])) {
+                        newKeys[pos] = guessStates[idx];
                     }
                 });
 
                 return newKeys;
             });
         }
-    }, [isCurrentRow, guessStatuses, setUsedKeys, word, reveal, beforeCurrentRow]);
+    }, [isCurrentRow, guessStates, setUsedKeys, word, reveal, beforeCurrentRow]);
 
     return (
         <div className={`game-row ${shouldBounce ? 'bounce-bad' : ''}`}>
@@ -94,7 +90,7 @@ const GameRow: React.FC<GameRowProps> = ({
                 <LetterBox 
                     key={i}
                     character={i < word.length ? word[i] : ''}
-                    guessStatus={guessStatuses[i]}
+                    guessState={guessStates[i]}
                     position={i}
                     reveal={i < word.length ? reveal : false}
                 />

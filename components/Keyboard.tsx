@@ -9,7 +9,7 @@ import {
 } from "react";
 import { AiOutlineEnter }       from "react-icons/ai";
 import { IoBackspaceOutline }   from "react-icons/io5";
-import { GuessStatus } from '@/constants/constants';
+import { GuessState } from '@/constants/constants';
 
 const rowOneKeys    = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'];
 const rowTwoKeys    = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'];
@@ -17,7 +17,7 @@ const rowThreeKeys  = ['Enter', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'Backspace'];
 
 interface KeyboardProps {
   setVirtualKeys: React.Dispatch<React.SetStateAction<string[]>>;
-  usedKeys: GuessStatus[];
+  usedKeys: GuessState[];
 }
 
 const Keyboard: React.FC<KeyboardProps> = ({

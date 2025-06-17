@@ -5,42 +5,51 @@ import LevelBar                     from "@/components/game/level_related/LevelB
 import GameGridLevel                from "@/components/game/level_related/GameGridLevel";
 import { usePersistentStats }       from "@/hooks/usePersistentStats"
 import { 
-    GameType, 
-    GuessStatus 
+    GameMode,
+    GuessState
 } from "@/constants/constants";
 
 
 import { 
     useState, 
-    useCallback 
+    useCallback, 
+    useEffect
 } from "react";
 
 function LevelGame() {
     // Used by the on-screen keyboard to send input
     const [virtualKeys,       setVirtualKeys]       = useState<string[]>([]);
     // Is there any animation playing that should block the game?
-    const [blockingAnimation, setBlockingAnimation] = useState(false);
+    const [blockingAnimation, setBlockingAnimation] = useState(true);
     // What keys were used and what is their GuessStatus? ; 27 -> All keys (25) + BACKSPACE/ENTER
-    const [usedKeys,          setUsedKeys]          = useState(Array(27).fill(GuessStatus.EMPTY));
-
-    const { currentLevel,     setCurrentLevel,
-            numOfWrongWords,  setNumOfWrongWords,
-            numOfRightWords,  setNumOfRightWords,
-            currentRow,       setCurrentRow,
-            words,            setWords,
-            guessStatuses,    setGuessStatuses,
-            gameStatus,       setGameStatus}  = usePersistentStats(GameType.LEVEL);
+    const [usedKeys,          setUsedKeys]          = useState(Array(27).fill(GuessState.EMPTY));
     const consumeFirstKey                           = useCallback(() => { setVirtualKeys(vk => vk.slice(1)) }, [setVirtualKeys]);
-    const incrementLevel                            = useCallback(() => { setCurrentLevel((lvl) => lvl+1) }, [setCurrentLevel]);
-    const incrementRights                           = useCallback(() => { setNumOfRightWords((rg) => rg+1) }, [setNumOfRightWords]);
-    const incrementWrongs                           = useCallback(() => { setNumOfWrongWords((wrg) => wrg+1) }, [setNumOfWrongWords]);
+
+    const {
+        loaded,
+        currentLevel,     setCurrentLevel,
+        lostLevels,       setLostLevels,
+        wonLevels,        setWonLevels,
+        lostDaily,        setLostDaily,
+        wonDaily,         setWonDaily,
+        currentRow,       setCurrentRow,
+        words,            setWords,
+        rowsDisplayed,    setRowsDisplayed,
+        runningState,     setRunningState
+    } = usePersistentStats(GameMode.LEVEL);
+
+    useEffect(() => {
+        if (!loaded) return;
+
+        setBlockingAnimation(false);
+    }, [loaded]);
 
     return (
     <section>
         <LevelBar 
-            currentLevel={currentLevel}
-            numOfRightWords={numOfRightWords}
-            numOfWrongWords={numOfWrongWords} />
+            centerText={(<p>Nivelul {currentLevel}</p>)}
+            won={wonLevels}
+            lost={lostLevels} />
         <GameGridLevel
             virtualKeys={virtualKeys} 
             consumeFirstKey={consumeFirstKey} 
@@ -48,17 +57,19 @@ function LevelGame() {
             setBlockingAnimation={setBlockingAnimation} 
             setUsedKeys={setUsedKeys} 
             currentLevel={currentLevel} 
-            incrementLevel={incrementLevel}
-            incrementRights={incrementRights}
-            incrementWrongs={incrementWrongs}
+            lostLevels={lostLevels}
+            wonLevels={wonLevels}
+            setCurrentLevel={setCurrentLevel}
             currentRow={currentRow} 
             setCurrentRow={setCurrentRow}
             words={words}
             setWords={setWords}
-            guessStatuses={guessStatuses}
-            setGuessStatuses={setGuessStatuses}
-            gameStatus={gameStatus}
-            setGameStatus={setGameStatus}
+            rowsDisplayed={rowsDisplayed}
+            setRowsDisplayed={setRowsDisplayed}
+            runningState={runningState}
+            setLostLevels={setLostLevels}
+            setWonLevels={setWonLevels}
+            setRunningState={setRunningState}
             />
         <Keyboard 
             setVirtualKeys={setVirtualKeys} 

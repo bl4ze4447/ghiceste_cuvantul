@@ -7,11 +7,13 @@ import {
 import type { Metadata }  from "next";
 
 const exo2 = Exo_2({
-  subsets: ["latin"]  
+  subsets: ["latin"],
+  display: "swap"
 });
 const bungee = Bungee({
   weight: "400",
-  subsets: ["latin"]  
+  subsets: ["latin"],
+  display: "swap"
 });
 
 export const metadata: Metadata = {

@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import './LevelBar.css';
 
 import { 
@@ -6,27 +7,27 @@ import {
 } from "react-icons/fa6";
 
 interface LevelBarProps {
-  currentLevel: number;
-  numOfWrongWords: number;
-  numOfRightWords: number,
+  centerText: ReactNode;
+  won: number;
+  lost: number,
 }
 
 const LevelBar: React.FC<LevelBarProps> = ({ 
-  currentLevel, 
-  numOfWrongWords, 
-  numOfRightWords 
+  centerText, 
+  won, 
+  lost 
 }) => {
     return (
       <div className='container' style={{marginTop: '30px'}}>
         <div className='level-div'>
           <div className='icon-text'>
-            <p>{numOfWrongWords}</p>
+            <p>{lost}</p>
             <FaCircleXmark className='wrong-ico' />
           </div>
-          <p className='center-text'>Nivelul {currentLevel}</p>
+          <div className='center-text'>{centerText}</div>
           <div className='icon-text'>
             <FaCircleCheck className='check-ico' />
-            <p>{numOfRightWords}</p>
+            <p>{won}</p>  
           </div>
         </div>
       </div>
