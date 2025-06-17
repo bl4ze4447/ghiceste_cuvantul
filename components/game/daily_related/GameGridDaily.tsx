@@ -200,8 +200,6 @@ const GameGridDaily: React.FC<GameGridDailyProps> = ({
         setTimeout(() => {            
             if (runningState === RunningState.WON) setWonDaily((prev) => prev+1);
             else setLostDaily((prev) => prev+1);
-
-            setRunningState(RunningState.PLAYING);
             setNewGameStarted(true); 
         }, 4000);
     }, [runningState, setRunningState, setLostDaily, setWonDaily, setUsedKeys, setCurrentRow, setRowsDisplayed, setWords]);
