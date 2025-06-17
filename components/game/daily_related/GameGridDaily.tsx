@@ -197,14 +197,7 @@ const GameGridDaily: React.FC<GameGridDailyProps> = ({
 
         const audio = runningState === RunningState.WON ? new Audio('/sounds/correct.mp3') : new Audio('/sounds/wrong.mp3');
         audio.play();
-        setTimeout(() => {
-            // reset all data to initial state
-            setCurrentRow(0);
-            setWords(Array(Settings.MAX_ROWS).fill(''));
-            setRowsDisplayed(Array(Settings.MAX_ROWS).fill(false));
-            setRunningState(RunningState.PLAYING);
-            setUsedKeys((val) => val.map(() => GuessState.EMPTY));
-            
+        setTimeout(() => {            
             if (runningState === RunningState.WON) setWonDaily((prev) => prev+1);
             else setLostDaily((prev) => prev+1);
 
