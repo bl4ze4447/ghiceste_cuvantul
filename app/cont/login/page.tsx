@@ -6,13 +6,16 @@ import { TextField }    from '@mui/material';
 import { useEffect, useState }     from "react";
 import Link             from "next/link";
 import Info from '@/components/Info';
-import { redirect } from 'next/navigation';
 import { authorizedFetch } from '@/utils/authorizedFetch';
 import Loading from '@/components/Loading';
+import { useRouter } from "next/navigation";
 
 const Login = () => {
+    const router = useRouter();
+
     useEffect(() => {
-        redirect('/'); // remove me
+        router.replace('/');
+        return;
         async function isLoggedIn() {
             const response = await authorizedFetch("http://localhost:5224/api/auth/is-logged-in", {
                 method: "GET",
@@ -23,7 +26,7 @@ const Login = () => {
             });
 
             if (response.ok) {
-                redirect('/cont');
+                router.replace('/cont');
             }
 
             setIsLoading(false);
@@ -71,7 +74,7 @@ const Login = () => {
         localStorage.setItem('accessToken', data.accessToken);
 
         setTimeout(() => {
-            redirect('/cont');
+            router.replace('/cont');
         }, 500);
     }
 

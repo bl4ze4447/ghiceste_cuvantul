@@ -4,16 +4,17 @@ import {
   Exo_2, 
   Bungee
 } from 'next/font/google';
-import type { Metadata }  from "next";
+import { Metadata }  from "next";
+import { Analytics } from "@vercel/analytics/next";
 
 const exo2 = Exo_2({
   subsets: ["latin"],
-  display: "swap"
+  display: "swap",
 });
 const bungee = Bungee({
   weight: "400",
   subsets: ["latin"],
-  display: "swap"
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -45,6 +46,7 @@ export default function RootLayout({
     <html lang="ro" className={`${exo2.className} ${bungee.className}`}>
       <body>
         {children}
+        <Analytics />
       </body>
     </html>
   );

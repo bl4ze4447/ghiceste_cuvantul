@@ -3,15 +3,17 @@
 import '@/components/account/AccountRelated.css';
 
 import { useEffect, useState }     from "react";
-import { redirect } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { AccountLoad } from '@/constants/constants';
 import { authorizedFetch } from '@/utils/authorizedFetch';
 import Card from '@/components/Card';
 import Loading from '@/components/Loading';
 
 const Account = () => {
+    const router = useRouter();
     useEffect(() => {
-        redirect('/'); // remove me
+        router.replace('/');
+        return;
         async function isLoggedIn() {
             const response = await authorizedFetch("http://localhost:5224/api/auth/is-logged-in", {
                 method: "GET",
@@ -28,7 +30,7 @@ const Account = () => {
                 }
                 
                 setTimeout(() => {
-                    redirect('/cont/login');
+                    router.replace('/cont/login');
                 }, 2000);
                 setLoggedIn(AccountLoad.NOT_LOGGED);
                 return;
@@ -55,7 +57,7 @@ const Account = () => {
             setError("Ai ieșit din cont");
             setLoggedIn(AccountLoad.NOT_LOGGED);
             localStorage.setItem('accessToken', '');
-            setTimeout(() => redirect('/cont/login'), 2000);
+            setTimeout(() => router.replace('/cont/login'), 2000);
         } catch (err: any) {
             setError("Raportează la administrator: " + err.toString());
             localStorage.removeItem("accessToken");
@@ -98,7 +100,7 @@ const Account = () => {
             } catch (_) {
                 setError("Sesiunea a expirat");
                 localStorage.removeItem("accessToken");
-                setTimeout(() => redirect('/cont/login'), 2000);
+                setTimeout(() => router.replace('/cont/login'), 2000);
             }
         }
 
@@ -118,7 +120,7 @@ const Account = () => {
             } catch (_) {
                 setError("Sesiunea a expirat");
                 localStorage.removeItem("accessToken");
-                setTimeout(() => redirect('/cont/login'), 2000);
+                setTimeout(() => router.replace('/cont/login'), 2000);
             }
         }
 
@@ -188,7 +190,7 @@ const Account = () => {
                         </div>
                         </Card>
                         <br />
-                        <input style={{marginTop: '-10px'}} type="button" value="Inapoi la meniul principal" className="connect-button-small" onClick={() => { redirect("/") }}/>
+                        <input style={{marginTop: '-10px'}} type="button" value="Inapoi la meniul principal" className="connect-button-small" onClick={() => { router.replace('/') }}/>
                         <input style={{marginTop: '10px'}} type="button" value="Ieși din cont" className="connect-button-small" onClick={async () => { await logout(); }}/>
                         <p className='exo' style={{fontWeight: 'bolder', fontSize: '1.2rem', marginTop: '24px'}}>Zonă periculoasă!</p>
                         <input style={{marginTop: '5px'}} type="button" value="Șterge contul" className="connect-button-small button-important" onClick={async () => { await logout(); }}/>

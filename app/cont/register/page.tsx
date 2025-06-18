@@ -5,13 +5,15 @@ import '@/components/account/AccountRelated.css';
 import { TextField }    from '@mui/material';
 import { useEffect, useState }     from "react";
 import Info from '@/components/Info';
-import { redirect } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { authorizedFetch } from '@/utils/authorizedFetch';
 import Loading from '@/components/Loading';
 
 const Login = () => {
+    const router = useRouter();
     useEffect(() => {
-        redirect('/'); // remove me
+        router.replace('/'); // remove me
+        return;
         async function isLoggedIn() {
             const response = await authorizedFetch("http://localhost:5224/api/auth/is-logged-in", {
                 method: "GET",
@@ -21,7 +23,7 @@ const Login = () => {
             });
 
             if (response.ok) {
-                redirect('/cont');
+                router.replace('/cont');
             }
         }
 
@@ -66,7 +68,7 @@ const Login = () => {
 
         setError('Succes! Ți-am trimis un mail cu instrucțiuni pentru a-ți verifica contul...');
         setTimeout(() => {
-            redirect('/cont/login');
+            router.replace('/cont/login');
         }, 3500);
     }
 
