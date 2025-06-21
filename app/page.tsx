@@ -12,7 +12,7 @@ function MainMenu() {
             <Header />
             <div className='menu-content'>
                 <div className='center-buttons'>
-                    <Link href="/nivele" className="game-button">Joacă niveluri</Link>
+                    <Link href="/niveluri" className="game-button">Joacă niveluri</Link>
                     <Link href="/cuvantul-zilei" className="game-button">Cuvântul zilei</Link>
                     <Link href="/cont" className="game-button">Contul meu</Link>
                     <Link href="/cum-sa-joci" className="game-button">Cum se joacă</Link>
