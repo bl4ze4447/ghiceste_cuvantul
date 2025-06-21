@@ -118,7 +118,7 @@ export function usePersistentStats(gameMode: GameMode) {
     if (savedLostLevels !== null) setLostLevels(Number(savedLostLevels));
     if (savedWonLevels !== null) setWonLevels(Number(savedWonLevels));
 
-    if (savedGuessedDaily !== null) setGuessedDaily(Boolean(savedGuessedDaily));
+    if (savedGuessedDaily !== null) setGuessedDaily(savedGuessedDaily.toLowerCase() === "true");
     if (savedLostDaily !== null) setLostDaily(Number(savedLostDaily));
     if (savedWonDaily !== null) setWonDaily(Number(savedWonDaily));
 

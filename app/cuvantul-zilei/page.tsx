@@ -6,7 +6,7 @@ import {
     GameMode, 
     GuessState 
 } from "@/constants/constants";
-import GameGridDaily                from "@/components/game/daily_related/GameGridDaily";
+import GameGridDaily                from "@/components/game/GameGridDaily";
 import Keyboard                     from "@/components/Keyboard";
 
 import { 
@@ -15,7 +15,7 @@ import {
     useEffect
 } from "react";
 import { usePersistentStats }       from '@/hooks/usePersistentStats';
-import LevelBar from '@/components/game/level_related/LevelBar';
+import LevelBar from '@/components/game/LevelBar';
 
 function DailyGame() {
     // Used by the on-screen keyboard to send input

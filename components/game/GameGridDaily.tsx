@@ -1,16 +1,17 @@
 'use client'
 
-import '../../styles/GameGrid.css';
+import '../styles/GameGrid.css';
 
-import GameRow from '../common/GameRow';
-import Info                         from '../../Info';
+import GameRow from './GameRow';
+import Info                         from '../Info';
 import { 
     Settings, 
+    GameMode, 
     GuessState,
     RunningState
 } from '@/constants/constants';
 import { WORDLIST }                 from '@/constants/wordlist';
-import { getWordByLevel }             from '@/utils/words_manip';
+import { getDailyWord }             from '@/utils/words_manip';
 
 import { 
     useCallback, 
@@ -23,25 +24,24 @@ import utc                          from 'dayjs/plugin/utc';
 import timezone                     from 'dayjs/plugin/timezone';
 import { authorizedFetch } from '@/utils/authorizedFetch';
 import { GameDailyDto } from '@/dto/game/gameDaily';
-import { GameLevelDto } from '@/dto/game/gameLevel';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-interface GameGridLevelProps {
+interface GameGridDailyProps {
     virtualKeys: string[];
     words: string[];
     rowsDisplayed: boolean[];
     runningState: RunningState;
     currentRow: number;
-    currentLevel: number;
-    wonLevels: number;
-    lostLevels: number;
+    guessedDaily: boolean;
+    wonDaily: number;
+    lostDaily: number;
     blockingAnimation: boolean;
     consumeFirstKey: () => void;
-    setLostLevels: React.Dispatch<React.SetStateAction<number>>;
-    setWonLevels: React.Dispatch<React.SetStateAction<number>>;
-    setCurrentLevel: React.Dispatch<React.SetStateAction<number>>;
+    setGuessedDaily: React.Dispatch<React.SetStateAction<boolean>>;
+    setLostDaily: React.Dispatch<React.SetStateAction<number>>;
+    setWonDaily: React.Dispatch<React.SetStateAction<number>>;
     setBlockingAnimation: React.Dispatch<React.SetStateAction<boolean>>;
     setUsedKeys: React.Dispatch<React.SetStateAction<GuessState[]>>;
     setCurrentRow: React.Dispatch<React.SetStateAction<number>>;
@@ -50,20 +50,20 @@ interface GameGridLevelProps {
     setRunningState: React.Dispatch<React.SetStateAction<RunningState>>
 }
 
-const GameGridLevel: React.FC<GameGridLevelProps> = ({
+const GameGridDaily: React.FC<GameGridDailyProps> = ({
     virtualKeys,
     words,
     rowsDisplayed,
     runningState,
     currentRow,
-    currentLevel,
-    wonLevels,
-    lostLevels,
+    guessedDaily,
+    wonDaily,
+    lostDaily,
     blockingAnimation,
     consumeFirstKey,
-    setWonLevels,
-    setLostLevels,
-    setCurrentLevel,
+    setGuessedDaily,
+    setWonDaily,
+    setLostDaily,
     setBlockingAnimation,
     setUsedKeys,
     setCurrentRow,
@@ -74,17 +74,16 @@ const GameGridLevel: React.FC<GameGridLevelProps> = ({
     async function uploadGameData() {
         try {
             return;
-            const body: GameLevelDto = {
-                currentLevel: currentLevel,
-                wonLevels: wonLevels,
-                lostLevels: lostLevels,
+            const body: GameDailyDto = {
+                wonDaily: wonDaily,
+                lostDaily: lostDaily,
                 words: words,
                 currentRow: currentRow,
                 rowsDisplayed: rowsDisplayed,
                 runningState: runningState
             };
 
-            const response = await authorizedFetch("http://localhost:5224/api/game/level-last", {
+            const response = await authorizedFetch("http://localhost:5224/api/game/daily-last", {
                 method: "PUT",
                 headers: {
                 "Content-Type": "application/json"
@@ -102,7 +101,7 @@ const GameGridLevel: React.FC<GameGridLevelProps> = ({
     }
     async function fetchGameData() {
         try {
-            const response = await authorizedFetch("http://localhost:5224/api/game/level-last", {
+            const response = await authorizedFetch("http://localhost:5224/api/game/daily-last", {
                 method: "GET",
                 headers: {
                 "Content-Type": "application/json"
@@ -115,13 +114,13 @@ const GameGridLevel: React.FC<GameGridLevelProps> = ({
             }
 
             const data = await response.json();
-            const lastGame: GameLevelDto = data.game;
+            const lastGame: GameDailyDto = data.game;
 
             setWords(lastGame.words);
             setCurrentRow(lastGame.currentRow);
             setRunningState(lastGame.runningState);
-            setWonLevels(lastGame.wonLevels);
-            setLostLevels(lastGame.lostLevels);
+            setWonDaily(lastGame.wonDaily);
+            setLostDaily(lastGame.lostDaily);
             setRowsDisplayed(lastGame.rowsDisplayed);
             //todo: currentRow in database, modificat dto-urile in backend, modificat gameRow si persistentStats
         } catch (_) {
@@ -129,7 +128,7 @@ const GameGridLevel: React.FC<GameGridLevelProps> = ({
         }
     }
 
-    const secretWord                            = useMemo(() => getWordByLevel(currentLevel), [currentLevel]);
+    const secretWord                            = useMemo(() => getDailyWord(), []);
     const [newGameStarted, setNewGameStarted]   = useState(false);
     const [isInvalidWord,   setIsInvalidWord]   = useState(false);
 
@@ -198,41 +197,22 @@ const GameGridLevel: React.FC<GameGridLevelProps> = ({
     }, [virtualKeys, consumeFirstKey, handleGameKeyPress]);
 
     useEffect(() => {
-        if (runningState === RunningState.PLAYING) return;
+        if (runningState === RunningState.PLAYING || guessedDaily === true) return;
 
         const audio = runningState === RunningState.WON ? new Audio('/sounds/correct.mp3') : new Audio('/sounds/wrong.mp3');
         audio.play();
-        setTimeout(() => {
-            // reset all data to initial state
-            setCurrentRow(0);
-            setWords(Array(Settings.MAX_ROWS).fill(''));
-            setRowsDisplayed(Array(Settings.MAX_ROWS).fill(false));
-            setRunningState(RunningState.PLAYING);
-            setUsedKeys((val) => val.map(() => GuessState.EMPTY));
-            setCurrentLevel((prev) => prev+1);
-            
-            if (runningState === RunningState.WON) setWonLevels((prev) => prev+1);
-            else setLostLevels((prev) => prev+1);
 
-            setRunningState(RunningState.PLAYING);
-            setNewGameStarted(true); 
-        }, 4000);
-    }, [runningState, setRunningState, setWonLevels, setLostLevels, setUsedKeys, setCurrentRow, setRowsDisplayed, setWords, setCurrentLevel]);
+        console.log('hey');
+        if (guessedDaily === false) {
+            setTimeout(() => {
+                console.log('hey');
+                if (runningState === RunningState.WON) setWonDaily((prev) => prev+1);
+                else setLostDaily((prev) => prev+1);
 
-    useEffect(() => {
-        if (!newGameStarted) return;
-
-        setBlockingAnimation(false);
-        setNewGameStarted(false);
-        // uploadGameData().then(() => {
-        //     disableBlockingAnimation();
-        //     setNewGameStarted(false);
-        // }).catch(() => {
-        //     disableBlockingAnimation();
-        //     setNewGameStarted(false);
-        // });
-
-    }, [setNewGameStarted, newGameStarted, disableBlockingAnimation, setBlockingAnimation, uploadGameData]);
+                setGuessedDaily(true);
+            }, 1000);
+        }
+    }, [runningState, guessedDaily, setRunningState, setLostDaily, setWonDaily, setUsedKeys, setCurrentRow, setRowsDisplayed, setWords]);
     
     return (
         <>
@@ -259,4 +239,4 @@ const GameGridLevel: React.FC<GameGridLevelProps> = ({
     )
 }
 
-export default GameGridLevel;
+export default GameGridDaily;

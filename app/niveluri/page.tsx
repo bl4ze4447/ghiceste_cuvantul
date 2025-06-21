@@ -1,8 +1,8 @@
 "use client"
 
 import Keyboard                     from "@/components/Keyboard";
-import LevelBar                     from "@/components/game/level_related/LevelBar";
-import GameGridLevel                from "@/components/game/level_related/GameGridLevel";
+import LevelBar                     from "@/components/game/LevelBar";
+import GameGridLevel                from "@/components/game/GameGridLevel";
 import { usePersistentStats }       from "@/hooks/usePersistentStats"
 import { 
     GameMode,
