@@ -39,7 +39,6 @@ const Account = () => {
             setError('');
             setLoggedIn(AccountLoad.LOGGED);
         }
-
         isLoggedIn();
     }, []);
 
@@ -130,7 +129,7 @@ const Account = () => {
 
     return (
         <section className="account-wrapper">
-            {loggedIn === AccountLoad.LOGGED && userRetrieved && gsRetrieved ? (
+            {/* {loggedIn === AccountLoad.LOGGED && userRetrieved && gsRetrieved ? (
                 <div className="create-account">
                     <h2 style={{ marginBottom: '20px', marginTop: '30px' }}>CONTUL TĂU</h2>
                     <div className="ml-20 mr-20" style={{minWidth: '300px', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
@@ -200,7 +199,8 @@ const Account = () => {
                 <Loading topMessage={error} bottomMessage='Vei fi redirecționat să te autentifici' />
             ) : (
                 <Loading topMessage='Pregătim pagina' bottomMessage='pentru tine' />
-            )}
+            )} */}
+            <p>Coming soon</p>
         </section>
     )
 }
