@@ -19,8 +19,6 @@ export async function refreshAccessToken(): Promise<string> {
 }
 
 export async function authorizedFetch(url: string, options: RequestInit = {}): Promise<Response> {
-    throw Error("");
-
     const token = localStorage.getItem("accessToken");
 
     const originalHeaders = (options.headers ?? {}) as Record<string, string>;

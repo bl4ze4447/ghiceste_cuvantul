@@ -12,8 +12,8 @@ import Loading from '@/components/Loading';
 const Login = () => {
     const router = useRouter();
     useEffect(() => {
-        router.replace('/'); // remove me
-        return;
+        // router.replace('/'); // remove me
+        // return;
         async function isLoggedIn() {
             const response = await authorizedFetch("http://localhost:5224/api/auth/is-logged-in", {
                 method: "GET",
@@ -24,7 +24,10 @@ const Login = () => {
 
             if (response.ok) {
                 router.replace('/cont');
+                return;
             }
+
+            setLoading(false);
         }
 
         isLoggedIn();
@@ -76,7 +79,7 @@ const Login = () => {
     const [email,    setEmail]      = useState('');
     const [password, setPassword]   = useState('');
     const [error,    setError]      = useState('Eu îți spun dacă este vreo problemă!');
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading]     = useState(true);
 
     return (
         <>

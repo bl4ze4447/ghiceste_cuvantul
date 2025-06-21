@@ -12,8 +12,8 @@ import Loading from '@/components/Loading';
 const Account = () => {
     const router = useRouter();
     useEffect(() => {
-        router.replace('/');
-        return;
+        // router.replace('/');
+        // return;
         async function isLoggedIn() {
             const response = await authorizedFetch("http://localhost:5224/api/auth/is-logged-in", {
                 method: "GET",

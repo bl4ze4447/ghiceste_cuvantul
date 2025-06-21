@@ -14,8 +14,8 @@ const Login = () => {
     const router = useRouter();
 
     useEffect(() => {
-        router.replace('/');
-        return;
+        // router.replace('/');
+        // return;
         async function isLoggedIn() {
             const response = await authorizedFetch("http://localhost:5224/api/auth/is-logged-in", {
                 method: "GET",
@@ -27,6 +27,7 @@ const Login = () => {
 
             if (response.ok) {
                 router.replace('/cont');
+                return;
             }
 
             setIsLoading(false);
