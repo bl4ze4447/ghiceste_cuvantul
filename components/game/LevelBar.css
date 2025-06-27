@@ -3,7 +3,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 330px;
+    width: 100%;
+    max-width: 330px;
     padding: 0 10px;
     border-bottom: 1px solid whitesmoke;
     margin-bottom: 5px;
@@ -43,16 +44,15 @@
 }
 
 .wrong-ico {
-    color: red;
+    color: rgb(245, 0, 0);
     margin-left: 6px;
 }
 
 .check-ico {
-    color: green;
+    color: #2ea200;
     margin-right: 6px;
 }
 
-/* .center-text {
-flex-grow: 1;
-text-align: center;  
-} */
+.center-text {
+    color: white;
+}
