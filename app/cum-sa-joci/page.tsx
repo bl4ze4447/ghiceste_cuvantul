@@ -55,17 +55,20 @@ function HowToPlay() {
                             </button>
                         </div>
 
-                        <p className="exo">
-                            <b style={{ color: '#2ea200' }}>Verde</b> — litera există și e pe
-                            poziția corectă.
-                        </p>
-                        <p className="exo">
-                            <b style={{ color: '#e6b800' }}>Galben</b> — litera există, dar e pe
-                            poziția greșită.
-                        </p>
-                        <p className="exo">
-                            <b style={{ color: '#5c7680' }}>Gri</b> — litera nu există în cuvânt.
-                        </p>
+                        <div>
+                            <p className="exo">
+                                <b style={{ color: '#2ea200' }}>Verde</b> — litera există și e pe
+                                poziția corectă.
+                            </p>
+                            <p className="exo">
+                                <b style={{ color: '#e6b800' }}>Galben</b> — litera există, dar e pe
+                                poziția greșită.
+                            </p>
+                            <p className="exo">
+                                <b style={{ color: '#5c7680' }}>Gri</b> — litera nu există în
+                                cuvânt.
+                            </p>
+                        </div>
                     </div>
                 </Card>
             </div>
