@@ -38,7 +38,7 @@ function HowToPlay() {
 
                     <div className="example-section" style={{ marginTop: '10px' }}>
                         <GameRow
-                            key={key} // forțează rerender complet
+                            key={key}
                             word={exampleMixed}
                             secretWord={secret}
                             isCurrentRow={false}
