@@ -11,7 +11,6 @@ import { FaCircleCheck, FaCircleXmark } from 'react-icons/fa6';
 function HowToPlay() {
     const secret = 'CXAXX';
     const exampleMixed = 'CARTE';
-    const exampleCorrect = 'CURTE';
 
     const [reveal, setReveal] = useState(true);
     const [key, setKey] = useState(0);
