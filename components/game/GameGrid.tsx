@@ -194,7 +194,11 @@ const GameGrid: React.FC<GameGridProps> = ({
 
     return (
         <>
-            <div className="game-grid">
+            <section
+                role="list"
+                aria-label="Grilă de joc cu rânduri de cuvinte"
+                className="game-grid"
+            >
                 {words.map((word, index) => (
                     <GameRow
                         key={index}
@@ -211,7 +215,7 @@ const GameGrid: React.FC<GameGridProps> = ({
                         beforeCurrentRow={index + 1 < currentRow}
                     />
                 ))}
-            </div>
+            </section>
             <Info
                 message="Cuvântul era"
                 important={secretWord}

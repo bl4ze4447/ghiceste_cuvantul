@@ -7,7 +7,7 @@ interface LoadingProps {
 
 const Loading: React.FC<LoadingProps> = ({ topMessage, bottomMessage }) => {
     return (
-        <div
+        <section
             style={{
                 height: '100vh',
                 display: 'flex',
@@ -32,7 +32,7 @@ const Loading: React.FC<LoadingProps> = ({ topMessage, bottomMessage }) => {
             <p className="exo" style={{ fontWeight: 'bold' }}>
                 {bottomMessage}
             </p>
-        </div>
+        </section>
     );
 };
 

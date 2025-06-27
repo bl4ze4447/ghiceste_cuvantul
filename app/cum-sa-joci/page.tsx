@@ -22,10 +22,10 @@ function HowToPlay() {
     };
 
     return (
-        <div className="how-to-play-container">
+        <main className="how-to-play-container">
             <h2 className="how-to-play-title">Cum se joacă</h2>
 
-            <div className="how-to-play-content">
+            <section className="how-to-play-content">
                 <Card>
                     <p className="exo lh1-5 justify">
                         Ghicește cuvântul în maximum <b>{Settings.MAX_ROWS}</b> încercări.
@@ -35,7 +35,7 @@ function HowToPlay() {
                         aproape ai fost:
                     </p>
 
-                    <div className="example-section" style={{ marginTop: '10px' }}>
+                    <section className="example-section" style={{ marginTop: '10px' }}>
                         <GameRow
                             key={key}
                             word={exampleMixed}
@@ -80,7 +80,7 @@ function HowToPlay() {
                                 de joc astfel:
                             </p>
                             <LevelBar centerText="Modul de joc" won={12} lost={6} />
-                            <div style={{ marginTop: '15px' }}>
+                            <section style={{ marginTop: '15px' }}>
                                 <p className="exo">
                                     <b>Modul de joc</b> poate fi:
                                 </p>
@@ -129,12 +129,12 @@ function HowToPlay() {
                                         </p>
                                     </div>
                                 </div>
-                            </div>
+                            </section>
                         </div>
-                    </div>
+                    </section>
                 </Card>
-            </div>
-        </div>
+            </section>
+        </main>
     );
 }
 

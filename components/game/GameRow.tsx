@@ -88,7 +88,13 @@ const GameRow: React.FC<GameRowProps> = ({
     }, [isCurrentRow, guessStates, setUsedKeys, word, reveal, beforeCurrentRow]);
 
     return (
-        <div className={`game-row ${shouldBounce ? 'bounce-bad' : ''}`}>
+        <section
+            role="list"
+            aria-label={`Rând de cuvinte ${isCurrentRow ? '(curent)' : ''} ${
+                beforeCurrentRow ? '(anterior)' : ''
+            }`}
+            className={`game-row ${shouldBounce ? 'bounce-bad' : ''}`}
+        >
             {Array(Settings.MAX_LETTERS)
                 .fill(0)
                 .map((_, i) => (
@@ -100,7 +106,7 @@ const GameRow: React.FC<GameRowProps> = ({
                         reveal={i < word.length ? reveal : false}
                     />
                 ))}
-        </div>
+        </section>
     );
 };
 

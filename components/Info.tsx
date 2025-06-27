@@ -9,13 +9,13 @@ interface InfoProps {
 
 const Info: React.FC<InfoProps> = ({ message, important, hide, hideText }) => {
     return (
-        <section className="info-div-wrapper">
+        <aside className="info-div-wrapper" aria-hidden={hide} role="alert">
             <div className={`info-div ${hide ? 'hide' : ''}`}>
                 <p className={hideText ? 'hide-text' : ''}>
                     {message} <span className={hideText ? 'hide-text' : ''}>{important}</span>
                 </p>
             </div>
-        </section>
+        </aside>
     );
 };
 

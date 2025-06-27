@@ -6,7 +6,8 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ children }) => {
     return (
-        <div
+        <section
+            role="region"
             style={{
                 backgroundColor: 'rgba(3, 72, 96, 0.98)',
                 borderRadius: '16px',
@@ -17,7 +18,7 @@ const Card: React.FC<CardProps> = ({ children }) => {
             }}
         >
             {children}
-        </div>
+        </section>
     );
 };
 

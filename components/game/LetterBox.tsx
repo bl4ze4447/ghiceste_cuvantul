@@ -40,7 +40,21 @@ const LetterBox: React.FC<LetterBoxProps> = ({ character, guessState, position, 
                 border 0.5s linear ${transitionDelay}s, scale 0.3s ease-in-out`,
             }}
         >
-            <p className="letter">{character}</p>
+            <span
+                role="listitem"
+                aria-label={`Litera ${character || 'gol'}, poziția ${position + 1}, stare: ${
+                    guessState === GuessState.GREEN
+                        ? 'corectă'
+                        : guessState === GuessState.YELLOW
+                        ? 'parțial corectă'
+                        : guessState === GuessState.GRAY
+                        ? 'greșită'
+                        : 'necompletată'
+                }`}
+                className="letter"
+            >
+                {character}
+            </span>
         </div>
     );
 };

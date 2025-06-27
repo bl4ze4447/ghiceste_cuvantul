@@ -29,19 +29,33 @@ const Keyboard: React.FC<KeyboardProps> = ({ setVirtualKeys, usedKeys }) => {
         <section className="keyboard-grid">
             <div className="key-row row-1">
                 {rowOneKeys.map((key, i) => (
-                    <div
+                    <button
+                        aria-label={
+                            key === 'Enter'
+                                ? 'Cheia Enter'
+                                : key === 'Backspace'
+                                ? 'Cheia Backspace'
+                                : `Litera ${key}`
+                        }
                         key={i}
                         className={`key-box ${getLetterClass(usedKeys[i], true)}`}
                         onClick={() => handleKeyClick(key)}
                     >
                         <p className="key-letter">{key}</p>
-                    </div>
+                    </button>
                 ))}
             </div>
             <div className="key-row row-2">
                 <div></div>
                 {rowTwoKeys.map((key, i) => (
-                    <div
+                    <button
+                        aria-label={
+                            key === 'Enter'
+                                ? 'Cheia Enter'
+                                : key === 'Backspace'
+                                ? 'Cheia Backspace'
+                                : `Litera ${key}`
+                        }
                         key={i + rowOneKeys.length}
                         className={`key-box ${getLetterClass(
                             usedKeys[i + rowOneKeys.length],
@@ -50,12 +64,19 @@ const Keyboard: React.FC<KeyboardProps> = ({ setVirtualKeys, usedKeys }) => {
                         onClick={() => handleKeyClick(key)}
                     >
                         {key.length === 1 && <p className="key-letter">{key}</p>}
-                    </div>
+                    </button>
                 ))}
             </div>
             <div className="key-row row-3">
                 {rowThreeKeys.map((key, i) => (
-                    <div
+                    <button
+                        aria-label={
+                            key === 'Enter'
+                                ? 'Cheia Enter'
+                                : key === 'Backspace'
+                                ? 'Cheia Backspace'
+                                : `Litera ${key}`
+                        }
                         key={i + rowOneKeys.length + rowTwoKeys.length}
                         className={`key-box ${getLetterClass(
                             usedKeys[i + rowOneKeys.length + rowTwoKeys.length],
@@ -68,7 +89,7 @@ const Keyboard: React.FC<KeyboardProps> = ({ setVirtualKeys, usedKeys }) => {
                             <IoBackspaceOutline className="react-icon longer" />
                         )}
                         {key.length === 1 && <p className="key-letter">{key}</p>}
-                    </div>
+                    </button>
                 ))}
             </div>
         </section>

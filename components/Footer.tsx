@@ -37,9 +37,12 @@ const Footer = () => {
                     style={{ marginLeft: '10px', marginRight: '10px', fontSize: '1.2rem' }}
                 >
                     {' '}
-                    |{' '}
+                    <span className="made-by">|</span>{' '}
                 </p>
-                <FaDiscord style={{ fontSize: '1.6rem', color: 'white', margin: '0 10px 0 0' }} />
+                <FaDiscord
+                    aria-hidden="true"
+                    style={{ fontSize: '1.6rem', color: 'white', margin: '0 10px 0 0' }}
+                />
                 <p className="made-by no-hover">bl4ze4447</p>
             </div>
         </footer>
