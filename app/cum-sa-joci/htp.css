@@ -69,3 +69,7 @@
 .lh1-5 {
     line-height: 1.5;
 }
+
+.justify {
+    text-align: justify;
+}

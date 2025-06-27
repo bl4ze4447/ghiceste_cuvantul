@@ -28,15 +28,15 @@ function HowToPlay() {
 
             <div className="how-to-play-content">
                 <Card>
-                    <p className="exo lh1-5">
+                    <p className="exo lh1-5 justify">
                         Ghicește cuvântul în maximum <b>{Settings.MAX_ROWS}</b> încercări.
                     </p>
-                    <p className="exo">
+                    <p className="exo justify">
                         După fiecare încercare, literele se colorează pentru a-ți arăta cât de
                         aproape ai fost:
                     </p>
 
-                    <div className="example-section">
+                    <div className="example-section" style={{ marginTop: '10px' }}>
                         <GameRow
                             key={key} // forțează rerender complet
                             word={exampleMixed}
@@ -51,7 +51,10 @@ function HowToPlay() {
                             disableBlockingAnimation={() => {}}
                             disableBounceAnimation={() => {}}
                         />
-                        <div className="button-row">
+                        <div
+                            className="button-row"
+                            style={{ marginBottom: '15px', marginTop: '3px' }}
+                        >
                             <button className="htp-button" onClick={handlePlay}>
                                 Redă exemplul
                             </button>
@@ -70,12 +73,15 @@ function HowToPlay() {
                                 <b style={{ color: '#5c7680' }}>Gri</b> — litera nu există în
                                 cuvânt.
                             </p>
-                            <p className="exo" style={{ marginTop: '30px', marginBottom: '-10px' }}>
+                            <p
+                                className="exo justify"
+                                style={{ marginTop: '15px', marginBottom: '-20px' }}
+                            >
                                 Pe parcursul jocului, progresul tău va fi afișat deasupra tabelului
                                 de joc astfel:
                             </p>
                             <LevelBar centerText="Modul de joc" won={12} lost={6} />
-                            <div style={{ marginTop: '20px' }}>
+                            <div style={{ marginTop: '15px' }}>
                                 <p className="exo">
                                     <b>Modul de joc</b> poate fi:
                                 </p>
