@@ -1,50 +1,51 @@
 body {
-  --max-width-of-row: calc(calc(55+4+3) * 5); /*NUM_OF_LETTERS * (LETTER_BOX HEIGHT + MARGIN) not margin*2 to leave some space*/
+    --max-width-of-row: calc(
+        calc(55+4+3) * 5
+    ); /*NUM_OF_LETTERS * (LETTER_BOX HEIGHT + MARGIN) not margin*2 to leave some space*/
 }
 
 .letter-box {
-  width: 54px;
-  height: 54px;
-  font-size: 1.75rem;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 3px;
-  transform-style: preserve-3d;
-  user-select: none;
+    width: 54px;
+    height: 54px;
+    font-size: 1.75rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 3px;
+    transform-style: preserve-3d;
+    user-select: none;
 }
 .letter-box p {
-  color: white;
+    color: white;
 }
 
 .letter-bounce {
-  scale: 1.2;
+    scale: 1.2;
 }
 
 .empty-letter {
-  background-color: #2A5368;
-  border: 3px solid #18303c;
+    background-color: #2a5368;
+    border: 3px solid #18303c;
 }
 .wrong-letter {
-  background-color: #5c7680;
-  border: 3px solid #34474e;
+    background-color: #5c7680;
+    border: 3px solid #34474e;
 }
 .guessed-letter {
-  background-color: #2ea200;
-  border: 3px solid #1e6a00;
+    background-color: #2ea200;
+    border: 3px solid #1e6a00;
 }
 .half-letter {
-  background-color: #e6b800;
-  border: 3px solid #a68501;
+    background-color: #e6b800;
+    border: 3px solid #a68501;
 }
 
 .letter-flip {
-  rotate: x 360deg;
+    rotate: x 360deg;
 }
 
 .letter {
-  backface-visibility: hidden;
-  user-select: none;
+    backface-visibility: hidden;
+    user-select: none;
 }
-

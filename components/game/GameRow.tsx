@@ -1,23 +1,11 @@
-'use client'
+'use client';
 
 import './GameRow.css';
 import LetterBox from './LetterBox';
-import { 
-    Settings, 
-    GuessState, 
-    TimesCSS, 
-    RunningState 
-} from '@/constants/constants';
-import { 
-    getGuessStates, 
-    getKeyPos 
-} from '@/utils/words_manip';
+import { Settings, GuessState, TimesCSS, RunningState } from '@/constants/constants';
+import { getGuessStates, getKeyPos } from '@/utils/words_manip';
 
-import { 
-    useEffect, 
-    useMemo, 
-    memo 
-} from 'react';
+import { useEffect, useMemo, memo } from 'react';
 
 interface GameRowProps {
     secretWord: string;
@@ -34,30 +22,36 @@ interface GameRowProps {
 }
 
 const GameRow: React.FC<GameRowProps> = ({
-    secretWord, 
-    word, 
-    isCurrentRow, 
+    secretWord,
+    word,
+    isCurrentRow,
     isLastRow,
     beforeCurrentRow,
-    shouldBounce, 
-    reveal, 
-    setUsedKeys, 
+    shouldBounce,
+    reveal,
+    setUsedKeys,
     setRunningState,
     disableBlockingAnimation,
-    disableBounceAnimation
+    disableBounceAnimation,
 }) => {
-    const guessStates = useMemo(() => reveal ? getGuessStates(word, secretWord) : Array(Settings.MAX_LETTERS).fill(GuessState.EMPTY), [reveal, word, secretWord]);
+    const guessStates = useMemo(
+        () =>
+            reveal
+                ? getGuessStates(word, secretWord)
+                : Array(Settings.MAX_LETTERS).fill(GuessState.EMPTY),
+        [reveal, word, secretWord]
+    );
 
     useEffect(() => {
         if (reveal && isCurrentRow) {
             setTimeout(() => {
                 disableBlockingAnimation();
-                if (guessStates.every(gs => gs === GuessState.GREEN)) {
+                if (guessStates.every((gs) => gs === GuessState.GREEN)) {
                     setRunningState(RunningState.WON);
                 } else if (reveal && isLastRow) {
                     setRunningState(RunningState.LOST);
                 }
-            }, TimesCSS.LETTER_FLIP_TRANSITION + (TimesCSS.LETTER_FLIP_DELAY-1) * Settings.MAX_LETTERS);
+            }, TimesCSS.LETTER_FLIP_TRANSITION + (TimesCSS.LETTER_FLIP_DELAY - 1) * Settings.MAX_LETTERS);
         }
 
         if (shouldBounce) {
@@ -66,7 +60,16 @@ const GameRow: React.FC<GameRowProps> = ({
                 disableBounceAnimation();
             }, TimesCSS.ROW_BAD_ANIMATION);
         }
-    }, [isCurrentRow, reveal, disableBlockingAnimation, shouldBounce, disableBounceAnimation, guessStates, isLastRow, setRunningState]);
+    }, [
+        isCurrentRow,
+        reveal,
+        disableBlockingAnimation,
+        shouldBounce,
+        disableBounceAnimation,
+        guessStates,
+        isLastRow,
+        setRunningState,
+    ]);
 
     useEffect(() => {
         if ((reveal && isCurrentRow) || beforeCurrentRow) {
@@ -86,17 +89,19 @@ const GameRow: React.FC<GameRowProps> = ({
 
     return (
         <div className={`game-row ${shouldBounce ? 'bounce-bad' : ''}`}>
-            {Array(Settings.MAX_LETTERS).fill(0).map((_, i) => (
-                <LetterBox 
-                    key={i}
-                    character={i < word.length ? word[i] : ''}
-                    guessState={guessStates[i]}
-                    position={i}
-                    reveal={i < word.length ? reveal : false}
-                />
-            ))}
+            {Array(Settings.MAX_LETTERS)
+                .fill(0)
+                .map((_, i) => (
+                    <LetterBox
+                        key={i}
+                        character={i < word.length ? word[i] : ''}
+                        guessState={guessStates[i]}
+                        position={i}
+                        reveal={i < word.length ? reveal : false}
+                    />
+                ))}
         </div>
     );
-}
+};
 
 export default memo(GameRow);

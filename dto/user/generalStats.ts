@@ -1,5 +1,4 @@
-export interface GeneralStatsDto
-{
+export interface GeneralStatsDto {
     wonLevels: number;
     lostLevels: number;
     currentLevel: number;

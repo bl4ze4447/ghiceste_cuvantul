@@ -1,7 +1,6 @@
-import { RunningState } from "@/constants/constants";
+import { RunningState } from '@/constants/constants';
 
-export interface GameLevelDto
-{
+export interface GameLevelDto {
     currentLevel: number;
     wonLevels: number;
     lostLevels: number;
@@ -9,4 +8,5 @@ export interface GameLevelDto
     currentRow: number;
     rowsDisplayed: boolean[];
     runningState: RunningState;
+    test: string;
 }

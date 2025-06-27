@@ -1,35 +1,35 @@
 export enum RunningState {
     WON,
     LOST,
-    PLAYING
-};
-  
+    PLAYING,
+}
+
 export enum GuessState {
     EMPTY,
     GRAY,
     YELLOW,
-    GREEN
-};
-  
+    GREEN,
+}
+
 export enum Settings {
     MAX_LETTERS = 5,
     MAX_ROWS = 6,
-};
+}
 
 export enum AccountLoad {
     LOADING,
     LOGGED,
-    NOT_LOGGED
+    NOT_LOGGED,
 }
 
 export enum ModalAnswer {
     NO,
-    YES
-};
+    YES,
+}
 
 export enum GameMode {
     LEVEL,
-    DAILY
+    DAILY,
 }
 
 // Milliseconds
@@ -37,5 +37,5 @@ export const TimesCSS = {
     LETTER_FLIP_DELAY: 300, // Found in LetterBox.js
     LETTER_FLIP_TRANSITION: 500, // Found in LetterBox.css
     LETTER_BOUNCE: 300, // Found in LetterBox.css and js
-    ROW_BAD_ANIMATION: 555 // Found in GameRow.js and css
+    ROW_BAD_ANIMATION: 555, // Found in GameRow.js and css
 };

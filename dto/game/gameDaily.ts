@@ -1,7 +1,6 @@
-import { RunningState } from "@/constants/constants";
+import { RunningState } from '@/constants/constants';
 
-export interface GameDailyDto
-{
+export interface GameDailyDto {
     wonDaily: number;
     lostDaily: number;
     words: string[];

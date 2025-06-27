@@ -1,131 +1,130 @@
-'use client'
+'use client';
 
 import '@/components/account/AccountRelated.css';
 
-import { useEffect, useState }     from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { AccountLoad } from '@/constants/constants';
 import { authorizedFetch } from '@/utils/authorizedFetch';
 import Card from '@/components/Card';
 import Loading from '@/components/Loading';
 
 const Account = () => {
-    const router = useRouter();
-    useEffect(() => {
-        // router.replace('/');
-        // return;
-        async function isLoggedIn() {
-            const response = await authorizedFetch("http://localhost:5224/api/auth/is-logged-in", {
-                method: "GET",
-                headers: {
-                "Content-Type": "application/json"
-                },
-                credentials: 'include'
-            });
-            if (!response.ok) {
-                if (response.headers.get("Content-Length") === "0") {
-                    setError("Beep boop, există o problemă");
-                } else {
-                    setError("Sesiunea a expirat");
-                }
-                
-                setTimeout(() => {
-                    router.replace('/cont/login');
-                }, 2000);
-                setLoggedIn(AccountLoad.NOT_LOGGED);
-                return;
-            }
+    // const router = useRouter();
+    // useEffect(() => {
+    //     // router.replace('/');
+    //     // return;
+    //     async function isLoggedIn() {
+    //         const response = await authorizedFetch('http://localhost:5224/api/auth/is-logged-in', {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             credentials: 'include',
+    //         });
+    //         if (!response.ok) {
+    //             if (response.headers.get('Content-Length') === '0') {
+    //                 setError('Beep boop, există o problemă');
+    //             } else {
+    //                 setError('Sesiunea a expirat');
+    //             }
 
-            setError('');
-            setLoggedIn(AccountLoad.LOGGED);
-        }
-        isLoggedIn();
-    }, []);
+    //             setTimeout(() => {
+    //                 router.replace('/cont/login');
+    //             }, 2000);
+    //             setLoggedIn(AccountLoad.NOT_LOGGED);
+    //             return;
+    //         }
 
-    async function logout() {
-        try {
-            const response = await authorizedFetch("http://localhost:5224/api/auth/logout", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                credentials: 'include'
-            });
+    //         setError('');
+    //         setLoggedIn(AccountLoad.LOGGED);
+    //     }
+    //     isLoggedIn();
+    // }, []);
 
-            if (!response.ok) throw new Error("This should not have an error but it did");
-            setError("Ai ieșit din cont");
-            setLoggedIn(AccountLoad.NOT_LOGGED);
-            localStorage.setItem('accessToken', '');
-            setTimeout(() => router.replace('/cont/login'), 2000);
-        } catch (err: any) {
-            setError("Raportează la administrator: " + err.toString());
-            localStorage.removeItem("accessToken");
-        }
-    }
+    // async function logout() {
+    //     try {
+    //         const response = await authorizedFetch('http://localhost:5224/api/auth/logout', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             credentials: 'include',
+    //         });
 
-    const [username, setUsername]   = useState('');
-    const [email,    setEmail]      = useState('');
-    const [error,    setError]      = useState('');
-    const [loggedIn, setLoggedIn]   = useState(AccountLoad.LOADING);
-    const [userRetrieved, setUserRetrieved] = useState(false);
-    const [gsRetrieved, SetGsRetrieved] = useState(false);
-    const [generalStats, setGeneralStats] = useState({
-        wonLevels: 0,
-        lostLevels: 0,
-        currentLevel: 0,
-        wonDaily: 0,
-        lostDaily: 0
-    });
+    //         if (!response.ok) throw new Error('This should not have an error but it did');
+    //         setError('Ai ieșit din cont');
+    //         setLoggedIn(AccountLoad.NOT_LOGGED);
+    //         localStorage.setItem('accessToken', '');
+    //         setTimeout(() => router.replace('/cont/login'), 2000);
+    //     } catch (err: any) {
+    //         setError('Raportează la administrator: ' + err.toString());
+    //         localStorage.removeItem('accessToken');
+    //     }
+    // }
 
-    useEffect(() => {
-        if (loggedIn !== AccountLoad.LOGGED)
-            return;
+    // const [username, setUsername] = useState('');
+    // const [email, setEmail] = useState('');
+    // const [error, setError] = useState('');
+    // const [loggedIn, setLoggedIn] = useState(AccountLoad.LOADING);
+    // const [userRetrieved, setUserRetrieved] = useState(false);
+    // const [gsRetrieved, SetGsRetrieved] = useState(false);
+    // const [generalStats, setGeneralStats] = useState({
+    //     wonLevels: 0,
+    //     lostLevels: 0,
+    //     currentLevel: 0,
+    //     wonDaily: 0,
+    //     lostDaily: 0,
+    // });
 
-        async function getUserData() {
-            try {
-                const response = await authorizedFetch("http://localhost:5224/api/user/", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                });
+    // useEffect(() => {
+    //     if (loggedIn !== AccountLoad.LOGGED) return;
 
-                if (!response.ok) throw new Error("Failed to fetch user data");
+    //     async function getUserData() {
+    //         try {
+    //             const response = await authorizedFetch('http://localhost:5224/api/user/', {
+    //                 method: 'GET',
+    //                 headers: {
+    //                     'Content-Type': 'application/json',
+    //                 },
+    //             });
 
-                const data = await response.json();
-                setUsername(data.user.username);
-                setEmail(data.user.emailAddress);
-                setUserRetrieved(true);
-            } catch (_) {
-                setError("Sesiunea a expirat");
-                localStorage.removeItem("accessToken");
-                setTimeout(() => router.replace('/cont/login'), 2000);
-            }
-        }
+    //             if (!response.ok) throw new Error('Failed to fetch user data');
 
-        async function getGeneralStats() {
-            try {
-                const response = await authorizedFetch("http://localhost:5224/api/user/stats", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                });
+    //             const data = await response.json();
+    //             setUsername(data.user.username);
+    //             setEmail(data.user.emailAddress);
+    //             setUserRetrieved(true);
+    //         } catch (_) {
+    //             setError('Sesiunea a expirat');
+    //             localStorage.removeItem('accessToken');
+    //             setTimeout(() => router.replace('/cont/login'), 2000);
+    //         }
+    //     }
 
-                if (!response.ok) throw new Error("Failed to fetch stats");
-                const data = await response.json();
-                setGeneralStats(data.generalStats);
-                SetGsRetrieved(true);
-            } catch (_) {
-                setError("Sesiunea a expirat");
-                localStorage.removeItem("accessToken");
-                setTimeout(() => router.replace('/cont/login'), 2000);
-            }
-        }
+    //     async function getGeneralStats() {
+    //         try {
+    //             const response = await authorizedFetch('http://localhost:5224/api/user/stats', {
+    //                 method: 'GET',
+    //                 headers: {
+    //                     'Content-Type': 'application/json',
+    //                 },
+    //             });
 
-        getUserData();   
-        getGeneralStats();    
-    }, [loggedIn]);
+    //             if (!response.ok) throw new Error('Failed to fetch stats');
+    //             const data = await response.json();
+    //             setGeneralStats(data.generalStats);
+    //             SetGsRetrieved(true);
+    //         } catch (_) {
+    //             setError('Sesiunea a expirat');
+    //             localStorage.removeItem('accessToken');
+    //             setTimeout(() => router.replace('/cont/login'), 2000);
+    //         }
+    //     }
+
+    //     getUserData();
+    //     getGeneralStats();
+    // }, [loggedIn]);
 
     return (
         <section className="account-wrapper">
@@ -202,7 +201,7 @@ const Account = () => {
             )} */}
             <p>Coming soon</p>
         </section>
-    )
-}
+    );
+};
 
 export default Account;

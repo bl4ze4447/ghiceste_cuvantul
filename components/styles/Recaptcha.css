@@ -1,14 +1,15 @@
 .recaptcha-container {
-  text-align: center;
-  margin: 0 20px;
-}
-.recaptcha-container small, .recaptcha-container small a {
     text-align: center;
-    font-family: "Exo 2", sans-serif;
+    margin: 0 20px;
+}
+.recaptcha-container small,
+.recaptcha-container small a {
+    text-align: center;
+    font-family: 'Exo 2', sans-serif;
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.85);
     padding: 0;
-  }
-  .recaptcha-container small a {
+}
+.recaptcha-container small a {
     color: #3d75e7;
-  }
+}
