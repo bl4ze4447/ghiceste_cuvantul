@@ -1,7 +1,7 @@
 'use client';
 
 import { GameMode, GuessState, Settings } from '@/constants/constants';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import './GameEndModal.css';
 import { FaCheck } from 'react-icons/fa6';
 import { IoCopy } from 'react-icons/io5';
@@ -36,7 +36,7 @@ const stateToEmoji = (state: GuessState): string => {
 const convertGridToEmoji = (grid: GuessState[][], level: number | null): string => {
     const levelText = level !== null ? 'nivelul ' + level.toString() : 'cuvântul zilei';
 
-    let resultRows: string[] = [];
+    const resultRows: string[] = [];
     for (const row of grid) {
         const emojiRow = row.map(stateToEmoji).join('');
         resultRows.push(emojiRow);
@@ -60,14 +60,16 @@ const GameEndModal: React.FC<GameEndModalProps> = ({
     const [shouldRender, setShouldRender] = useState(false);
     const [copied, setCopied] = useState(false);
     const [word, setWord] = useState('');
-    const timeouts: NodeJS.Timeout[] = [];
+    const timeouts = useRef<NodeJS.Timeout[]>([]);
+
     useEffect(() => {
         return () => {
-            timeouts.forEach(clearTimeout);
+            timeouts.current.forEach(clearTimeout);
+            timeouts.current = [];
         };
     }, []);
 
-    const secretWordChecked = async () => {
+    const secretWordChecked = useCallback(async () => {
         const value: string | null =
             gameMode === GameMode.LEVEL
                 ? localStorage.getItem('level-sw')
@@ -86,11 +88,11 @@ const GameEndModal: React.FC<GameEndModalProps> = ({
         if (gameMode === GameMode.LEVEL) localStorage.setItem('level-sw', result.message);
         else localStorage.setItem('daily-sw', result.message);
         setWord(result.message);
-    };
+    }, [setWord, gameMode]);
 
     useEffect(() => {
         if (visible) {
-            timeouts.push(
+            timeouts.current.push(
                 setTimeout(() => {
                     setShouldRender(true);
                 }, 2250)
@@ -98,9 +100,9 @@ const GameEndModal: React.FC<GameEndModalProps> = ({
 
             secretWordChecked();
         } else {
-            timeouts.push(setTimeout(() => setShouldRender(false), 10));
+            timeouts.current.push(setTimeout(() => setShouldRender(false), 10));
         }
-    }, [visible]);
+    }, [visible, secretWordChecked]);
 
     const handleShare = () => {
         const result = convertGridToEmoji(guessGrid, level);

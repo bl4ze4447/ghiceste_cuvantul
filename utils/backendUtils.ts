@@ -63,7 +63,7 @@ function newFetchStatisticsResult(
 }
 
 export async function isLogged() {
-    let csrfToken: string | null = localStorage.getItem('csrfToken');
+    const csrfToken: string | null = localStorage.getItem('csrfToken');
     if (csrfToken == null) return newFetchResult(false, 'Sesiunea a expirat!');
 
     try {
@@ -305,7 +305,7 @@ export async function login(emailAddress: string, password: string, phoneNumber:
 }
 
 export async function logout() {
-    let csrfToken: string | null = localStorage.getItem('csrfToken');
+    const csrfToken: string | null = localStorage.getItem('csrfToken');
     if (csrfToken == null) return newFetchResult(false, 'Sesiunea a expirat!');
 
     try {
@@ -334,7 +334,7 @@ export async function logout() {
 }
 
 export async function deleteAccount(emailAddress: string, password: string, phoneNumber: string) {
-    let csrfToken: string | null = localStorage.getItem('csrfToken');
+    const csrfToken: string | null = localStorage.getItem('csrfToken');
     if (csrfToken == null) return newFetchResult(false, 'Sesiunea a expirat!');
 
     if (emailAddress.trim().length == 0)
@@ -395,7 +395,7 @@ function extractErrorMessage(data: any): string {
 }
 
 export async function getLastDaily() {
-    let csrfToken: string | null = localStorage.getItem('csrfToken');
+    const csrfToken: string | null = localStorage.getItem('csrfToken');
     if (csrfToken == null) return newFetchGameResult(false, null, 'Sesiunea a expirat!');
 
     try {
@@ -426,7 +426,7 @@ export async function getLastDaily() {
 }
 
 export async function getLastLevel() {
-    let csrfToken: string | null = localStorage.getItem('csrfToken');
+    const csrfToken: string | null = localStorage.getItem('csrfToken');
     if (csrfToken == null) return newFetchGameResult(false, null, 'Sesiunea a expirat!');
 
     try {
@@ -457,7 +457,7 @@ export async function getLastLevel() {
 }
 
 export async function updateLastDaily(word: string, signature: string) {
-    let csrfToken: string | null = localStorage.getItem('csrfToken');
+    const csrfToken: string | null = localStorage.getItem('csrfToken');
     if (csrfToken == null) return newFetchGameResult(false, null, 'Sesiunea a expirat!');
 
     try {
@@ -495,7 +495,7 @@ export async function updateLastDaily(word: string, signature: string) {
 }
 
 export async function updateLastLevel(word: string, signature: string) {
-    let csrfToken: string | null = localStorage.getItem('csrfToken');
+    const csrfToken: string | null = localStorage.getItem('csrfToken');
     if (csrfToken == null) return newFetchGameResult(false, null, 'Sesiunea a expirat!');
 
     try {
@@ -533,7 +533,7 @@ export async function updateLastLevel(word: string, signature: string) {
 }
 
 export async function getStatistics() {
-    let csrfToken: string | null = localStorage.getItem('csrfToken');
+    const csrfToken: string | null = localStorage.getItem('csrfToken');
     if (csrfToken == null) return newFetchStatisticsResult(false, null, 'Sesiunea a expirat!');
 
     try {
@@ -565,7 +565,7 @@ export async function getStatistics() {
 }
 
 export async function secretWord(gameMode: GameMode) {
-    let csrfToken: string | null = localStorage.getItem('csrfToken');
+    const csrfToken: string | null = localStorage.getItem('csrfToken');
     if (csrfToken == null) return newFetchResult(false, 'Sesiunea a expirat!');
 
     try {

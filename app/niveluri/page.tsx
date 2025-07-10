@@ -7,7 +7,6 @@ import { usePersistentStats } from '@/hooks/usePersistentStats';
 import { GameMode, GuessState, RunningState, Settings } from '@/constants/constants';
 
 import { useState, useCallback, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import BackButton from '@/components/BackButton';
 import GameEndModal from '@/components/game/GameEndModal';
 

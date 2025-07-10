@@ -1,6 +1,6 @@
 import './styles/Footer.css';
 
-import { FaHeart, FaGithub, FaDiscord } from 'react-icons/fa6';
+import { FaHeart, FaGithub } from 'react-icons/fa6';
 
 const Footer = () => {
     return (

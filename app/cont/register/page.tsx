@@ -13,10 +13,18 @@ import BackButton from '@/components/BackButton';
 
 const Login = () => {
     const router = useRouter();
-    const timeouts: NodeJS.Timeout[] = [];
+    const timeouts = useRef<NodeJS.Timeout[]>([]);
+
     useEffect(() => {
         return () => {
-            timeouts.forEach(clearTimeout);
+            timeouts.current.forEach(clearTimeout);
+            timeouts.current = [];
+        };
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            timeouts.current.forEach(clearTimeout);
         };
     }, []);
 
@@ -42,7 +50,7 @@ const Login = () => {
                     );
                     setTitle('Informație');
                     setShowNotification(true);
-                    timeouts.push(
+                    timeouts.current.push(
                         setTimeout(() => {
                             router.push('/cont');
                         }, 1000)
@@ -58,7 +66,7 @@ const Login = () => {
             setShowNotification(false);
             setIsLoading(false);
         });
-    }, []);
+    }, [router]);
 
     const registerChecked = async () => {
         const phoneNumber = (
@@ -108,7 +116,7 @@ const Login = () => {
         );
         setTitle('Succes!');
         setIsLoading(false);
-        timeouts.push(
+        timeouts.current.push(
             setTimeout(() => {
                 router.push('/cont/login');
             }, 5200)

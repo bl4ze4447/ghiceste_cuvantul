@@ -1,15 +1,13 @@
 'use client';
 
-import { GameMode, GuessState, Settings } from '@/constants/constants';
-import React, { useEffect, useState } from 'react';
+import { GuessState, Settings } from '@/constants/constants';
+import React, { useEffect, useRef, useState } from 'react';
 import './GameEndModal.css';
 import { FaCheck } from 'react-icons/fa6';
 import { IoCopy } from 'react-icons/io5';
-import { IoArrowRedo } from 'react-icons/io5';
 import { IoClose } from 'react-icons/io5';
 
 import './LevelBar.css';
-import { secretWord } from '@/utils/backendUtils';
 import Link from 'next/link';
 
 interface GameEndModalDemoProps {
@@ -34,7 +32,7 @@ const stateToEmoji = (state: GuessState): string => {
 const convertGridToEmoji = (grid: GuessState[][]): string => {
     const levelText = 'demo';
 
-    let resultRows: string[] = [];
+    const resultRows: string[] = [];
     for (const row of grid) {
         const emojiRow = row.map(stateToEmoji).join('');
         resultRows.push(emojiRow);
@@ -51,10 +49,12 @@ const GameEndModalDemo: React.FC<GameEndModalDemoProps> = ({ visible, isWin, gue
     const [shouldRender, setShouldRender] = useState(false);
     const [copied, setCopied] = useState(false);
     const [word, setWord] = useState('');
-    const timeouts: NodeJS.Timeout[] = [];
+    const timeouts = useRef<NodeJS.Timeout[]>([]);
+
     useEffect(() => {
         return () => {
-            timeouts.forEach(clearTimeout);
+            timeouts.current.forEach(clearTimeout);
+            timeouts.current = [];
         };
     }, []);
 
@@ -64,7 +64,7 @@ const GameEndModalDemo: React.FC<GameEndModalDemoProps> = ({ visible, isWin, gue
 
     useEffect(() => {
         if (visible) {
-            timeouts.push(
+            timeouts.current.push(
                 setTimeout(() => {
                     setShouldRender(true);
                 }, 2250)
@@ -72,7 +72,7 @@ const GameEndModalDemo: React.FC<GameEndModalDemoProps> = ({ visible, isWin, gue
 
             secretWordChecked();
         } else {
-            timeouts.push(setTimeout(() => setShouldRender(false), 10));
+            timeouts.current.push(setTimeout(() => setShouldRender(false), 10));
         }
     }, [visible]);
 

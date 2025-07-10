@@ -77,20 +77,13 @@ const GameGrid: React.FC<GameGridProps> = ({
 
     const disableBlockingAnimation = useCallback(() => {
         setBlockingAnimation(false);
-    }, []);
+    }, [setBlockingAnimation]);
 
     const updateCurrentWord = useCallback(
         (word: string) => {
             setWords((prevWords) => prevWords.map((w, i) => (i === currentRow ? word : w)));
         },
-        [currentRow]
-    );
-
-    const updateCurrentRowDisplay = useCallback(
-        (displayRow: boolean) => {
-            setShowRow((prev) => prev.map((val, i) => (i === currentRow ? displayRow : val)));
-        },
-        [currentRow]
+        [currentRow, setWords]
     );
 
     const handleGameKeyPress = useCallback(
@@ -190,10 +183,18 @@ const GameGrid: React.FC<GameGridProps> = ({
             currentRow,
             words,
             runningState,
-            guessStates,
             blockingAnimation,
             updateCurrentWord,
-            updateCurrentRowDisplay,
+            setBlockingAnimation,
+            setCurrentLevel,
+            setCurrentRow,
+            setGamesLost,
+            setGamesWon,
+            setGuessStates,
+            setRunningState,
+            setShowRow,
+            setSignature,
+            setWords,
         ]
     );
 
@@ -212,7 +213,7 @@ const GameGrid: React.FC<GameGridProps> = ({
             handleGameKeyPress(virtualKeys[0]);
             consumeFirstKey();
         }
-    }, [virtualKeys]);
+    }, [virtualKeys, consumeFirstKey, handleGameKeyPress]);
 
     useEffect(() => {
         if (!isInvalidWord) return;

@@ -13,10 +13,12 @@ import BackButton from '@/components/BackButton';
 
 const Login = () => {
     const router = useRouter();
-    const timeouts: NodeJS.Timeout[] = [];
+    const timeouts = useRef<NodeJS.Timeout[]>([]);
+
     useEffect(() => {
         return () => {
-            timeouts.forEach(clearTimeout);
+            timeouts.current.forEach(clearTimeout);
+            timeouts.current = [];
         };
     }, []);
 
@@ -77,7 +79,7 @@ const Login = () => {
         setShowNotification(true);
         setDescription('Vei fi redirecționat către pagina contului tău!');
         setTitle('Succes!');
-        timeouts.push(
+        timeouts.current.push(
             setTimeout(() => {
                 router.push('/cont');
             }, 1000)

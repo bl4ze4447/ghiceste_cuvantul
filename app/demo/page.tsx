@@ -6,19 +6,15 @@ import { GameMode, GuessState, RunningState } from '@/constants/constants';
 
 import Keyboard from '@/components/Keyboard';
 import LevelBar from '@/components/game/LevelBar';
-import GameGrid from '@/components/game/GameGrid';
 
 import { useState, useCallback, useEffect } from 'react';
 
 import { usePersistentStats } from '@/hooks/usePersistentStats';
-import { useRouter } from 'next/navigation';
 import BackButton from '@/components/BackButton';
-import GameEndModal from '@/components/game/GameEndModal';
 import GameGridDemo from '@/components/game/GameGridDemo';
 import GameEndModalDemo from '@/components/game/GameEndModalDemo';
 
 function DailyGame() {
-    const router = useRouter();
     // Used by the on-screen keyboard to send input
     const [virtualKeys, setVirtualKeys] = useState<string[]>([]);
 

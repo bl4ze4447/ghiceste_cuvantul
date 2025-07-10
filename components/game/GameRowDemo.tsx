@@ -48,7 +48,7 @@ const GameRowDemo: React.FC<GameRowDemoProps> = ({
 
     useEffect(() => {
         setGuessStates(row, guessStates);
-    }, [guessStates]);
+    }, [guessStates, row, setGuessStates]);
 
     useEffect(() => {
         if (reveal && isCurrentRow) {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Card from '@/components/Card';
 import GameRow from '@/components/game/GameRow';
 import './htp.css';
@@ -10,16 +10,18 @@ import { FaCircleCheck, FaCircleXmark } from 'react-icons/fa6';
 import BackButton from '@/components/BackButton';
 
 function HowToPlay() {
-    const timeouts: NodeJS.Timeout[] = [];
+    const timeouts = useRef<NodeJS.Timeout[]>([]);
+
     useEffect(() => {
         return () => {
-            timeouts.forEach(clearTimeout);
+            timeouts.current.forEach(clearTimeout);
+            timeouts.current = [];
         };
     }, []);
     const exampleMixed = 'CARTE';
 
     const [reveal, setReveal] = useState(true);
-    const [guessStates, _] = useState([
+    const [guessStates] = useState([
         GuessState.GREEN,
         GuessState.YELLOW,
         GuessState.EMPTY,
@@ -29,17 +31,9 @@ function HowToPlay() {
     const [key, setKey] = useState(0);
 
     const handlePlay = () => {
-        const gs = Array.from([
-            GuessState.GREEN,
-            GuessState.YELLOW,
-            GuessState.EMPTY,
-            GuessState.EMPTY,
-            GuessState.EMPTY,
-        ]);
-
         setReveal(false);
         setKey((prev) => prev + 1);
-        timeouts.push(setTimeout(() => setReveal(true), 50));
+        timeouts.current.push(setTimeout(() => setReveal(true), 50));
     };
 
     return (

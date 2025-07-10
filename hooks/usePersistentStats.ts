@@ -35,14 +35,14 @@ export function usePersistentStats(gameMode: GameMode, demo: boolean = false) {
     const [signature, setSignature] = useState('');
     useEffect(() => {
         const savedLevel = localStorage.getItem('level-current');
-        let savedLostLevels = localStorage.getItem('level-lost');
-        let savedWonLevels = localStorage.getItem('level-won');
+        const savedLostLevels = localStorage.getItem('level-lost');
+        const savedWonLevels = localStorage.getItem('level-won');
 
         const savedLostDaily = localStorage.getItem('daily-lost');
         const savedWonDaily = localStorage.getItem('daily-won');
 
-        let savedWonDemo = localStorage.getItem('demo-won');
-        let savedLostDemo = localStorage.getItem('demo-lost');
+        const savedWonDemo = localStorage.getItem('demo-won');
+        const savedLostDemo = localStorage.getItem('demo-lost');
 
         let savedSignature: string | null;
         let savedGuessedDaily: string | null;

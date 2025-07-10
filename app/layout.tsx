@@ -45,7 +45,6 @@ export default function RootLayout({
             <body>
                 {children}
                 <Analytics />
-                <script src="https://www.google.com/recaptcha/api.js?render=6LdUV3wrAAAAAMLB5ezt-r8dwer-iSslouK3edau"></script>
             </body>
         </html>
     );

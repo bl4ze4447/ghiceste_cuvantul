@@ -1,6 +1,5 @@
 'use client';
 
-import { IoClose } from 'react-icons/io5';
 import './styles/BackButton.css';
 import Link from 'next/link';
 

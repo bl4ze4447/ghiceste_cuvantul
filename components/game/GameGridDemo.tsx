@@ -2,14 +2,12 @@
 
 import '../styles/GameGrid.css';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 
-import Info from '../Info';
-
-import { Settings, GameMode, GuessState, RunningState } from '@/constants/constants';
+import { Settings, GuessState, RunningState } from '@/constants/constants';
 import { WORDLIST } from '@/constants/wordlist';
 import GameRowDemo from './GameRowDemo';
 
@@ -61,25 +59,28 @@ const GameGridDemo: React.FC<GameGridDemoProps> = ({
 
     const disableBlockingAnimation = useCallback(() => {
         setBlockingAnimation(false);
-    }, []);
+    }, [setBlockingAnimation]);
 
     const updateCurrentWord = useCallback(
         (word: string) => {
             setWords((prevWords) => prevWords.map((w, i) => (i === currentRow ? word : w)));
         },
-        [currentRow]
+        [currentRow, setWords]
     );
 
     const updateCurrentRowDisplay = useCallback(
         (displayRow: boolean) => {
             setRowsDisplayed((prev) => prev.map((val, i) => (i === currentRow ? displayRow : val)));
         },
-        [currentRow]
+        [currentRow, setRowsDisplayed]
     );
 
-    const updateCurrentGuessState = useCallback((idx: number, guessState: GuessState[]) => {
-        setGuessStates((prev) => prev.map((val, i) => (i === idx ? guessState : val)));
-    }, []);
+    const updateCurrentGuessState = useCallback(
+        (idx: number, guessState: GuessState[]) => {
+            setGuessStates((prev) => prev.map((val, i) => (i === idx ? guessState : val)));
+        },
+        [setGuessStates]
+    );
 
     const handleGameKeyPress = useCallback(
         (key: string) => {
@@ -120,6 +121,8 @@ const GameGridDemo: React.FC<GameGridDemoProps> = ({
             blockingAnimation,
             updateCurrentWord,
             updateCurrentRowDisplay,
+            setBlockingAnimation,
+            setCurrentRow,
         ]
     );
 
@@ -138,7 +141,7 @@ const GameGridDemo: React.FC<GameGridDemoProps> = ({
             handleGameKeyPress(virtualKeys[0]);
             consumeFirstKey();
         }
-    }, [virtualKeys]);
+    }, [virtualKeys, consumeFirstKey, handleGameKeyPress]);
 
     useEffect(() => {
         if (!isInvalidWord) return;
@@ -163,7 +166,7 @@ const GameGridDemo: React.FC<GameGridDemoProps> = ({
         return () => {
             clearTimeout(timeout);
         };
-    }, [runningState]);
+    }, [runningState, setGamesWon, setGamesLost]);
 
     return (
         <>

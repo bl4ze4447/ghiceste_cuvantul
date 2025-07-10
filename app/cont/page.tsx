@@ -2,7 +2,7 @@
 
 import '@/components/account/AccountRelated.css';
 
-import { SetStateAction, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AccountLoad, ModalAnswer } from '@/constants/constants';
 import Card from '@/components/Card';
@@ -15,10 +15,12 @@ import ConfirmModal from '@/components/ConfirmModal';
 
 const Account = () => {
     const router = useRouter();
-    const timeouts: NodeJS.Timeout[] = [];
+    const timeouts = useRef<NodeJS.Timeout[]>([]);
+
     useEffect(() => {
         return () => {
-            timeouts.forEach(clearTimeout);
+            timeouts.current.forEach(clearTimeout);
+            timeouts.current = [];
         };
     }, []);
 
@@ -33,7 +35,7 @@ const Account = () => {
                     setError(result.message);
                     setLoggedIn(AccountLoad.NOT_LOGGED);
                     setBottomMessage('Vei fi redirecționat să te autentifici');
-                    timeouts.push(
+                    timeouts.current.push(
                         setTimeout(() => {
                             router.push('/cont/login');
                         }, 1000)
@@ -48,7 +50,7 @@ const Account = () => {
             setError('');
             setBottomMessage('');
         });
-    }, []);
+    }, [router]);
 
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
@@ -56,15 +58,6 @@ const Account = () => {
     const [loggedIn, setLoggedIn] = useState(AccountLoad.LOADING);
     const [accountDeletionModal, setAccountDeletionModal] = useState<ModalAnswer | null>(null);
     const [modalVisible, setModalVisible] = useState(false);
-
-    useEffect(() => {
-        if (accountDeletionModal === null) return;
-
-        if (accountDeletionModal === ModalAnswer.YES) {
-            deleteChecked();
-            setAccountDeletionModal(null);
-        }
-    }, [accountDeletionModal, modalVisible]);
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -120,14 +113,14 @@ const Account = () => {
         setBottomMessage('Vei fi redirecționat către meniul principal!');
         setError('Ai fost deconectat!');
         setLoggedIn(AccountLoad.NOT_LOGGED);
-        timeouts.push(
+        timeouts.current.push(
             setTimeout(() => {
                 router.push('/');
             }, 1500)
         );
     };
 
-    const deleteChecked = async () => {
+    const deleteChecked = useCallback(async () => {
         if (loggedIn !== AccountLoad.LOGGED) return;
 
         const phoneNumber = (
@@ -159,12 +152,21 @@ const Account = () => {
         setBottomMessage('Vei fi redirecționat către meniul principal!');
         setError('Contul a fost șters!');
         setLoggedIn(AccountLoad.NOT_LOGGED);
-        timeouts.push(
+        timeouts.current.push(
             setTimeout(() => {
                 router.push('/');
             }, 1500)
         );
-    };
+    }, [email, loggedIn, password, router]);
+
+    useEffect(() => {
+        if (accountDeletionModal === null) return;
+
+        if (accountDeletionModal === ModalAnswer.YES) {
+            deleteChecked();
+            setAccountDeletionModal(null);
+        }
+    }, [accountDeletionModal, modalVisible, deleteChecked]);
 
     return (
         <section className="account-wrapper">
