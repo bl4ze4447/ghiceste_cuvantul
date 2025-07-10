@@ -1,10 +1,12 @@
-import { RunningState } from '@/constants/constants';
+import { GuessState, RunningState } from '@/constants/constants';
 
 export interface GameDailyDto {
-    wonDaily: number;
-    lostDaily: number;
     words: string[];
-    currentRow: number;
-    rowsDisplayed: boolean[];
     runningState: RunningState;
+    showRow: boolean[];
+    guessStates: GuessState[][];
+    currentRow: number;
+    wonDailies: number;
+    lostDailies: number;
+    signature: string;
 }

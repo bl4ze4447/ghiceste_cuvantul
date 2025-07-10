@@ -2,204 +2,645 @@
 
 import '@/components/account/AccountRelated.css';
 
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { AccountLoad } from '@/constants/constants';
-import { authorizedFetch } from '@/utils/authorizedFetch';
+import { AccountLoad, ModalAnswer } from '@/constants/constants';
 import Card from '@/components/Card';
 import Loading from '@/components/Loading';
+import Notification from '@/components/Notification';
+import { deleteAccount, isLogged, logout, getStatistics } from '@/utils/backendUtils';
+import { StatisticsDto } from '@/dto/statistics';
+import BackButton from '@/components/BackButton';
+import ConfirmModal from '@/components/ConfirmModal';
 
 const Account = () => {
-    // const router = useRouter();
-    // useEffect(() => {
-    //     // router.replace('/');
-    //     // return;
-    //     async function isLoggedIn() {
-    //         const response = await authorizedFetch('http://localhost:5224/api/auth/is-logged-in', {
-    //             method: 'GET',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             credentials: 'include',
-    //         });
-    //         if (!response.ok) {
-    //             if (response.headers.get('Content-Length') === '0') {
-    //                 setError('Beep boop, există o problemă');
-    //             } else {
-    //                 setError('Sesiunea a expirat');
-    //             }
+    const router = useRouter();
+    const timeouts: NodeJS.Timeout[] = [];
+    useEffect(() => {
+        return () => {
+            timeouts.forEach(clearTimeout);
+        };
+    }, []);
 
-    //             setTimeout(() => {
-    //                 router.replace('/cont/login');
-    //             }, 2000);
-    //             setLoggedIn(AccountLoad.NOT_LOGGED);
-    //             return;
-    //         }
+    useEffect(() => {
+        isLogged().then((result) => {
+            if (result.ok === null || result.ok === false) {
+                if (result.ok === null) {
+                    setDescription(result.message);
+                    setShowNotification(true);
+                    setTitle('Problemă internă');
+                } else {
+                    setError(result.message);
+                    setLoggedIn(AccountLoad.NOT_LOGGED);
+                    setBottomMessage('Vei fi redirecționat să te autentifici');
+                    timeouts.push(
+                        setTimeout(() => {
+                            router.push('/cont/login');
+                        }, 1000)
+                    );
+                }
 
-    //         setError('');
-    //         setLoggedIn(AccountLoad.LOGGED);
-    //     }
-    //     isLoggedIn();
-    // }, []);
+                return;
+            }
 
-    // async function logout() {
-    //     try {
-    //         const response = await authorizedFetch('http://localhost:5224/api/auth/logout', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             credentials: 'include',
-    //         });
+            setShowNotification(false);
+            setLoggedIn(AccountLoad.LOGGED);
+            setError('');
+            setBottomMessage('');
+        });
+    }, []);
 
-    //         if (!response.ok) throw new Error('This should not have an error but it did');
-    //         setError('Ai ieșit din cont');
-    //         setLoggedIn(AccountLoad.NOT_LOGGED);
-    //         localStorage.setItem('accessToken', '');
-    //         setTimeout(() => router.replace('/cont/login'), 2000);
-    //     } catch (err: any) {
-    //         setError('Raportează la administrator: ' + err.toString());
-    //         localStorage.removeItem('accessToken');
-    //     }
-    // }
+    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [error, setError] = useState('');
+    const [loggedIn, setLoggedIn] = useState(AccountLoad.LOADING);
+    const [accountDeletionModal, setAccountDeletionModal] = useState<ModalAnswer | null>(null);
+    const [modalVisible, setModalVisible] = useState(false);
 
-    // const [username, setUsername] = useState('');
-    // const [email, setEmail] = useState('');
-    // const [error, setError] = useState('');
-    // const [loggedIn, setLoggedIn] = useState(AccountLoad.LOADING);
-    // const [userRetrieved, setUserRetrieved] = useState(false);
-    // const [gsRetrieved, SetGsRetrieved] = useState(false);
-    // const [generalStats, setGeneralStats] = useState({
-    //     wonLevels: 0,
-    //     lostLevels: 0,
-    //     currentLevel: 0,
-    //     wonDaily: 0,
-    //     lostDaily: 0,
-    // });
+    useEffect(() => {
+        if (accountDeletionModal === null) return;
 
-    // useEffect(() => {
-    //     if (loggedIn !== AccountLoad.LOGGED) return;
+        if (accountDeletionModal === ModalAnswer.YES) {
+            deleteChecked();
+            setAccountDeletionModal(null);
+        }
+    }, [accountDeletionModal, modalVisible]);
 
-    //     async function getUserData() {
-    //         try {
-    //             const response = await authorizedFetch('http://localhost:5224/api/user/', {
-    //                 method: 'GET',
-    //                 headers: {
-    //                     'Content-Type': 'application/json',
-    //                 },
-    //             });
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [showNotification, setShowNotification] = useState(false);
+    const [bottomMessage, setBottomMessage] = useState('');
 
-    //             if (!response.ok) throw new Error('Failed to fetch user data');
+    const [statistics, setStatistics] = useState<StatisticsDto | null>(null);
+    const [showAccountData, setShowAccountData] = useState(false);
 
-    //             const data = await response.json();
-    //             setUsername(data.user.username);
-    //             setEmail(data.user.emailAddress);
-    //             setUserRetrieved(true);
-    //         } catch (_) {
-    //             setError('Sesiunea a expirat');
-    //             localStorage.removeItem('accessToken');
-    //             setTimeout(() => router.replace('/cont/login'), 2000);
-    //         }
-    //     }
+    const getStatisticsChecked = async () => {
+        const result = await getStatistics();
+        setShowAccountData(true);
+        if (result.ok === null || result.ok === false) {
+            if (result.ok === null) {
+                setDescription(result.message);
+                setTitle('Problemă internă');
+            } else {
+                setDescription(result.message);
+                setTitle('Avertisment');
+            }
 
-    //     async function getGeneralStats() {
-    //         try {
-    //             const response = await authorizedFetch('http://localhost:5224/api/user/stats', {
-    //                 method: 'GET',
-    //                 headers: {
-    //                     'Content-Type': 'application/json',
-    //                 },
-    //             });
+            setShowNotification(true);
+            return;
+        }
 
-    //             if (!response.ok) throw new Error('Failed to fetch stats');
-    //             const data = await response.json();
-    //             setGeneralStats(data.generalStats);
-    //             SetGsRetrieved(true);
-    //         } catch (_) {
-    //             setError('Sesiunea a expirat');
-    //             localStorage.removeItem('accessToken');
-    //             setTimeout(() => router.replace('/cont/login'), 2000);
-    //         }
-    //     }
+        setStatistics(result.statistics);
+    };
 
-    //     getUserData();
-    //     getGeneralStats();
-    // }, [loggedIn]);
+    useEffect(() => {
+        if (loggedIn !== AccountLoad.LOGGED) return;
+
+        getStatisticsChecked();
+    }, [loggedIn]);
+
+    const logoutChecked = async () => {
+        if (loggedIn !== AccountLoad.LOGGED) return;
+
+        const result = await logout();
+        if (result.ok === null || result.ok === false) {
+            if (result.ok === null) {
+                setDescription(result.message);
+                setTitle('Problemă internă');
+            } else {
+                setDescription(result.message);
+                setTitle('Avertisment');
+            }
+
+            setShowNotification(true);
+            return;
+        }
+
+        setShowNotification(false);
+        setBottomMessage('Vei fi redirecționat către meniul principal!');
+        setError('Ai fost deconectat!');
+        setLoggedIn(AccountLoad.NOT_LOGGED);
+        timeouts.push(
+            setTimeout(() => {
+                router.push('/');
+            }, 1500)
+        );
+    };
+
+    const deleteChecked = async () => {
+        if (loggedIn !== AccountLoad.LOGGED) return;
+
+        const phoneNumber = (
+            document.querySelector('input[name="phone_number"]') as HTMLInputElement
+        )?.value;
+
+        if (phoneNumber && phoneNumber.trim() !== '') {
+            setTitle('Avertisment');
+            setDescription('Spam detectat!');
+            setShowNotification(true);
+            return;
+        }
+
+        const result = await deleteAccount(email, password, phoneNumber);
+        if (result.ok === null || result.ok === false) {
+            if (result.ok === null) {
+                setDescription(result.message);
+                setTitle('Problemă internă');
+            } else {
+                setDescription(result.message);
+                setTitle('Avertisment');
+            }
+
+            setShowNotification(true);
+            return;
+        }
+
+        setShowNotification(false);
+        setBottomMessage('Vei fi redirecționat către meniul principal!');
+        setError('Contul a fost șters!');
+        setLoggedIn(AccountLoad.NOT_LOGGED);
+        timeouts.push(
+            setTimeout(() => {
+                router.push('/');
+            }, 1500)
+        );
+    };
 
     return (
         <section className="account-wrapper">
-            {/* {loggedIn === AccountLoad.LOGGED && userRetrieved && gsRetrieved ? (
+            <BackButton />
+            <input
+                type="text"
+                name="phone_number"
+                style={{ display: 'none' }}
+                autoComplete="off"
+                tabIndex={-1}
+            />
+            {loggedIn === AccountLoad.LOGGED && showAccountData ? (
                 <div className="create-account">
-                    <h2 style={{ marginBottom: '20px', marginTop: '30px' }}>CONTUL TĂU</h2>
-                    <div className="ml-20 mr-20" style={{minWidth: '300px', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                    <h2 style={{ marginBottom: '20px' }}>CONTUL TĂU</h2>
+                    <div
+                        className="ml-20 mr-20"
+                        style={{
+                            minWidth: '300px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
                         <Card>
-                            <h4 style={{marginBottom: '6px'}}>Informații utilizator</h4>
+                            <h4 style={{ marginBottom: '15px', marginTop: '-6px' }}>
+                                Informații utilizator
+                            </h4>
                             <div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p className='p-account' style={{ margin: 0, textAlign: 'left', textDecoration: 'none' }}>Poreclă:</p>
-                                    <p className='exo' style={{ margin: 0, fontWeight: 'bold', textAlign: 'right' }}>{username}</p>
+                                    <p
+                                        className="p-account"
+                                        style={{
+                                            margin: 0,
+                                            textAlign: 'left',
+                                            textDecoration: 'none',
+                                        }}
+                                    >
+                                        Poreclă:
+                                    </p>
+                                    <p
+                                        className="exo"
+                                        style={{
+                                            margin: 0,
+                                            fontWeight: 'bold',
+                                            textAlign: 'right',
+                                        }}
+                                    >
+                                        {statistics !== null ? statistics.username : 'Indisponibil'}
+                                    </p>
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p className='p-account' style={{ margin: 0, textAlign: 'left', textDecoration: 'none' }}>Email:</p>
-                                    <p className='exo' style={{ margin: 0, fontWeight: 'bold', textAlign: 'right' }}>{email}</p>
+                                    <p
+                                        className="p-account"
+                                        style={{
+                                            margin: 0,
+                                            textAlign: 'left',
+                                            textDecoration: 'none',
+                                        }}
+                                    >
+                                        Email:
+                                    </p>
+                                    <p
+                                        className="exo"
+                                        style={{
+                                            margin: 0,
+                                            fontWeight: 'bold',
+                                            textAlign: 'right',
+                                        }}
+                                    >
+                                        {statistics !== null
+                                            ? statistics.emailAddress
+                                            : 'Indisponibil'}
+                                    </p>
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p className='p-account' style={{ margin: 0, textAlign: 'left', textDecoration: 'none' }}>Verificat:</p>
-                                    <p className='exo' style={{ margin: 0, fontWeight: 'bold', textAlign: 'right' }}>DA</p>
+                                    <p
+                                        className="p-account"
+                                        style={{
+                                            margin: 0,
+                                            textAlign: 'left',
+                                            textDecoration: 'none',
+                                        }}
+                                    >
+                                        Verificat:
+                                    </p>
+                                    <p
+                                        className="exo"
+                                        style={{
+                                            margin: 0,
+                                            fontWeight: 'bold',
+                                            textAlign: 'right',
+                                            color:
+                                                statistics && statistics.verified
+                                                    ? '#2ea200'
+                                                    : '#FF4C4C',
+                                        }}
+                                    >
+                                        {statistics !== null
+                                            ? statistics.verified
+                                                ? 'DA'
+                                                : 'NU'
+                                            : 'Indisponibil'}
+                                    </p>
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <p
+                                        className="p-account"
+                                        style={{
+                                            margin: 0,
+                                            textAlign: 'left',
+                                            textDecoration: 'none',
+                                        }}
+                                    >
+                                        Restricționat:
+                                    </p>
+                                    <p
+                                        className="exo"
+                                        style={{
+                                            margin: 0,
+                                            fontWeight: 'bold',
+                                            textAlign: 'right',
+                                            color:
+                                                statistics && statistics.banned
+                                                    ? '#E94B3C'
+                                                    : '#2ea200',
+                                        }}
+                                    >
+                                        {statistics !== null
+                                            ? statistics.banned
+                                                ? 'DA'
+                                                : 'NU'
+                                            : 'Indisponibil'}
+                                    </p>
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <p
+                                        className="p-account"
+                                        style={{
+                                            margin: 0,
+                                            textAlign: 'left',
+                                            textDecoration: 'none',
+                                        }}
+                                    >
+                                        Jocuri jucate:
+                                    </p>
+                                    <p
+                                        className="exo"
+                                        style={{
+                                            margin: 0,
+                                            fontWeight: 'bold',
+                                            textAlign: 'right',
+                                        }}
+                                    >
+                                        {statistics !== null
+                                            ? statistics.totalGames
+                                            : 'Indisponibil'}
+                                    </p>
                                 </div>
                             </div>
                         </Card>
                         <Card>
-                            <h4 style={{marginBottom: '6px'}}>Statistici nivele</h4>
+                            <h4 style={{ marginBottom: '15px', marginTop: '-6px' }}>
+                                Statistici niveluri
+                            </h4>
                             <div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p className='p-account' style={{ margin: 0, textAlign: 'left', textDecoration: 'none' }}>Ai ajuns la:</p>
-                                    <p className='exo' style={{ margin: 0, fontWeight: 'bold', textAlign: 'right' }}>nivelul {generalStats.currentLevel}</p>
+                                    <p
+                                        className="p-account"
+                                        style={{
+                                            margin: 0,
+                                            textAlign: 'left',
+                                            textDecoration: 'none',
+                                        }}
+                                    >
+                                        Jocuri jucate:
+                                    </p>
+                                    <p
+                                        className="exo"
+                                        style={{
+                                            margin: 0,
+                                            fontWeight: 'bold',
+                                            textAlign: 'right',
+                                        }}
+                                    >
+                                        {statistics !== null
+                                            ? statistics.levelLoses + statistics.levelWins
+                                            : 'Indisponibil'}
+                                    </p>
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p className='p-account' style={{ margin: 0, textAlign: 'left', textDecoration: 'none' }}>Niveluri rezolvate:</p>
-                                <p className='exo' style={{ margin: 0, fontWeight: 'bold', textAlign: 'right' }}>{generalStats.wonLevels}</p>
+                                    <p
+                                        className="p-account"
+                                        style={{
+                                            margin: 0,
+                                            textAlign: 'left',
+                                            textDecoration: 'none',
+                                        }}
+                                    >
+                                        Niveluri câștigate:
+                                    </p>
+                                    <p
+                                        className="exo"
+                                        style={{
+                                            margin: 0,
+                                            fontWeight: 'bold',
+                                            textAlign: 'right',
+                                        }}
+                                    >
+                                        {statistics !== null
+                                            ? statistics.levelWins
+                                            : 'Indisponibil'}
+                                    </p>
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p className='p-account' style={{ margin: 0, textAlign: 'left', textDecoration: 'none' }}>Niveluri pierdute:</p>
-                                <p className='exo' style={{ margin: 0, fontWeight: 'bold', textAlign: 'right' }}>{generalStats.lostLevels}</p>
+                                    <p
+                                        className="p-account"
+                                        style={{
+                                            margin: 0,
+                                            textAlign: 'left',
+                                            textDecoration: 'none',
+                                        }}
+                                    >
+                                        Niveluri pierdute:
+                                    </p>
+                                    <p
+                                        className="exo"
+                                        style={{
+                                            margin: 0,
+                                            fontWeight: 'bold',
+                                            textAlign: 'right',
+                                        }}
+                                    >
+                                        {statistics !== null
+                                            ? statistics.levelLoses
+                                            : 'Indisponibil'}
+                                    </p>
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p className='p-account' style={{ margin: 0, textAlign: 'left', textDecoration: 'none' }}>Rată de succes:</p>
-                                    <p className='exo' style={{ margin: 0, fontWeight: 'bold', textAlign: 'right' }}>{ Number(generalStats.wonLevels + generalStats.lostLevels) === 0 ? '0%' : (Number(generalStats.wonLevels) / (Number(generalStats.wonLevels) + Number(generalStats.lostLevels)) * 100).toFixed(0) + "%"}</p>
+                                    <p
+                                        className="p-account"
+                                        style={{
+                                            margin: 0,
+                                            textAlign: 'left',
+                                            textDecoration: 'none',
+                                        }}
+                                    >
+                                        Victorii consecutive:
+                                    </p>
+                                    <p
+                                        className="exo"
+                                        style={{
+                                            margin: 0,
+                                            fontWeight: 'bold',
+                                            textAlign: 'right',
+                                        }}
+                                    >
+                                        {statistics !== null
+                                            ? statistics.levelStreak
+                                            : 'Indisponibil'}
+                                    </p>
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <p
+                                        className="p-account"
+                                        style={{
+                                            margin: 0,
+                                            textAlign: 'left',
+                                            textDecoration: 'none',
+                                        }}
+                                    >
+                                        Record victorii consecutive:
+                                    </p>
+                                    <p
+                                        className="exo"
+                                        style={{
+                                            margin: 0,
+                                            fontWeight: 'bold',
+                                            textAlign: 'right',
+                                        }}
+                                    >
+                                        {statistics !== null
+                                            ? statistics.levelMaxStreak
+                                            : 'Indisponibil'}
+                                    </p>
                                 </div>
                             </div>
                         </Card>
                         <Card>
-                        <h4 style={{marginBottom: '6px'}}>Statistici cuvântul zilei</h4>
-                        <div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <p className='p-account' style={{ margin: 0, textAlign: 'left', textDecoration: 'none' }}>Cuvinte rezolvate:</p>
-                                <p className='exo' style={{ margin: 0, fontWeight: 'bold', textAlign: 'right' }}>{generalStats.wonDaily}</p>
+                            <h4 style={{ marginBottom: '15px', marginTop: '-6px' }}>
+                                Statistici cuvântul zilei
+                            </h4>{' '}
+                            <div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <p
+                                        className="p-account"
+                                        style={{
+                                            margin: 0,
+                                            textAlign: 'left',
+                                            textDecoration: 'none',
+                                        }}
+                                    >
+                                        Jocuri jucate:
+                                    </p>
+                                    <p
+                                        className="exo"
+                                        style={{
+                                            margin: 0,
+                                            fontWeight: 'bold',
+                                            textAlign: 'right',
+                                        }}
+                                    >
+                                        {statistics !== null
+                                            ? statistics.dailyLoses + statistics.dailyWins
+                                            : 'Indisponibil'}
+                                    </p>
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <p
+                                        className="p-account"
+                                        style={{
+                                            margin: 0,
+                                            textAlign: 'left',
+                                            textDecoration: 'none',
+                                        }}
+                                    >
+                                        Zile câștigate:
+                                    </p>
+                                    <p
+                                        className="exo"
+                                        style={{
+                                            margin: 0,
+                                            fontWeight: 'bold',
+                                            textAlign: 'right',
+                                        }}
+                                    >
+                                        {statistics !== null
+                                            ? statistics.dailyWins
+                                            : 'Indisponibil'}
+                                    </p>
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <p
+                                        className="p-account"
+                                        style={{
+                                            margin: 0,
+                                            textAlign: 'left',
+                                            textDecoration: 'none',
+                                        }}
+                                    >
+                                        Zile pierdute:
+                                    </p>
+                                    <p
+                                        className="exo"
+                                        style={{
+                                            margin: 0,
+                                            fontWeight: 'bold',
+                                            textAlign: 'right',
+                                        }}
+                                    >
+                                        {statistics !== null
+                                            ? statistics.dailyLoses
+                                            : 'Indisponibil'}
+                                    </p>
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <p
+                                        className="p-account"
+                                        style={{
+                                            margin: 0,
+                                            textAlign: 'left',
+                                            textDecoration: 'none',
+                                        }}
+                                    >
+                                        Victorii consecutive:
+                                    </p>
+                                    <p
+                                        className="exo"
+                                        style={{
+                                            margin: 0,
+                                            fontWeight: 'bold',
+                                            textAlign: 'right',
+                                        }}
+                                    >
+                                        {statistics !== null
+                                            ? statistics.dailyStreak
+                                            : 'Indisponibil'}
+                                    </p>
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <p
+                                        className="p-account"
+                                        style={{
+                                            margin: 0,
+                                            textAlign: 'left',
+                                            textDecoration: 'none',
+                                        }}
+                                    >
+                                        Record victorii consecutive:
+                                    </p>
+                                    <p
+                                        className="exo"
+                                        style={{
+                                            margin: 0,
+                                            fontWeight: 'bold',
+                                            textAlign: 'right',
+                                        }}
+                                    >
+                                        {statistics !== null
+                                            ? statistics.dailyMaxStreak
+                                            : 'Indisponibil'}
+                                    </p>
+                                </div>
                             </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <p className='p-account' style={{ margin: 0, textAlign: 'left', textDecoration: 'none' }}>Cuvinte pierdute:</p>
-                                <p className='exo' style={{ margin: 0, fontWeight: 'bold', textAlign: 'right' }}>{generalStats.lostDaily}</p>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <p className='p-account' style={{ margin: 0, textAlign: 'left', textDecoration: 'none' }}>Rată de succes:</p>
-                                <p className='exo' style={{ margin: 0, fontWeight: 'bold', textAlign: 'right' }}>{ Number(generalStats.wonDaily + generalStats.lostDaily) === 0 ? '0%' : (Number(generalStats.wonDaily) / (Number(generalStats.wonDaily) + Number(generalStats.lostDaily)) * 100).toFixed(0) + "%"}</p>
-                            </div>
-                        </div>
                         </Card>
-                        <br />
-                        <input style={{marginTop: '-10px'}} type="button" value="Inapoi la meniul principal" className="connect-button-small" onClick={() => { router.replace('/') }}/>
-                        <input style={{marginTop: '10px'}} type="button" value="Ieși din cont" className="connect-button-small" onClick={async () => { await logout(); }}/>
-                        <p className='exo' style={{fontWeight: 'bolder', fontSize: '1.2rem', marginTop: '24px'}}>Zonă periculoasă!</p>
-                        <input style={{marginTop: '5px'}} type="button" value="Șterge contul" className="connect-button-small button-important" onClick={async () => { await logout(); }}/>
+                        <input
+                            style={{ marginTop: '10px', width: '250px' }}
+                            type="button"
+                            value="Ieși din cont"
+                            className="connect-button-small"
+                            onClick={async () => {
+                                await logoutChecked();
+                            }}
+                        />
+                        <p
+                            className="exo"
+                            style={{ fontWeight: 'bolder', fontSize: '1.2rem', marginTop: '10px' }}
+                        >
+                            Zonă periculoasă!
+                        </p>
+                        <button
+                            style={{ marginTop: '5px', marginBottom: '45px', width: '250px' }}
+                            type="button"
+                            className="connect-button-small button-important"
+                            onClick={() => {
+                                setModalVisible(true);
+                            }}
+                        >
+                            Șterge contul
+                        </button>
                     </div>
+                    <ConfirmModal
+                        visible={modalVisible}
+                        setVisible={setModalVisible}
+                        action={'Șterge contul'}
+                        setModalResult={setAccountDeletionModal}
+                        invertColors={true}
+                        positiveMessage="Șterge contul"
+                        email={email}
+                        setEmail={setEmail}
+                        password={password}
+                        setPassword={setPassword}
+                    />
+                    <Notification
+                        title={title}
+                        onClose={() => {
+                            setShowNotification(false);
+                        }}
+                        description={description}
+                        visible={showNotification}
+                    />
                 </div>
-            ) : loggedIn == AccountLoad.NOT_LOGGED ? (
-                <Loading topMessage={error} bottomMessage='Vei fi redirecționat să te autentifici' />
+            ) : loggedIn === AccountLoad.NOT_LOGGED ? (
+                <Loading topMessage={error} bottomMessage={bottomMessage} />
             ) : (
-                <Loading topMessage='Pregătim pagina' bottomMessage='pentru tine' />
-            )} */}
-            <p>Coming soon</p>
+                <>
+                    <Loading topMessage="Pregătim pagina" bottomMessage="pentru tine" />
+                    <Notification
+                        title={title}
+                        onClose={() => {
+                            setShowNotification(false);
+                        }}
+                        description={description}
+                        visible={showNotification}
+                    />
+                </>
+            )}
         </section>
     );
 };

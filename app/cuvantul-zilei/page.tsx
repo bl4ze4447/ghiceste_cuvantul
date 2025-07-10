@@ -2,7 +2,7 @@
 
 import '../styles/DailyGame.css';
 
-import { GameMode, GuessState } from '@/constants/constants';
+import { GameMode, GuessState, RunningState } from '@/constants/constants';
 
 import Keyboard from '@/components/Keyboard';
 import LevelBar from '@/components/game/LevelBar';
@@ -11,8 +11,12 @@ import GameGrid from '@/components/game/GameGrid';
 import { useState, useCallback, useEffect } from 'react';
 
 import { usePersistentStats } from '@/hooks/usePersistentStats';
+import { useRouter } from 'next/navigation';
+import BackButton from '@/components/BackButton';
+import GameEndModal from '@/components/game/GameEndModal';
 
 function DailyGame() {
+    const router = useRouter();
     // Used by the on-screen keyboard to send input
     const [virtualKeys, setVirtualKeys] = useState<string[]>([]);
 
@@ -28,8 +32,10 @@ function DailyGame() {
 
     const {
         loaded,
-        guessedDaily,
-        setGuessedDaily,
+        signature,
+        setSignature,
+        guessStates,
+        setGuessStates,
         lostDaily,
         setLostDaily,
         wonDaily,
@@ -38,8 +44,8 @@ function DailyGame() {
         setCurrentRow,
         words,
         setWords,
-        rowsDisplayed,
-        setRowsDisplayed,
+        showRow,
+        setShowRow,
         runningState,
         setRunningState,
     } = usePersistentStats(GameMode.DAILY);
@@ -50,10 +56,20 @@ function DailyGame() {
 
     return (
         <section>
+            <BackButton />
             <LevelBar
                 won={wonDaily}
                 lost={lostDaily}
                 centerText={<p className="daily-word-message">Cuvântul zilei</p>}
+            />
+
+            <GameEndModal
+                visible={runningState !== RunningState.PLAYING}
+                isWin={runningState === RunningState.WON}
+                guessGrid={guessStates}
+                level={null}
+                gameMode={GameMode.DAILY}
+                onNextLevel={() => {}}
             />
 
             <GameGrid
@@ -67,15 +83,16 @@ function DailyGame() {
                 setCurrentRow={setCurrentRow}
                 words={words}
                 setWords={setWords}
-                rowsDisplayed={rowsDisplayed}
-                setRowsDisplayed={setRowsDisplayed}
+                signature={signature}
+                setSignature={setSignature}
+                guessStates={guessStates}
+                setGuessStates={setGuessStates}
+                showRow={showRow}
+                setShowRow={setShowRow}
                 runningState={runningState}
-                guessedDaily={guessedDaily}
-                setGuessedDaily={setGuessedDaily}
                 setGamesWon={setWonDaily}
                 setGamesLost={setLostDaily}
                 setRunningState={setRunningState}
-                currentLevel={0} // will be ignored from here to bottom
                 setCurrentLevel={() => {}}
             />
 

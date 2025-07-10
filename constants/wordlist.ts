@@ -1,4 +1,4 @@
-export const SECRET_WORDS = [
+const naughtyWordList = [
     'sange',
     'gluga',
     'coana',
@@ -543,7 +543,6 @@ export const SECRET_WORDS = [
     'mason',
     'recif',
     'final',
-    'ratat',
     'veghe',
     'aoleo',
     'gerar',
@@ -1365,7 +1364,6 @@ export const SECRET_WORDS = [
     'bomba',
     'maxim',
     'nativ',
-    'prost',
     'libra',
     'diblu',
     'mafie',
@@ -1383,7 +1381,6 @@ export const SECRET_WORDS = [
     'dogar',
     'cruce',
     'carja',
-    'idiot',
     'tunde',
     'ciupi',
     'anula',
@@ -1672,9 +1669,6 @@ export const SECRET_WORDS = [
     'dihor',
     'elice',
     'fanta',
-];
-
-export const WORDLIST = SECRET_WORDS.concat([
     'ABACA',
     'ABACE',
     'ABALE',
@@ -3050,7 +3044,6 @@ export const WORDLIST = SECRET_WORDS.concat([
     'BUCEA',
     'BUCHE',
     'BUCHI',
-    'BUCII',
     'BUCIN',
     'BUCLA',
     'BUCLE',
@@ -4129,7 +4122,6 @@ export const WORDLIST = SECRET_WORDS.concat([
     'CURTI',
     'CURUL',
     'CURUT',
-    'CURVA',
     'CURVE',
     'CURVI',
     'CUSAC',
@@ -4547,7 +4539,6 @@ export const WORDLIST = SECRET_WORDS.concat([
     'DOZEI',
     'DOZEZ',
     'DRACI',
-    'DRACU',
     'DRAFT',
     'DRAGA',
     'DRAGE',
@@ -6168,7 +6159,6 @@ export const WORDLIST = SECRET_WORDS.concat([
     'IDILA',
     'IDILE',
     'IDIOM',
-    'IDIOT',
     'IDOLI',
     'IDOUL',
     'IDREI',
@@ -9102,7 +9092,6 @@ export const WORDLIST = SECRET_WORDS.concat([
     'PENEZ',
     'PENII',
     'PENIN',
-    'PENIS',
     'PENNY',
     'PENSA',
     'PENSE',
@@ -9541,7 +9530,6 @@ export const WORDLIST = SECRET_WORDS.concat([
     'PROOR',
     'PRORA',
     'PRORE',
-    'PROST',
     'PROTO',
     'PROUR',
     'PROVA',
@@ -9830,7 +9818,6 @@ export const WORDLIST = SECRET_WORDS.concat([
     'RATAI',
     'RATAM',
     'RATAN',
-    'RATAT',
     'RATAU',
     'RATCA',
     'RATCE',
@@ -12519,7 +12506,6 @@ export const WORDLIST = SECRET_WORDS.concat([
     'VAGAS',
     'VAGII',
     'VAGIL',
-    'VAGIN',
     'VAGON',
     'VAGUE',
     'VAGUL',
@@ -13257,4 +13243,6 @@ export const WORDLIST = SECRET_WORDS.concat([
     'ZVARR',
     'ZVELT',
     'ZVONI',
-]);
+];
+
+export const WORDLIST = naughtyWordList.map((word) => word.toLowerCase());

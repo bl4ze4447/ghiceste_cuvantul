@@ -3,95 +3,94 @@
 import '@/components/account/AccountRelated.css';
 
 import { TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import Info from '@/components/Info';
-import { authorizedFetch } from '@/utils/authorizedFetch';
 import Loading from '@/components/Loading';
 import { useRouter } from 'next/navigation';
+import { isLogged, login } from '@/utils/backendUtils';
+import Notification from '@/components/Notification';
+import BackButton from '@/components/BackButton';
 
 const Login = () => {
     const router = useRouter();
-
+    const timeouts: NodeJS.Timeout[] = [];
     useEffect(() => {
-        // router.replace('/');
-        // return;
-        async function isLoggedIn() {
-            const response = await authorizedFetch('http://localhost:5224/api/auth/is-logged-in', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-            });
-
-            if (response.ok) {
-                router.replace('/cont');
-                return;
-            }
-
-            setIsLoading(false);
-        }
-
-        isLoggedIn();
+        return () => {
+            timeouts.forEach(clearTimeout);
+        };
     }, []);
-
-    async function login() {
-        if (email.trim() == '') {
-            setError('Adresa de mail este obligatorie');
-            return;
-        }
-        if (password.trim() == '') {
-            setError('Parola este obligatorie');
-            return;
-        }
-
-        const response = await fetch('http://localhost:5224/api/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify({ username: '-', emailAddress: email, password: password }),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            if (response.headers.get('Content-Length') !== '0') {
-                let errorMessage: string = 'Bad Request';
-                if (data.message) errorMessage = data.message;
-                else if (data.errors) {
-                    if (data.errors.EmailAddress) errorMessage = 'Adresa de mail este invalidă';
-                    else if (data.errors.Password)
-                        errorMessage = 'Parola trebuie să aibă minim 8 caractere';
-                }
-
-                setError(errorMessage);
-            }
-            return;
-        }
-
-        setError('Credențiale corecte, vei fi redirecționat...');
-        localStorage.setItem('accessToken', data.accessToken);
-
-        setTimeout(() => {
-            router.replace('/cont');
-        }, 500);
-    }
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('Eu îți spun dacă este vreo problemă!');
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [showNotification, setShowNotification] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        isLogged().then((result) => {
+            if (result.ok === null || result.ok === true) {
+                if (result.ok === null) {
+                    setDescription(result.message);
+                    setTitle('Problemă internă');
+                } else {
+                    setDescription(
+                        'Deja ești autentificat, vei fi redirecționat către contul tău în 5 secunde!'
+                    );
+                    setTitle('Informație');
+                }
+            }
+
+            setShowNotification(false);
+            setIsLoading(false);
+        });
+    }, []);
+
+    const loginChecked = async () => {
+        const phoneNumber = (
+            document.querySelector('input[name="phone_number"]') as HTMLInputElement
+        )?.value;
+
+        if (phoneNumber && phoneNumber.trim() !== '') {
+            setTitle('Avertisment');
+            setDescription('Spam detectat!');
+            setShowNotification(true);
+            setIsLoading(false);
+            return;
+        }
+
+        const result = await login(email, password, phoneNumber);
+        if (result.ok === null || result.ok === false) {
+            if (result.ok === null) {
+                setDescription(result.message);
+                setTitle('Problemă internă');
+            } else {
+                setDescription(result.message);
+                setTitle('Avertisment');
+            }
+
+            setShowNotification(true);
+            setIsLoading(false);
+            return;
+        }
+
+        setShowNotification(true);
+        setDescription('Vei fi redirecționat către pagina contului tău!');
+        setTitle('Succes!');
+        timeouts.push(
+            setTimeout(() => {
+                router.push('/cont');
+            }, 1000)
+        );
+    };
 
     return (
         <>
-            {isLoading === false ? (
+            {isLoading !== true ? (
                 <section className="account-wrapper">
+                    <BackButton />
                     <div className="create-account">
-                        <h2 style={{ marginBottom: '20px', marginTop: '30px' }}>Intră în cont</h2>
-
+                        <h2 style={{ marginBottom: '20px' }}>Intră în cont</h2>
                         <div className="ml-20 mr-20">
                             <TextField
                                 className="google-inputs"
@@ -123,7 +122,6 @@ const Login = () => {
                                 }}
                             />
                         </div>
-
                         <div className="ml-20 mr-20 mt-8 mb-16">
                             <TextField
                                 className="google-inputs"
@@ -156,24 +154,47 @@ const Login = () => {
                             />
                         </div>
                         <input
-                            type="button"
-                            value="Conectează-te"
-                            className="connect-button"
-                            onClick={login}
+                            type="text"
+                            name="phone_number"
+                            style={{ display: 'none' }}
+                            autoComplete="off"
+                            tabIndex={-1}
                         />
-                        <div className="mt-8">
-                            <Info message={error} hide={false} hideText={false} important="" />
-                        </div>
-                        <Link className="p-account" href="#" style={{ marginTop: '15px' }}>
+                        <button
+                            className="connect-button"
+                            onClick={loginChecked}
+                            style={{ marginTop: '5px' }}
+                        >
+                            Conectează-te
+                        </button>
+                        <Link
+                            className="p-account"
+                            href="/reseteaza-parola"
+                            style={{ marginTop: '5px', color: '#93c5fd' }}
+                        >
                             Ai uitat parola?
                         </Link>
                         <p className="p-account" style={{ textDecoration: 'none' }}>
-                            Nu ai un cont? <Link href="/cont/register">Creează-ți unul aici</Link>
+                            Nu ai un cont?{' '}
+                            <Link href="/cont/register" style={{ color: '#93c5fd' }}>
+                                Creează-ți unul aici
+                            </Link>
                         </p>
                     </div>
+                    <Notification
+                        title={title}
+                        description={description}
+                        onClose={() => {
+                            setShowNotification(false);
+                        }}
+                        visible={showNotification}
+                    />
                 </section>
             ) : (
-                <Loading topMessage="Pregătim pagina" bottomMessage="pentru tine" />
+                <>
+                    <BackButton />
+                    <Loading topMessage="Pregătim pagina" bottomMessage="pentru tine" />
+                </>
             )}
         </>
     );

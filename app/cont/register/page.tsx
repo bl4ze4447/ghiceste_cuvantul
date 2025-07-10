@@ -3,93 +3,141 @@
 import '@/components/account/AccountRelated.css';
 
 import { TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
-import Info from '@/components/Info';
+import { useEffect, useRef, useState } from 'react';
+import Notification from '@/components/Notification';
 import { useRouter } from 'next/navigation';
-import { authorizedFetch } from '@/utils/authorizedFetch';
 import Loading from '@/components/Loading';
+import { register, isLogged } from '@/utils/backendUtils';
+import TermsCheckbox from '@/components/TermsCheckbox';
+import BackButton from '@/components/BackButton';
 
 const Login = () => {
     const router = useRouter();
+    const timeouts: NodeJS.Timeout[] = [];
     useEffect(() => {
-        // router.replace('/'); // remove me
-        // return;
-        async function isLoggedIn() {
-            const response = await authorizedFetch('http://localhost:5224/api/auth/is-logged-in', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (response.ok) {
-                router.replace('/cont');
-                return;
-            }
-
-            setLoading(false);
-        }
-
-        isLoggedIn();
+        return () => {
+            timeouts.forEach(clearTimeout);
+        };
     }, []);
-
-    async function register() {
-        if (username.trim() == '') {
-            setError('Numele de utilizator este obligatoriu');
-            return;
-        }
-        if (email.trim() == '') {
-            setError('Adresa de mail este obligatorie');
-            return;
-        }
-        if (password.trim() == '') {
-            setError('Parola este obligatorie');
-            return;
-        }
-        const response = await fetch('http://localhost:5224/api/auth/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username: username, emailAddress: email, password: password }),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            let errorMessage: string = 'Bad Request';
-            if (data.message) errorMessage = data.message;
-            else if (data.errors) {
-                if (data.errors.Username)
-                    errorMessage = 'Numele de utilizator poate avea maxim 16 caractere';
-                else if (data.errors.EmailAddress) errorMessage = 'Adresa de mail este invalidă';
-                else if (data.errors.Password)
-                    errorMessage = 'Parola trebuie să aibă minim 8 caractere';
-            }
-
-            setError(errorMessage);
-            return;
-        }
-
-        setError('Succes! Ți-am trimis un mail cu instrucțiuni pentru a-ți verifica contul...');
-        setTimeout(() => {
-            router.replace('/cont/login');
-        }, 3500);
-    }
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('Eu îți spun dacă este vreo problemă!');
-    const [loading, setLoading] = useState(true);
+    const [password2, setPassword2] = useState('');
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [showNotification, setShowNotification] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [accepted, setAccepted] = useState(false);
+
+    useEffect(() => {
+        isLogged().then((result) => {
+            if (result.ok === null || result.ok === true) {
+                if (result.ok === null) {
+                    setDescription(result.message);
+                    setTitle('Problemă internă');
+                } else {
+                    setDescription(
+                        'Deja ești autentificat, vei fi redirecționat către contul tău!'
+                    );
+                    setTitle('Informație');
+                    setShowNotification(true);
+                    timeouts.push(
+                        setTimeout(() => {
+                            router.push('/cont');
+                        }, 1000)
+                    );
+                    return;
+                }
+
+                setShowNotification(true);
+                setIsLoading(false);
+                return;
+            }
+
+            setShowNotification(false);
+            setIsLoading(false);
+        });
+    }, []);
+
+    const registerChecked = async () => {
+        const phoneNumber = (
+            document.querySelector('input[name="phone_number"]') as HTMLInputElement
+        )?.value;
+
+        if (phoneNumber && phoneNumber.trim() !== '') {
+            setTitle('Avertisment');
+            setDescription('Spam detectat!');
+            setShowNotification(true);
+            setIsLoading(false);
+            return;
+        }
+
+        if (!accepted) {
+            setShowNotification(true);
+            setDescription(
+                'Contul poate fi creat doar dacă sunteți de acord cu termenii și condițiile!'
+            );
+            setTitle('Avertisment');
+            return;
+        }
+        if (password !== password2) {
+            setShowNotification(true);
+            setDescription('Parola introdusă trebuie să coincidă cu confirmă parola!');
+            setTitle('Avertisment');
+            return;
+        }
+        const result = await register(username, email, password, phoneNumber);
+        if (result.ok === null || result.ok === false) {
+            if (result.ok === null) {
+                setDescription(result.message);
+                setTitle('Problemă internă');
+            } else {
+                setDescription(result.message);
+                setTitle('Avertisment');
+            }
+
+            setShowNotification(true);
+            setIsLoading(false);
+            return;
+        }
+
+        setShowNotification(true);
+        setDescription(
+            'A fost trimis un mail către adresa dvs. cu instrucțiuni pentru a vă verifica contul! Veți fi redirecționat să vă logați!'
+        );
+        setTitle('Succes!');
+        setIsLoading(false);
+        timeouts.push(
+            setTimeout(() => {
+                router.push('/cont/login');
+            }, 5200)
+        );
+    };
 
     return (
         <>
-            {loading === false ? (
+            {isLoading === false ? (
                 <section className="account-wrapper">
+                    <BackButton />
                     <div className="create-account">
-                        <h2 style={{ marginBottom: '20px', marginTop: '30px' }}>Creează un cont</h2>
+                        <h2 style={{ marginBottom: '20px' }}>Creează un cont</h2>
                         <div className="ml-20 mr-20">
+                            <p
+                                className="exo"
+                                style={{
+                                    fontSize: '0.9rem',
+                                    opacity: '0.8',
+                                    marginBottom: '5px',
+                                    maxWidth: '280px',
+                                    textAlign: 'justify',
+                                    marginLeft: 'auto',
+                                    marginRight: 'auto',
+                                }}
+                            >
+                                Numele de utilizator poate conține doar litere, cifre și underline{' '}
+                                {'( _ )'}
+                            </p>
                             <TextField
                                 className="google-inputs"
                                 label="Nume de utilizator"
@@ -153,7 +201,22 @@ const Login = () => {
                             />
                         </div>
 
-                        <div className="ml-20 mr-20 mt-8 mb-16">
+                        <div className="ml-20 mr-20 mt-8">
+                            <p
+                                className="exo"
+                                style={{
+                                    fontSize: '0.9rem',
+                                    opacity: '0.8',
+                                    marginBottom: '5px',
+                                    maxWidth: '280px',
+                                    textAlign: 'justify',
+                                    marginLeft: 'auto',
+                                    marginRight: 'auto',
+                                }}
+                            >
+                                Parola trebuie să conțină cel puțin o literă mică, o literă mare și
+                                o cifră, și un minim de 8 caractere
+                            </p>
                             <TextField
                                 className="google-inputs"
                                 label="Parolă"
@@ -184,19 +247,74 @@ const Login = () => {
                                 }}
                             />
                         </div>
-                        <input
-                            type="button"
-                            value="Creează contul"
-                            className="connect-button"
-                            onClick={register}
-                        />
-                        <div className="mt-8 mb-16">
-                            <Info message={error} hide={false} hideText={false} important="" />
+
+                        <div className="ml-20 mr-20 mt-8 mb-16">
+                            <TextField
+                                className="google-inputs"
+                                label="Confirm parolă"
+                                type="password"
+                                variant="outlined"
+                                value={password2}
+                                onChange={(ev) => setPassword2(ev.target.value)}
+                                sx={{
+                                    width: '25ch',
+                                    input: { color: 'white' },
+                                    label: {
+                                        color: 'rgba(255,255,255,0.7)',
+                                        '&.Mui-focused': {
+                                            color: 'white',
+                                        },
+                                    },
+                                    '& .MuiOutlinedInput-root': {
+                                        '& fieldset': {
+                                            borderColor: 'rgba(255,255,255,0.7)',
+                                        },
+                                        '&:hover fieldset': {
+                                            borderColor: 'white',
+                                        },
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: 'white',
+                                        },
+                                    },
+                                }}
+                            />
                         </div>
+
+                        <input
+                            type="text"
+                            name="phone_number"
+                            style={{ display: 'none' }}
+                            autoComplete="off"
+                            tabIndex={-1}
+                        />
+
+                        <TermsCheckbox checked={accepted} onChange={setAccepted} />
+
+                        <button type="button" className="connect-button" onClick={registerChecked}>
+                            Creează contul
+                        </button>
                     </div>
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    ></div>
+                    <Notification
+                        title={title}
+                        description={description}
+                        onClose={() => {
+                            setShowNotification(false);
+                        }}
+                        visible={showNotification}
+                    />
                 </section>
             ) : (
-                <Loading topMessage="Pregătim pagina" bottomMessage="pentru tine" />
+                <>
+                    <BackButton />
+                    <Loading topMessage="Pregătim pagina" bottomMessage="pentru tine" />
+                </>
             )}
         </>
     );

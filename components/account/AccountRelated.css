@@ -69,18 +69,30 @@ a {
     margin: 5px 0 5px 0;
     background-size: 1px calc(1.1rem * 16);
     background: linear-gradient(135deg, #1e4e5f 0%, #0f2f3a 100%);
-    transition: scale 100ms ease-out;
+    transition: all 100ms ease-out;
     text-decoration: none;
     text-align: center;
 }
 .connect-button-small {
     padding: 5px 30px 5px 30px;
-    width: 100%;
     font-size: 0.9rem;
 }
+
+.connect-button:active,
+.connect-button-small:active,
+.connect-button-back:active {
+    scale: 0.9;
+}
+
+.connect-button:hover,
+.connect-button-small:hover,
+.connect-button-back:hover {
+    opacity: 0.5;
+}
+
 .button-important {
-    background: linear-gradient(135deg, #5f1e1e 0%, #3a0f0f 100%);
-    border: rgb(47, 0, 0) 2px solid;
+    background: linear-gradient(135deg, #5f1e1e 0%, #3a0f0f 100%) !important;
+    border: rgb(47, 0, 0) 2px solid !important;
 }
 .line {
     width: 100vw;

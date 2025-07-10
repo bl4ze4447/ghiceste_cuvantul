@@ -3,56 +3,71 @@
 import './GameRow.css';
 import LetterBox from './LetterBox';
 import { Settings, GuessState, TimesCSS, RunningState } from '@/constants/constants';
-import { getKeyPos } from '@/utils/wordUtils';
+import { getGuessStates, getKeyPos } from '@/utils/wordUtils';
 
-import { useEffect, memo } from 'react';
+import { useEffect, useMemo, memo } from 'react';
 
-interface GameRowProps {
+interface GameRowDemoProps {
+    secretWord: string;
     word: string;
     isCurrentRow: boolean;
     isLastRow: boolean;
     beforeCurrentRow: boolean;
     shouldBounce: boolean;
-    guessStates: GuessState[];
     reveal: boolean;
+    row: number;
     setUsedKeys: React.Dispatch<React.SetStateAction<GuessState[]>>;
     setRunningState: React.Dispatch<React.SetStateAction<RunningState>>;
     disableBlockingAnimation: () => void;
+    setGuessStates: (idx: number, guessStates: GuessState[]) => void;
     disableBounceAnimation: () => void;
 }
 
-const GameRow: React.FC<GameRowProps> = ({
+const GameRowDemo: React.FC<GameRowDemoProps> = ({
+    secretWord,
     word,
     isCurrentRow,
     isLastRow,
     beforeCurrentRow,
     shouldBounce,
-    guessStates,
     reveal,
+    row,
     setUsedKeys,
     setRunningState,
+    setGuessStates,
     disableBlockingAnimation,
     disableBounceAnimation,
 }) => {
+    const guessStates = useMemo(
+        () =>
+            reveal
+                ? getGuessStates(word, secretWord)
+                : Array(Settings.MAX_LETTERS).fill(GuessState.EMPTY),
+        [reveal, word, secretWord]
+    );
+
     useEffect(() => {
-        let timeout1: NodeJS.Timeout, timeout2: NodeJS.Timeout;
+        setGuessStates(row, guessStates);
+    }, [guessStates]);
+
+    useEffect(() => {
         if (reveal && isCurrentRow) {
-            timeout1 = setTimeout(() => {
+            setTimeout(() => {
                 disableBlockingAnimation();
+                if (guessStates.every((gs) => gs === GuessState.GREEN)) {
+                    setRunningState(RunningState.WON);
+                } else if (reveal && isLastRow) {
+                    setRunningState(RunningState.LOST);
+                }
             }, TimesCSS.LETTER_FLIP_TRANSITION + (TimesCSS.LETTER_FLIP_DELAY - 1) * Settings.MAX_LETTERS);
         }
 
         if (shouldBounce) {
-            timeout2 = setTimeout(() => {
+            setTimeout(() => {
                 disableBlockingAnimation();
                 disableBounceAnimation();
             }, TimesCSS.ROW_BAD_ANIMATION);
         }
-
-        return () => {
-            clearTimeout(timeout1);
-            clearTimeout(timeout2);
-        };
     }, [
         isCurrentRow,
         reveal,
@@ -94,13 +109,13 @@ const GameRow: React.FC<GameRowProps> = ({
                     <LetterBox
                         key={i}
                         character={i < word.length ? word[i] : ''}
-                        guessState={reveal ? guessStates[i] : GuessState.EMPTY}
+                        guessState={guessStates[i]}
                         position={i}
-                        reveal={reveal}
+                        reveal={i < word.length ? reveal : false}
                     />
                 ))}
         </section>
     );
 };
 
-export default memo(GameRow);
+export default memo(GameRowDemo);

@@ -3,7 +3,7 @@
 import './LetterBox.css';
 
 import { GuessState, TimesCSS } from '@/constants/constants';
-import { getLetterClass } from '@/utils/words_manip';
+import { getLetterClass } from '@/utils/wordUtils';
 
 import { useEffect, useState } from 'react';
 

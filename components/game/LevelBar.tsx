@@ -11,7 +11,7 @@ interface LevelBarProps {
 
 const LevelBar: React.FC<LevelBarProps> = ({ centerText, won, lost }) => {
     return (
-        <div className="container" style={{ marginTop: '30px' }}>
+        <div className="container">
             <div className="level-div">
                 <div className="icon-text">
                     <p>{lost}</p>

@@ -20,4 +20,5 @@
 
 .bounce-bad {
     animation: GameRowAnimationBad 185ms linear 0ms 3 normal both;
+    color: #066889;
 }

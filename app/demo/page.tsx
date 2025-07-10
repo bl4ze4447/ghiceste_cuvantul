@@ -1,17 +1,24 @@
 'use client';
 
+import '../styles/DailyGame.css';
+
+import { GameMode, GuessState, RunningState } from '@/constants/constants';
+
 import Keyboard from '@/components/Keyboard';
 import LevelBar from '@/components/game/LevelBar';
 import GameGrid from '@/components/game/GameGrid';
-import { usePersistentStats } from '@/hooks/usePersistentStats';
-import { GameMode, GuessState, RunningState, Settings } from '@/constants/constants';
 
 import { useState, useCallback, useEffect } from 'react';
+
+import { usePersistentStats } from '@/hooks/usePersistentStats';
 import { useRouter } from 'next/navigation';
 import BackButton from '@/components/BackButton';
 import GameEndModal from '@/components/game/GameEndModal';
+import GameGridDemo from '@/components/game/GameGridDemo';
+import GameEndModalDemo from '@/components/game/GameEndModalDemo';
 
-function LevelGame() {
+function DailyGame() {
+    const router = useRouter();
     // Used by the on-screen keyboard to send input
     const [virtualKeys, setVirtualKeys] = useState<string[]>([]);
 
@@ -25,32 +32,14 @@ function LevelGame() {
         setVirtualKeys((vk) => vk.slice(1));
     }, []);
 
-    const resetGame = () => {
-        setCurrentRow(0);
-        setWords(Array(Settings.MAX_ROWS).fill(''));
-        setShowRow(Array(Settings.MAX_ROWS).fill(false));
-        setRunningState(RunningState.PLAYING);
-        setGuessStates(
-            Array.from({ length: Settings.MAX_ROWS }, () =>
-                Array(Settings.MAX_LETTERS).fill(GuessState.EMPTY)
-            )
-        );
-        setUsedKeys((val) => val.map(() => GuessState.EMPTY));
-        setCurrentLevel((prev) => prev + 1);
-    };
-
     const {
         loaded,
-        signature,
-        setSignature,
         guessStates,
+        lostDaily,
         setGuessStates,
-        currentLevel,
-        setCurrentLevel,
-        lostLevels,
-        setLostLevels,
-        wonLevels,
-        setWonLevels,
+        setLostDaily,
+        wonDaily,
+        setWonDaily,
         currentRow,
         setCurrentRow,
         words,
@@ -59,7 +48,7 @@ function LevelGame() {
         setShowRow,
         runningState,
         setRunningState,
-    } = usePersistentStats(GameMode.LEVEL);
+    } = usePersistentStats(GameMode.DAILY, true);
 
     useEffect(() => {
         if (loaded) setBlockingAnimation(false);
@@ -68,26 +57,19 @@ function LevelGame() {
     return (
         <section>
             <BackButton />
+            <LevelBar
+                won={wonDaily}
+                lost={lostDaily}
+                centerText={<p className="daily-word-message">Demo</p>}
+            />
 
-            <GameEndModal
+            <GameEndModalDemo
                 visible={runningState !== RunningState.PLAYING}
                 isWin={runningState === RunningState.WON}
                 guessGrid={guessStates}
-                level={currentLevel}
-                gameMode={GameMode.LEVEL}
-                onNextLevel={() => {
-                    resetGame();
-                }}
             />
 
-            <LevelBar
-                centerText={<p>Nivelul {currentLevel}</p>}
-                won={wonLevels}
-                lost={lostLevels}
-            />
-
-            <GameGrid
-                gameMode={GameMode.LEVEL}
+            <GameGridDemo
                 virtualKeys={virtualKeys}
                 consumeFirstKey={consumeFirstKey}
                 blockingAnimation={blockingAnimation}
@@ -97,17 +79,13 @@ function LevelGame() {
                 setCurrentRow={setCurrentRow}
                 words={words}
                 setWords={setWords}
-                signature={signature}
-                setSignature={setSignature}
-                guessStates={guessStates}
-                setGuessStates={setGuessStates}
-                showRow={showRow}
-                setShowRow={setShowRow}
+                rowsDisplayed={showRow}
+                setRowsDisplayed={setShowRow}
                 runningState={runningState}
-                setGamesWon={setWonLevels}
-                setGamesLost={setLostLevels}
-                setCurrentLevel={setCurrentLevel}
+                setGamesWon={setWonDaily}
+                setGamesLost={setLostDaily}
                 setRunningState={setRunningState}
+                setGuessStates={setGuessStates}
             />
 
             <Keyboard setVirtualKeys={setVirtualKeys} usedKeys={usedKeys} />
@@ -115,4 +93,4 @@ function LevelGame() {
     );
 }
 
-export default LevelGame;
+export default DailyGame;

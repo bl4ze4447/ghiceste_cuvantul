@@ -2,75 +2,59 @@
 
 import '../styles/GameGrid.css';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 
-import GameRow from './GameRow';
+import Info from '../Info';
 
 import { Settings, GameMode, GuessState, RunningState } from '@/constants/constants';
-import { updateLastDaily, updateLastLevel } from '@/utils/backendUtils';
-import { GameLevelDto } from '@/dto/game/gameLevel';
-import { GameDailyDto } from '@/dto/game/gameDaily';
-import Notification from '../Notification';
 import { WORDLIST } from '@/constants/wordlist';
+import GameRowDemo from './GameRowDemo';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-interface GameGridProps {
-    gameMode: GameMode;
+interface GameGridDemoProps {
     virtualKeys: string[];
     words: string[];
-    showRow: boolean[];
+    rowsDisplayed: boolean[];
     runningState: RunningState;
     currentRow: number;
     blockingAnimation: boolean;
-    signature: string;
-    guessStates: GuessState[][];
     consumeFirstKey: () => void;
-    setSignature: React.Dispatch<React.SetStateAction<string>>;
-    setGuessStates: React.Dispatch<React.SetStateAction<GuessState[][]>>;
-    setCurrentLevel: React.Dispatch<React.SetStateAction<number>>;
     setGamesLost: React.Dispatch<React.SetStateAction<number>>;
     setGamesWon: React.Dispatch<React.SetStateAction<number>>;
     setBlockingAnimation: React.Dispatch<React.SetStateAction<boolean>>;
     setUsedKeys: React.Dispatch<React.SetStateAction<GuessState[]>>;
     setCurrentRow: React.Dispatch<React.SetStateAction<number>>;
     setWords: React.Dispatch<React.SetStateAction<string[]>>;
-    setShowRow: React.Dispatch<React.SetStateAction<boolean[]>>;
+    setRowsDisplayed: React.Dispatch<React.SetStateAction<boolean[]>>;
+    setGuessStates: React.Dispatch<React.SetStateAction<GuessState[][]>>;
     setRunningState: React.Dispatch<React.SetStateAction<RunningState>>;
 }
 
-const GameGrid: React.FC<GameGridProps> = ({
-    gameMode,
+const GameGridDemo: React.FC<GameGridDemoProps> = ({
     virtualKeys,
     words,
-    showRow,
+    rowsDisplayed,
     runningState,
     currentRow,
-    guessStates,
-    signature,
     blockingAnimation,
     consumeFirstKey,
-    setGuessStates,
-    setSignature,
     setGamesWon,
     setGamesLost,
-    setCurrentLevel,
     setBlockingAnimation,
     setUsedKeys,
     setCurrentRow,
     setWords,
-    setShowRow,
+    setRowsDisplayed,
     setRunningState,
+    setGuessStates,
 }) => {
+    const secretWord = 'carte';
     const [isInvalidWord, setIsInvalidWord] = useState(false);
-    const [description, setDescription] = useState('');
-    const [showNotification, setShowNotification] = useState(false);
-    const [title, setTitle] = useState('');
-
     const disableBounceAnimation = useCallback(() => {
         setIsInvalidWord(false);
     }, []);
@@ -88,13 +72,17 @@ const GameGrid: React.FC<GameGridProps> = ({
 
     const updateCurrentRowDisplay = useCallback(
         (displayRow: boolean) => {
-            setShowRow((prev) => prev.map((val, i) => (i === currentRow ? displayRow : val)));
+            setRowsDisplayed((prev) => prev.map((val, i) => (i === currentRow ? displayRow : val)));
         },
         [currentRow]
     );
 
+    const updateCurrentGuessState = useCallback((idx: number, guessState: GuessState[]) => {
+        setGuessStates((prev) => prev.map((val, i) => (i === idx ? guessState : val)));
+    }, []);
+
     const handleGameKeyPress = useCallback(
-        async (key: string) => {
+        (key: string) => {
             if (
                 currentRow === Settings.MAX_ROWS ||
                 runningState !== RunningState.PLAYING ||
@@ -104,76 +92,17 @@ const GameGrid: React.FC<GameGridProps> = ({
 
             if (key === 'Enter') {
                 if (words[currentRow].length !== Settings.MAX_LETTERS) return;
+
                 if (!WORDLIST.includes(words[currentRow].toLowerCase())) {
                     setIsInvalidWord(true);
+                    setBlockingAnimation(true);
                     return;
                 }
 
-                if (gameMode === GameMode.LEVEL) {
-                    const result = await updateLastLevel(words[currentRow], signature);
-
-                    if (result.ok === null || result.ok === false) {
-                        if (result.ok === null) {
-                            setDescription(result.message);
-                            setTitle('Problemă internă');
-                        } else {
-                            setDescription(result.message);
-                            setTitle('Avertisment');
-                        }
-
-                        setShowNotification(true);
-                        return;
-                    }
-
-                    if (result.faultyWord) {
-                        setIsInvalidWord(true);
-                    }
-
-                    if (result.game) {
-                        setBlockingAnimation(true);
-                        const game = result.game as GameLevelDto;
-                        setCurrentRow(game.currentRow);
-                        setGuessStates(game.guessStates);
-                        setRunningState(game.runningState);
-                        setShowRow(game.showRow);
-                        setSignature(game.signature);
-                        setWords(game.words);
-                        setGamesWon(game.wonLevels);
-                        setGamesLost(game.lostLevels);
-                        setCurrentLevel(game.level);
-                    }
-                } else {
-                    const result = await updateLastDaily(words[currentRow], signature);
-                    if (result.ok === null || result.ok === false) {
-                        if (result.ok === null) {
-                            setDescription(result.message);
-                            setTitle('Problemă internă');
-                        } else {
-                            setDescription(result.message);
-                            setTitle('Avertisment');
-                        }
-
-                        setShowNotification(true);
-                        return;
-                    }
-
-                    if (result.faultyWord) {
-                        setIsInvalidWord(true);
-                    }
-
-                    if (result.game) {
-                        setBlockingAnimation(true);
-                        const game = result.game as GameDailyDto;
-                        setCurrentRow(game.currentRow);
-                        setGuessStates(game.guessStates);
-                        setRunningState(game.runningState);
-                        setShowRow(game.showRow);
-                        setSignature(game.signature);
-                        setWords(game.words);
-                        setGamesWon(game.wonDailies);
-                        setGamesLost(game.lostDailies);
-                    }
-                }
+                setCurrentRow(Math.min(currentRow + 1, Settings.MAX_ROWS));
+                updateCurrentRowDisplay(true);
+                setBlockingAnimation(true);
+                return;
             }
 
             if (key === 'Backspace') {
@@ -185,12 +114,9 @@ const GameGrid: React.FC<GameGridProps> = ({
             }
         },
         [
-            signature,
-            gameMode,
             currentRow,
             words,
             runningState,
-            guessStates,
             blockingAnimation,
             updateCurrentWord,
             updateCurrentRowDisplay,
@@ -228,27 +154,30 @@ const GameGrid: React.FC<GameGridProps> = ({
                 runningState === RunningState.WON
                     ? new Audio('/sounds/won.wav')
                     : new Audio('/sounds/lost.wav');
+
+            if (runningState === RunningState.WON) setGamesWon(1);
+            else setGamesLost(1);
             audio.play();
         }, 2250);
 
         return () => {
             clearTimeout(timeout);
         };
-    }, [runningState, gameMode]);
+    }, [runningState]);
 
     return (
         <>
             <section
                 role="list"
-                aria-label="Grilă de joc cu 6 rânduri de cuvinte"
+                aria-label="Grilă de joc cu rânduri de cuvinte"
                 className="game-grid"
             >
                 {words.map((word, index) => (
-                    <GameRow
+                    <GameRowDemo
                         key={index}
                         word={word}
-                        guessStates={guessStates[index]}
-                        reveal={showRow[index]}
+                        secretWord={secretWord}
+                        reveal={rowsDisplayed[index]}
                         setRunningState={setRunningState}
                         disableBlockingAnimation={disableBlockingAnimation}
                         isCurrentRow={currentRow === index + 1}
@@ -257,19 +186,13 @@ const GameGrid: React.FC<GameGridProps> = ({
                         shouldBounce={isInvalidWord && currentRow === index}
                         disableBounceAnimation={disableBounceAnimation}
                         beforeCurrentRow={index + 1 < currentRow}
+                        setGuessStates={updateCurrentGuessState}
+                        row={index}
                     />
                 ))}
-                <Notification
-                    title={title}
-                    onClose={() => {
-                        setShowNotification(false);
-                    }}
-                    description={description}
-                    visible={showNotification}
-                />
             </section>
         </>
     );
 };
 
-export default GameGrid;
+export default GameGridDemo;

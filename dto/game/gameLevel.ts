@@ -1,12 +1,13 @@
-import { RunningState } from '@/constants/constants';
+import { GuessState, RunningState } from '@/constants/constants';
 
 export interface GameLevelDto {
-    currentLevel: number;
+    words: string[];
+    runningState: RunningState;
+    showRow: boolean[];
+    guessStates: GuessState[][];
+    currentRow: number;
+    level: number;
     wonLevels: number;
     lostLevels: number;
-    words: string[];
-    currentRow: number;
-    rowsDisplayed: boolean[];
-    runningState: RunningState;
-    test: string;
+    signature: string;
 }

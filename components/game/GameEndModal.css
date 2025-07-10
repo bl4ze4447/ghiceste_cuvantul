@@ -24,53 +24,47 @@
     pointer-events: none;
 }
 
-.modal.confirm-modal {
+.modal {
     background: rgba(3, 72, 96, 0.98);
-    padding: 36px 24px;
+    padding: 2rem;
     border-radius: 12px;
-    max-width: 300px;
+    max-width: 350px;
     width: 92%;
     position: relative;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     text-align: center;
+    font-family: 'Exo 2', sans-serif;
 }
 
-.modal-answers-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    margin-top: 20px;
-}
-
-.confirm-button {
-    font-size: 0.9rem;
-    border-radius: 10px;
+.connect-button-small {
+    display: flex;
+    font-family: Bungee, 'sans-erif';
+    font-size: 1rem;
+    border-radius: 10px 10px 10px 10px;
     color: white;
-    border: 1px solid white;
+    border: white 1px solid;
     cursor: pointer;
+    margin: 5px auto;
+    background-size: 1px calc(1.1rem * 16);
     background: linear-gradient(135deg, #1e4e5f 0%, #0f2f3a 100%);
-    padding: 6px 16px;
     transition: scale 100ms ease-out;
+    text-decoration: none;
+    text-align: center;
+    padding: 4px 20px;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9rem;
+}
+.connect-button-small:active {
+    scale: 0.9;
 }
 
-.confirm-button:hover {
+.connect-button-small:hover {
     opacity: 0.5;
 }
 
-.confirm-button:active {
-    scale: 0.95;
-}
-
-.ma-red {
-    border: 2px solid #4e0c0c;
-    background: linear-gradient(135deg, #7c1f1f 0%, #4e0c0c 100%);
-}
-
-.ma-gray {
-    border: 2px solid #123d01;
-    background: linear-gradient(135deg, #2ea200 0%, #1e6a00 100%);
-}
-
 .close-button {
+    display: inline;
     position: absolute;
     top: 12px;
     right: 12px;

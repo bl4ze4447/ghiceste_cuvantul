@@ -1,7 +1,7 @@
 export enum RunningState {
-    WON,
-    LOST,
     PLAYING,
+    LOST,
+    WON,
 }
 
 export enum GuessState {

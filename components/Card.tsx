@@ -15,6 +15,7 @@ const Card: React.FC<CardProps> = ({ children }) => {
                 padding: '24px',
                 width: '100%',
                 margin: '7px 10px',
+                lineHeight: '1.35',
             }}
         >
             {children}

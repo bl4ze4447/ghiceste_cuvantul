@@ -1,31 +1,12 @@
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
+import { GuessState, Settings } from '../constants/constants';
 
-import { SECRET_WORDS } from '../constants/wordlist';
-import { cyrb53 } from './utils';
-import { Settings, GuessState } from '../constants/constants';
+const rowOneKeys = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'];
+const rowTwoKeys = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'];
+const rowThreeKeys = ['!', 'z', 'x', 'c', 'v', 'b', 'n', 'm', '!'];
+const keyMap = [...rowOneKeys, ...rowTwoKeys, ...rowThreeKeys];
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
-
-export function getWordOffsetedBy(days: number) {
-    // Get the current day offseted by the days parameter
-    const now = dayjs().tz('Europe/Bucharest').subtract(days, 'day');
-    const localMidnight = now.startOf('day');
-    const daysSinceEpoch = Math.floor(localMidnight.valueOf() / 86400000);
-
-    // Hash the days for a 'randomized' index
-    const rand = cyrb53(daysSinceEpoch.toString());
-    return SECRET_WORDS[rand % SECRET_WORDS.length];
-}
-
-export function getDailyWord() {
-    return getWordOffsetedBy(0);
-}
-
-export function getWordByLevel(level: number) {
-    return SECRET_WORDS[(level - 1) % SECRET_WORDS.length];
+export function getKeyPos(key: string) {
+    return keyMap.indexOf(key);
 }
 
 export function getGuessStates(word: string, secret: string) {
@@ -54,15 +35,6 @@ export function getGuessStates(word: string, secret: string) {
     });
 
     return guessStatuses;
-}
-
-const rowOneKeys = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'];
-const rowTwoKeys = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'];
-const rowThreeKeys = ['!', 'z', 'x', 'c', 'v', 'b', 'n', 'm', '!'];
-const keyMap = [...rowOneKeys, ...rowTwoKeys, ...rowThreeKeys];
-
-export function getKeyPos(key: string) {
-    return keyMap.indexOf(key);
 }
 
 export function getLetterClass(state: GuessState, isKeyboard: boolean) {
