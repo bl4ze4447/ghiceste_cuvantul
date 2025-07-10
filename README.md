@@ -1,5 +1,5 @@
 ## Demo
-You can try it here: https://wordle-ro.com
+You can try it here: https://ghicestecuvantul.ro
 
 ## Features
 * Classic Wordle gameplay with Romanian Words
