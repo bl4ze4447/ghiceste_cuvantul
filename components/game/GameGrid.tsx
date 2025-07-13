@@ -2,7 +2,7 @@
 
 import '../styles/GameGrid.css';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -94,7 +94,7 @@ const GameGrid: React.FC<GameGridProps> = ({
         setDescription(backendMessage);
         if (backendResult === null) setTitle('Problemă internă');
         else setTitle('Avertisment');
-    }, [loaded, backendResult]);
+    }, [loaded, backendResult, backendMessage]);
 
     const disableBounceAnimation = useCallback(() => {
         setIsInvalidWord(false);
