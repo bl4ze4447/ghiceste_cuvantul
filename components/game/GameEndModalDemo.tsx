@@ -129,7 +129,14 @@ const GameEndModalDemo: React.FC<GameEndModalDemoProps> = ({ visible, isWin, gue
                 </div>
                 <p className="exo">Cuvântul pentru acest joc era:</p>
                 <p style={{ fontSize: '1.2rem' }}>{word}</p>
-                <div style={{ marginTop: '15px' }}>
+                <div
+                    style={{
+                        marginTop: '15px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
                     <button
                         className="connect-button-small"
                         onClick={(e) => {
