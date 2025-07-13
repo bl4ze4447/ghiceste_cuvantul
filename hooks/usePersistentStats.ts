@@ -12,7 +12,9 @@ export function usePersistentStats(gameMode: GameMode, demo: boolean = false) {
     const [loaded, setLoaded] = useState(false);
 
     const [loadedLocal, setLoadedLocal] = useState(false);
-    const [loadedBackend, setLoadedBackend] = useState(false);
+    const [_, setLoadedBackend] = useState(false);
+    const [backendResult, setBackendResult] = useState<boolean | null>(null);
+    const [backendMessage, setBackendMessage] = useState<string>('');
 
     const [currentLevel, setCurrentLevel] = useState(1);
     const [lostLevels, setLostLevels] = useState(0);
@@ -183,6 +185,8 @@ export function usePersistentStats(gameMode: GameMode, demo: boolean = false) {
         switch (gameMode) {
             case GameMode.DAILY:
                 getLastDaily().then((result) => {
+                    setBackendResult(result.ok);
+                    setBackendMessage(result.message);
                     if (result.ok !== true) {
                         setLoaded(true);
                         setLoadedBackend(true);
@@ -204,6 +208,8 @@ export function usePersistentStats(gameMode: GameMode, demo: boolean = false) {
                 break;
             case GameMode.LEVEL:
                 getLastLevel().then((result) => {
+                    setBackendResult(result.ok);
+                    setBackendMessage(result.message);
                     if (result.ok !== true) {
                         setLoaded(true);
                         setLoadedBackend(true);
@@ -300,6 +306,8 @@ export function usePersistentStats(gameMode: GameMode, demo: boolean = false) {
 
     return {
         loaded,
+        backendResult,
+        backendMessage,
         signature,
         setSignature,
         guessStates,

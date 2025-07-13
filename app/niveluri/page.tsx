@@ -40,6 +40,8 @@ function LevelGame() {
 
     const {
         loaded,
+        backendResult,
+        backendMessage,
         signature,
         setSignature,
         guessStates,
@@ -86,6 +88,9 @@ function LevelGame() {
             />
 
             <GameGrid
+                loaded={loaded}
+                backendResult={backendResult}
+                backendMessage={backendMessage}
                 gameMode={GameMode.LEVEL}
                 virtualKeys={virtualKeys}
                 consumeFirstKey={consumeFirstKey}

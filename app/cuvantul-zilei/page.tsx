@@ -30,6 +30,8 @@ function DailyGame() {
 
     const {
         loaded,
+        backendResult,
+        backendMessage,
         signature,
         setSignature,
         guessStates,
@@ -71,6 +73,9 @@ function DailyGame() {
             />
 
             <GameGrid
+                loaded={loaded}
+                backendResult={backendResult}
+                backendMessage={backendMessage}
                 gameMode={GameMode.DAILY}
                 virtualKeys={virtualKeys}
                 consumeFirstKey={consumeFirstKey}

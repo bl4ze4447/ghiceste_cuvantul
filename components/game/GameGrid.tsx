@@ -23,12 +23,15 @@ interface GameGridProps {
     gameMode: GameMode;
     virtualKeys: string[];
     words: string[];
+    loaded: boolean;
     showRow: boolean[];
     runningState: RunningState;
     currentRow: number;
     blockingAnimation: boolean;
     signature: string;
     guessStates: GuessState[][];
+    backendResult: boolean | null;
+    backendMessage: string;
     consumeFirstKey: () => void;
     setSignature: React.Dispatch<React.SetStateAction<string>>;
     setGuessStates: React.Dispatch<React.SetStateAction<GuessState[][]>>;
@@ -45,6 +48,9 @@ interface GameGridProps {
 
 const GameGrid: React.FC<GameGridProps> = ({
     gameMode,
+    loaded,
+    backendResult,
+    backendMessage,
     virtualKeys,
     words,
     showRow,
@@ -70,6 +76,15 @@ const GameGrid: React.FC<GameGridProps> = ({
     const [description, setDescription] = useState('');
     const [showNotification, setShowNotification] = useState(false);
     const [title, setTitle] = useState('');
+
+    useEffect(() => {
+        if (!loaded || backendResult === true) return;
+
+        setShowNotification(true);
+        setDescription(backendMessage);
+        if (backendResult === null) setTitle('Problemă internă');
+        else setTitle('Avertisment');
+    }, [loaded, backendResult]);
 
     const disableBounceAnimation = useCallback(() => {
         setIsInvalidWord(false);
