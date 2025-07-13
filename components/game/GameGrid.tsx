@@ -2,7 +2,7 @@
 
 import '../styles/GameGrid.css';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -76,6 +76,16 @@ const GameGrid: React.FC<GameGridProps> = ({
     const [description, setDescription] = useState('');
     const [showNotification, setShowNotification] = useState(false);
     const [title, setTitle] = useState('');
+
+    const wrongWordSound = useRef<HTMLAudioElement | null>(null);
+    const wonSound = useRef<HTMLAudioElement | null>(null);
+    const lostSound = useRef<HTMLAudioElement | null>(null);
+
+    useEffect(() => {
+        wrongWordSound.current = new Audio('/sounds/wrong_word.wav');
+        wonSound.current = new Audio('/sounds/won.wav');
+        lostSound.current = new Audio('/sounds/lost.wav');
+    }, []);
 
     useEffect(() => {
         if (!loaded || backendResult === true) return;
@@ -231,26 +241,27 @@ const GameGrid: React.FC<GameGridProps> = ({
     }, [virtualKeys, consumeFirstKey, handleGameKeyPress]);
 
     useEffect(() => {
-        if (!isInvalidWord) return;
+        if (!isInvalidWord || wrongWordSound.current === null) return;
 
-        new Audio('/sounds/wrong_word.wav').play();
-    }, [isInvalidWord]);
+        wrongWordSound.current.currentTime = 0;
+        wrongWordSound.current.play();
+    }, [isInvalidWord, wrongWordSound]);
 
     useEffect(() => {
-        if (runningState === RunningState.PLAYING) return;
+        if (runningState === RunningState.PLAYING || !loaded) return;
 
         const timeout = setTimeout(() => {
-            const audio =
-                runningState === RunningState.WON
-                    ? new Audio('/sounds/won.wav')
-                    : new Audio('/sounds/lost.wav');
-            audio.play();
-        }, 2250);
+            const audio = runningState === RunningState.WON ? wonSound : lostSound;
+            if (audio.current === null) return;
+
+            audio.current.currentTime = 0;
+            audio.current.play();
+        }, 2150);
 
         return () => {
             clearTimeout(timeout);
         };
-    }, [runningState, gameMode]);
+    }, [runningState, gameMode, loaded, wonSound, lostSound]);
 
     return (
         <>

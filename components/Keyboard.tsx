@@ -40,7 +40,7 @@ const Keyboard: React.FC<KeyboardProps> = ({ setVirtualKeys, usedKeys }) => {
                             }
                             key={i}
                             className={`key-box ${getLetterClass(usedKeys[i], true)}`}
-                            onClick={() => handleKeyClick(key)}
+                            onPointerDown={() => handleKeyClick(key)}
                         >
                             <p className="key-letter">{key}</p>
                         </button>
@@ -62,7 +62,7 @@ const Keyboard: React.FC<KeyboardProps> = ({ setVirtualKeys, usedKeys }) => {
                                 usedKeys[i + rowOneKeys.length],
                                 true
                             )}`}
-                            onClick={() => handleKeyClick(key)}
+                            onPointerDown={() => handleKeyClick(key)}
                         >
                             {key.length === 1 && <p className="key-letter">{key}</p>}
                         </button>
@@ -83,7 +83,7 @@ const Keyboard: React.FC<KeyboardProps> = ({ setVirtualKeys, usedKeys }) => {
                                 usedKeys[i + rowOneKeys.length + rowTwoKeys.length],
                                 true
                             )}`}
-                            onClick={() => handleKeyClick(key)}
+                            onPointerDown={() => handleKeyClick(key)}
                         >
                             {key === 'Enter' && <AiOutlineEnter className="react-icon longer" />}
                             {key === 'Backspace' && (
