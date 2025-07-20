@@ -3,6 +3,7 @@
 import { verifyAccount } from '@/utils/backendUtils';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import BackButton from '../BackButton';
 
 function Verify() {
     const [result, setResult] = useState('');
@@ -22,6 +23,7 @@ function Verify() {
 
     return (
         <main>
+            <BackButton />=
             <h1
                 style={{
                     position: 'absolute',
