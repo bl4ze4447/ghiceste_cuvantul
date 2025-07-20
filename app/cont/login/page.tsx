@@ -171,7 +171,7 @@ const Login = () => {
                         </button>
                         <Link
                             className="p-account"
-                            href="/reseteaza-parola"
+                            href="/resetare-parola"
                             style={{ marginTop: '5px', color: '#93c5fd' }}
                         >
                             Ai uitat parola?
