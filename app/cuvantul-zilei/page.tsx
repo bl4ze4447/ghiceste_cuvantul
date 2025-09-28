@@ -110,8 +110,10 @@ function DailyGame() {
                 </div>
             </div>
 
-            {isServerDown === true ? (
-                <></>
+            {isServerDown === true && loaded ? (
+                <p className="working-on-game-p">
+                    Ne pare rău dar jocul este momentan în mentenanță. Reveniți mai târziu!
+                </p>
             ) : (
                 <>
                     <StatusBar
@@ -128,59 +130,54 @@ function DailyGame() {
                         gameMode={GameMode.DAILY}
                         onNextLevel={() => {}}
                     />
+                    {loggedIn === false ? (
+                        <GameGridLocal
+                            virtualKeys={virtualKeys}
+                            consumeFirstKey={consumeFirstKey}
+                            blockingAnimation={blockingAnimation}
+                            setBlockingAnimation={setBlockingAnimation}
+                            setUsedKeys={setUsedKeys}
+                            currentRow={currentRow}
+                            setCurrentRow={setCurrentRow}
+                            words={words}
+                            setWords={setWords}
+                            setGuessStates={setGuessStates}
+                            runningState={runningState}
+                            setGamesWon={setWonDaily}
+                            setGamesLost={setLostDaily}
+                            setRunningState={setRunningState}
+                            rowsDisplayed={showRow}
+                            setRowsDisplayed={setShowRow}
+                        />
+                    ) : (
+                        <GameGrid
+                            loaded={loaded}
+                            backendResult={backendResult}
+                            backendMessage={backendMessage}
+                            gameMode={GameMode.DAILY}
+                            virtualKeys={virtualKeys}
+                            consumeFirstKey={consumeFirstKey}
+                            blockingAnimation={blockingAnimation}
+                            setBlockingAnimation={setBlockingAnimation}
+                            setUsedKeys={setUsedKeys}
+                            currentRow={currentRow}
+                            setCurrentRow={setCurrentRow}
+                            words={words}
+                            setWords={setWords}
+                            signature={signature}
+                            setSignature={setSignature}
+                            guessStates={guessStates}
+                            setGuessStates={setGuessStates}
+                            showRow={showRow}
+                            setShowRow={setShowRow}
+                            runningState={runningState}
+                            setGamesWon={setWonDaily}
+                            setGamesLost={setLostDaily}
+                            setRunningState={setRunningState}
+                            setCurrentLevel={() => {}}
+                        />
+                    )}
                 </>
-            )}
-
-            {loggedIn === false ? (
-                <GameGridLocal
-                    virtualKeys={virtualKeys}
-                    consumeFirstKey={consumeFirstKey}
-                    blockingAnimation={blockingAnimation}
-                    setBlockingAnimation={setBlockingAnimation}
-                    setUsedKeys={setUsedKeys}
-                    currentRow={currentRow}
-                    setCurrentRow={setCurrentRow}
-                    words={words}
-                    setWords={setWords}
-                    setGuessStates={setGuessStates}
-                    runningState={runningState}
-                    setGamesWon={setWonDaily}
-                    setGamesLost={setLostDaily}
-                    setRunningState={setRunningState}
-                    rowsDisplayed={showRow}
-                    setRowsDisplayed={setShowRow}
-                />
-            ) : loggedIn === true ? (
-                <GameGrid
-                    loaded={loaded}
-                    backendResult={backendResult}
-                    backendMessage={backendMessage}
-                    gameMode={GameMode.DAILY}
-                    virtualKeys={virtualKeys}
-                    consumeFirstKey={consumeFirstKey}
-                    blockingAnimation={blockingAnimation}
-                    setBlockingAnimation={setBlockingAnimation}
-                    setUsedKeys={setUsedKeys}
-                    currentRow={currentRow}
-                    setCurrentRow={setCurrentRow}
-                    words={words}
-                    setWords={setWords}
-                    signature={signature}
-                    setSignature={setSignature}
-                    guessStates={guessStates}
-                    setGuessStates={setGuessStates}
-                    showRow={showRow}
-                    setShowRow={setShowRow}
-                    runningState={runningState}
-                    setGamesWon={setWonDaily}
-                    setGamesLost={setLostDaily}
-                    setRunningState={setRunningState}
-                    setCurrentLevel={() => {}}
-                />
-            ) : (
-                <p className="working-on-game-p">
-                    Ne pare rău dar jocul este momentan în mentenanță. Reveniți mai târziu!
-                </p>
             )}
             <Keyboard setVirtualKeys={setVirtualKeys} usedKeys={usedKeys} />
         </section>

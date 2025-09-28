@@ -112,7 +112,7 @@ function LevelGame() {
                 </div>
             </div>
 
-            {isServerDown === true ? (
+            {isServerDown === true && loaded ? (
                 <p className="working-on-game-p">
                     Ne pare rău dar jocul este momentan în mentenanță. Reveniți mai târziu!
                 </p>

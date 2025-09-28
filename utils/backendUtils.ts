@@ -3,7 +3,7 @@ import { StatisticsDto } from '@/dto/statistics';
 import { GameLevelDto } from '@/dto/game/gameLevel';
 import { updateGameRequest } from '@/dto/game/updateGameRequest';
 import { GameMode } from '@/constants/constants';
-const backendURL = 'https://api.ghicestecuvantul.ro';
+const backendURL = 'http://localhost:5239';
 
 export interface FetchResult {
     ok: boolean | null;
