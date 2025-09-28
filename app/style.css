@@ -1,0 +1,68 @@
+.game-button-account,
+.game-button-small,
+.game-button {
+    font-family: var(--font-capriola);
+    padding: 11.25px 8px;
+    border-radius: 10px;
+    color: white;
+    border: white 1px solid;
+    background: var(--bg-gradient);
+    cursor: pointer;
+    margin: 5px 0;
+    width: calc(1.1rem * 15);
+    transition: scale 100ms ease-out;
+    text-decoration: none;
+    text-align: center;
+}
+
+.game-button {
+    padding: 22px 8px;
+}
+
+.game-button-account {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+}
+.game-button-account:active {
+    scale: 0.9;
+}
+.game-button-account:hover {
+    opacity: 0.7;
+}
+
+.gba-bottom {
+    font-family: var(--font-exo2);
+    opacity: 0.7;
+}
+
+.game-button-small {
+    padding: 10px 8px;
+    margin: 2px 0;
+}
+.game-button-small:active {
+    scale: 0.9;
+}
+.game-button-small:hover {
+    opacity: 0.7;
+}
+.center-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    margin-top: 20px;
+}
+
+.main-menu {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+.menu-content {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+}

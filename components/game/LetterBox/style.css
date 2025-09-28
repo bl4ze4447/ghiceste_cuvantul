@@ -1,0 +1,49 @@
+.letter-box {
+    flex: 1;
+    aspect-ratio: 1 / 1;
+    max-width: 54px;
+    font-size: 1.75rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 3px;
+    transform-style: preserve-3d;
+    user-select: none;
+    text-transform: capitalize;
+    font-family: var(--font-capriola);
+}
+
+.letter-box span {
+    color: white;
+}
+
+.letter-bounce {
+    scale: 1.2;
+}
+
+.empty-letter {
+    background-color: transparent;
+    border: 2px solid #4f4f4f;
+}
+.wrong-letter {
+    background-color: #434343;
+    border: 2px solid #4f4f4f;
+}
+.guessed-letter {
+    background-color: #2ea200;
+    border: 2px solid #1e6a00;
+}
+.half-letter {
+    background-color: #e6b800;
+    border: 2px solid #a68501;
+}
+
+.letter-flip {
+    rotate: x 360deg;
+}
+
+.letter {
+    backface-visibility: hidden;
+    user-select: none;
+}

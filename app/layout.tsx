@@ -1,17 +1,23 @@
 import './globals.css';
 
-import { Exo_2, Bungee } from 'next/font/google';
+import { Capriola, Exo_2, Playwrite_RO } from 'next/font/google';
 import { Metadata } from 'next';
 import { Analytics } from '@vercel/analytics/next';
 
 const exo2 = Exo_2({
     subsets: ['latin'],
     display: 'swap',
+    variable: '--font-exo2',
 });
-const bungee = Bungee({
-    weight: '400',
-    subsets: ['latin'],
+const playwrite = Playwrite_RO({
     display: 'swap',
+    variable: '--font-title',
+});
+const workSans = Capriola({
+    weight: '400',
+    display: 'swap',
+    variable: '--font-capriola',
+    subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
@@ -23,6 +29,7 @@ export const metadata: Metadata = {
         'cuvântul zilei',
         'jocuri românești',
         'ghiceste cuvantul',
+        'cuvant',
         'ghiceste',
         'wordle ro',
         'wordle in romana',
@@ -30,8 +37,8 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'Ghicește cuvântul',
         description: 'Joacă ghicește cuvântul și descoperă cuvintele înaintea prietenilor!',
-        images: ['https://wordle-ro.com/social_media.png'],
-        url: 'https://wordle-ro.com',
+        images: ['https://ghicestecuvantul.ro/social_media.png'],
+        url: 'https://ghicestecuvantul.ro',
     },
 };
 
@@ -41,7 +48,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="ro" className={`${exo2.className} ${bungee.className}`}>
+        <html lang="ro" className={`${exo2.variable} ${playwrite.variable} ${workSans.variable}`}>
             <body>
                 {children}
                 <Analytics />

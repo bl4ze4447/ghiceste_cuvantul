@@ -1,8 +1,8 @@
 'use client';
 
-import BackButton from '@/components/BackButton';
-import Notification from '@/components/Notification';
-import '../../components/account/AccountRelated.css';
+import './style.css';
+import BackButton from '@/components/BackButton/component';
+import Notification from '@/components/Notification/component';
 import { TextField } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -88,7 +88,7 @@ function ResetPassword() {
     };
 
     return (
-        <main style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <main className="main-container-reset">
             <input
                 type="text"
                 name="phone_number"
@@ -100,17 +100,19 @@ function ResetPassword() {
             <h2 style={{ marginBottom: '20px' }}>SCHIMBARE PAROLĂ</h2>
             {isRequesting === true ? (
                 <>
-                    <p className="exo">Introdu adresa de email cu care ai creat contul:</p>
-                    <div className="ml-20 mr-20 mt-8" style={{ marginBottom: '5px' }}>
+                    <p className="register-info-normal">
+                        Introdu adresa de email cu care ai creat contul:
+                    </p>
+                    <div className="text-field-confirm-email-container">
                         <TextField
-                            className="google-inputs"
+                            className="text-field"
                             label="Email"
                             type="email"
                             variant="outlined"
                             value={email}
                             onChange={(ev) => setEmail(ev.target.value)}
                             sx={{
-                                width: '25ch',
+                                width: '30ch',
                                 input: { color: 'white' },
                                 label: {
                                     color: 'rgba(255,255,255,0.7)',
@@ -146,32 +148,21 @@ function ResetPassword() {
                 </>
             ) : (
                 <>
-                    <p className="exo">Introdu o nouă parolă sigură:</p>
-                    <div className="ml-20 mr-20 mt-8">
-                        <p
-                            className="exo"
-                            style={{
-                                fontSize: '0.9rem',
-                                opacity: '0.8',
-                                marginBottom: '5px',
-                                maxWidth: '280px',
-                                textAlign: 'justify',
-                                marginLeft: 'auto',
-                                marginRight: 'auto',
-                            }}
-                        >
-                            Parola trebuie să conțină cel puțin o literă mică, o literă mare și o
+                    <p className="register-info-normal">Introdu o nouă parolă sigură:</p>
+                    <div className="text-field-password-container">
+                        <p className="register-info">
+                            Parola trebuie să conțină cel puțin o literă mică, o literă mare, o
                             cifră, și un minim de 8 caractere
                         </p>
                         <TextField
-                            className="google-inputs"
+                            className="text-field"
                             label="Parolă"
                             type="password"
                             variant="outlined"
                             value={password}
                             onChange={(ev) => setPassword(ev.target.value)}
                             sx={{
-                                width: '25ch',
+                                width: '30ch',
                                 input: { color: 'white' },
                                 label: {
                                     color: 'rgba(255,255,255,0.7)',
@@ -194,16 +185,16 @@ function ResetPassword() {
                         />
                     </div>
 
-                    <div className="ml-20 mr-20 mt-8 mb-16">
+                    <div className="text-field-confirm-password-container">
                         <TextField
-                            className="google-inputs"
+                            className="text-field"
                             label="Confirm parolă"
                             type="password"
                             variant="outlined"
                             value={password2}
                             onChange={(ev) => setPassword2(ev.target.value)}
                             sx={{
-                                width: '25ch',
+                                width: '30ch',
                                 input: { color: 'white' },
                                 label: {
                                     color: 'rgba(255,255,255,0.7)',

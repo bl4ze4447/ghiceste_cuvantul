@@ -1,0 +1,103 @@
+body {
+    --gap-between: 6px;
+    --margin-bottom: 9px;
+    --key-height: 50px;
+    --grid-padding-top: 12px;
+    --grid-padding-bottom: 24px;
+    --grid-max-height: calc(
+        var(--margin-bottom) * 3 + var(--key-height) * 3 + var(--grid-padding-bottom) +
+            var(--grid-padding-top)
+    );
+}
+
+.keyboard-fixed {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+}
+
+.key-row {
+    display: grid;
+    justify-content: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.key-row.row-1 {
+    grid-template-columns: repeat(10, 1fr);
+}
+
+.key-row.row-2 {
+    grid-template-columns: 0.5fr repeat(9, 1fr) 0.5fr;
+}
+
+.key-row.row-3 {
+    grid-template-columns: 1.5fr repeat(7, 1fr) 1.5fr;
+}
+
+.key-box-outer {
+    background-color: transparent;
+    width: 100%;
+    height: var(--key-height);
+    font-weight: bold;
+    user-select: none;
+    border: none;
+    transition: background-color 1s ease-in, transform 25ms ease-in-out, opacity 25ms ease-in-out;
+    padding: 4px 3px;
+}
+.key-box {
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #777777;
+    text-transform: uppercase;
+}
+.key-box-outer:active {
+    scale: 0.8;
+    opacity: 0.8;
+}
+.key-box > p {
+    user-select: none;
+}
+.longer {
+    width: 40px;
+}
+.keyboard-grid {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 500px;
+    max-height: var(--grid-max-height);
+    z-index: 3;
+    padding-top: var(--grid-padding-top);
+    padding-bottom: var(--grid-padding-bottom);
+    padding-left: 6px;
+    padding-right: 6px;
+    box-sizing: border-box;
+    background-color: rgba(35, 35, 35, 0.85);
+    border-top: 1.5px solid white;
+    border-radius: 10px 10px 0px 0px;
+}
+
+.key-letter,
+.react-icon {
+    color: #ffffff;
+    text-align: center;
+    font-family: var(--font-capriola);
+    font-size: 1.2rem;
+}
+
+.wrong-letter-key {
+    background-color: #434343 !important;
+}
+.guessed-letter-key {
+    background-color: #2ea200 !important;
+}
+.half-letter-key {
+    background-color: #e6b800 !important;
+}

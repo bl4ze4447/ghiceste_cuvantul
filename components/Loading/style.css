@@ -1,0 +1,23 @@
+.loading-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 0 10px;
+}
+
+.loading-section-fullscreen {
+    height: 100vh;
+}
+
+.loading-top-p {
+    font-family: var(--font-exo2);
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.loading-bottom-p {
+    font-family: var(--font-exo2);
+    margin-top: 5px;
+}

@@ -1,17 +1,15 @@
 'use client';
 
-import '@/components/account/AccountRelated.css';
-
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AccountLoad, ModalAnswer } from '@/constants/constants';
-import Card from '@/components/Card';
-import Loading from '@/components/Loading';
-import Notification from '@/components/Notification';
+import Loading from '@/components/Loading/component';
+import Notification from '@/components/Notification/component';
 import { deleteAccount, isLogged, logout, getStatistics } from '@/utils/backendUtils';
 import { StatisticsDto } from '@/dto/statistics';
-import BackButton from '@/components/BackButton';
-import ConfirmModal from '@/components/ConfirmModal';
+import BackButton from '@/components/BackButton/component';
+import ConfirmModal from '@/components/ConfirmModal/component';
+import Statistics from '@/components/Statistics/component';
 
 const Account = () => {
     const router = useRouter();
@@ -47,8 +45,6 @@ const Account = () => {
 
             setShowNotification(false);
             setLoggedIn(AccountLoad.LOGGED);
-            setError('');
-            setBottomMessage('');
         });
     }, [router]);
 
@@ -65,11 +61,9 @@ const Account = () => {
     const [bottomMessage, setBottomMessage] = useState('');
 
     const [statistics, setStatistics] = useState<StatisticsDto | null>(null);
-    const [showAccountData, setShowAccountData] = useState(false);
 
     const getStatisticsChecked = async () => {
         const result = await getStatistics();
-        setShowAccountData(true);
         if (result.ok === null || result.ok === false) {
             if (result.ok === null) {
                 setDescription(result.message);
@@ -169,7 +163,7 @@ const Account = () => {
     }, [accountDeletionModal, modalVisible, deleteChecked]);
 
     return (
-        <section className="account-wrapper">
+        <main className="account-wrapper">
             <BackButton />
             <input
                 type="text"
@@ -178,428 +172,23 @@ const Account = () => {
                 autoComplete="off"
                 tabIndex={-1}
             />
-            {loggedIn === AccountLoad.LOGGED && showAccountData ? (
-                <div className="create-account">
-                    <h2 style={{ marginBottom: '20px' }}>CONTUL TĂU</h2>
-                    <div
-                        className="ml-20 mr-20"
-                        style={{
-                            minWidth: '300px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Card>
-                            <h4 style={{ marginBottom: '15px', marginTop: '-6px' }}>
-                                Informații utilizator
-                            </h4>
-                            <div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p
-                                        className="p-account"
-                                        style={{
-                                            margin: 0,
-                                            textAlign: 'left',
-                                            textDecoration: 'none',
-                                        }}
-                                    >
-                                        Poreclă:
-                                    </p>
-                                    <p
-                                        className="exo"
-                                        style={{
-                                            margin: 0,
-                                            fontWeight: 'bold',
-                                            textAlign: 'right',
-                                        }}
-                                    >
-                                        {statistics !== null ? statistics.username : 'Indisponibil'}
-                                    </p>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p
-                                        className="p-account"
-                                        style={{
-                                            margin: 0,
-                                            textAlign: 'left',
-                                            textDecoration: 'none',
-                                        }}
-                                    >
-                                        Email:
-                                    </p>
-                                    <p
-                                        className="exo"
-                                        style={{
-                                            margin: 0,
-                                            fontWeight: 'bold',
-                                            textAlign: 'right',
-                                        }}
-                                    >
-                                        {statistics !== null
-                                            ? statistics.emailAddress
-                                            : 'Indisponibil'}
-                                    </p>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p
-                                        className="p-account"
-                                        style={{
-                                            margin: 0,
-                                            textAlign: 'left',
-                                            textDecoration: 'none',
-                                        }}
-                                    >
-                                        Verificat:
-                                    </p>
-                                    <p
-                                        className="exo"
-                                        style={{
-                                            margin: 0,
-                                            fontWeight: 'bold',
-                                            textAlign: 'right',
-                                            color:
-                                                statistics && statistics.verified
-                                                    ? '#2ea200'
-                                                    : '#FF4C4C',
-                                        }}
-                                    >
-                                        {statistics !== null
-                                            ? statistics.verified
-                                                ? 'DA'
-                                                : 'NU'
-                                            : 'Indisponibil'}
-                                    </p>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p
-                                        className="p-account"
-                                        style={{
-                                            margin: 0,
-                                            textAlign: 'left',
-                                            textDecoration: 'none',
-                                        }}
-                                    >
-                                        Restricționat:
-                                    </p>
-                                    <p
-                                        className="exo"
-                                        style={{
-                                            margin: 0,
-                                            fontWeight: 'bold',
-                                            textAlign: 'right',
-                                            color:
-                                                statistics && statistics.banned
-                                                    ? '#E94B3C'
-                                                    : '#2ea200',
-                                        }}
-                                    >
-                                        {statistics !== null
-                                            ? statistics.banned
-                                                ? 'DA'
-                                                : 'NU'
-                                            : 'Indisponibil'}
-                                    </p>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p
-                                        className="p-account"
-                                        style={{
-                                            margin: 0,
-                                            textAlign: 'left',
-                                            textDecoration: 'none',
-                                        }}
-                                    >
-                                        Jocuri jucate:
-                                    </p>
-                                    <p
-                                        className="exo"
-                                        style={{
-                                            margin: 0,
-                                            fontWeight: 'bold',
-                                            textAlign: 'right',
-                                        }}
-                                    >
-                                        {statistics !== null
-                                            ? statistics.totalGames
-                                            : 'Indisponibil'}
-                                    </p>
-                                </div>
-                            </div>
-                        </Card>
-                        <Card>
-                            <h4 style={{ marginBottom: '15px', marginTop: '-6px' }}>
-                                Statistici niveluri
-                            </h4>
-                            <div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p
-                                        className="p-account"
-                                        style={{
-                                            margin: 0,
-                                            textAlign: 'left',
-                                            textDecoration: 'none',
-                                        }}
-                                    >
-                                        Jocuri jucate:
-                                    </p>
-                                    <p
-                                        className="exo"
-                                        style={{
-                                            margin: 0,
-                                            fontWeight: 'bold',
-                                            textAlign: 'right',
-                                        }}
-                                    >
-                                        {statistics !== null
-                                            ? statistics.levelLoses + statistics.levelWins
-                                            : 'Indisponibil'}
-                                    </p>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p
-                                        className="p-account"
-                                        style={{
-                                            margin: 0,
-                                            textAlign: 'left',
-                                            textDecoration: 'none',
-                                        }}
-                                    >
-                                        Niveluri câștigate:
-                                    </p>
-                                    <p
-                                        className="exo"
-                                        style={{
-                                            margin: 0,
-                                            fontWeight: 'bold',
-                                            textAlign: 'right',
-                                        }}
-                                    >
-                                        {statistics !== null
-                                            ? statistics.levelWins
-                                            : 'Indisponibil'}
-                                    </p>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p
-                                        className="p-account"
-                                        style={{
-                                            margin: 0,
-                                            textAlign: 'left',
-                                            textDecoration: 'none',
-                                        }}
-                                    >
-                                        Niveluri pierdute:
-                                    </p>
-                                    <p
-                                        className="exo"
-                                        style={{
-                                            margin: 0,
-                                            fontWeight: 'bold',
-                                            textAlign: 'right',
-                                        }}
-                                    >
-                                        {statistics !== null
-                                            ? statistics.levelLoses
-                                            : 'Indisponibil'}
-                                    </p>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p
-                                        className="p-account"
-                                        style={{
-                                            margin: 0,
-                                            textAlign: 'left',
-                                            textDecoration: 'none',
-                                        }}
-                                    >
-                                        Victorii consecutive:
-                                    </p>
-                                    <p
-                                        className="exo"
-                                        style={{
-                                            margin: 0,
-                                            fontWeight: 'bold',
-                                            textAlign: 'right',
-                                        }}
-                                    >
-                                        {statistics !== null
-                                            ? statistics.levelStreak
-                                            : 'Indisponibil'}
-                                    </p>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p
-                                        className="p-account"
-                                        style={{
-                                            margin: 0,
-                                            textAlign: 'left',
-                                            textDecoration: 'none',
-                                        }}
-                                    >
-                                        Record victorii consecutive:
-                                    </p>
-                                    <p
-                                        className="exo"
-                                        style={{
-                                            margin: 0,
-                                            fontWeight: 'bold',
-                                            textAlign: 'right',
-                                        }}
-                                    >
-                                        {statistics !== null
-                                            ? statistics.levelMaxStreak
-                                            : 'Indisponibil'}
-                                    </p>
-                                </div>
-                            </div>
-                        </Card>
-                        <Card>
-                            <h4 style={{ marginBottom: '15px', marginTop: '-6px' }}>
-                                Statistici cuvântul zilei
-                            </h4>{' '}
-                            <div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p
-                                        className="p-account"
-                                        style={{
-                                            margin: 0,
-                                            textAlign: 'left',
-                                            textDecoration: 'none',
-                                        }}
-                                    >
-                                        Jocuri jucate:
-                                    </p>
-                                    <p
-                                        className="exo"
-                                        style={{
-                                            margin: 0,
-                                            fontWeight: 'bold',
-                                            textAlign: 'right',
-                                        }}
-                                    >
-                                        {statistics !== null
-                                            ? statistics.dailyLoses + statistics.dailyWins
-                                            : 'Indisponibil'}
-                                    </p>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p
-                                        className="p-account"
-                                        style={{
-                                            margin: 0,
-                                            textAlign: 'left',
-                                            textDecoration: 'none',
-                                        }}
-                                    >
-                                        Zile câștigate:
-                                    </p>
-                                    <p
-                                        className="exo"
-                                        style={{
-                                            margin: 0,
-                                            fontWeight: 'bold',
-                                            textAlign: 'right',
-                                        }}
-                                    >
-                                        {statistics !== null
-                                            ? statistics.dailyWins
-                                            : 'Indisponibil'}
-                                    </p>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p
-                                        className="p-account"
-                                        style={{
-                                            margin: 0,
-                                            textAlign: 'left',
-                                            textDecoration: 'none',
-                                        }}
-                                    >
-                                        Zile pierdute:
-                                    </p>
-                                    <p
-                                        className="exo"
-                                        style={{
-                                            margin: 0,
-                                            fontWeight: 'bold',
-                                            textAlign: 'right',
-                                        }}
-                                    >
-                                        {statistics !== null
-                                            ? statistics.dailyLoses
-                                            : 'Indisponibil'}
-                                    </p>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p
-                                        className="p-account"
-                                        style={{
-                                            margin: 0,
-                                            textAlign: 'left',
-                                            textDecoration: 'none',
-                                        }}
-                                    >
-                                        Victorii consecutive:
-                                    </p>
-                                    <p
-                                        className="exo"
-                                        style={{
-                                            margin: 0,
-                                            fontWeight: 'bold',
-                                            textAlign: 'right',
-                                        }}
-                                    >
-                                        {statistics !== null
-                                            ? statistics.dailyStreak
-                                            : 'Indisponibil'}
-                                    </p>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <p
-                                        className="p-account"
-                                        style={{
-                                            margin: 0,
-                                            textAlign: 'left',
-                                            textDecoration: 'none',
-                                        }}
-                                    >
-                                        Record victorii consecutive:
-                                    </p>
-                                    <p
-                                        className="exo"
-                                        style={{
-                                            margin: 0,
-                                            fontWeight: 'bold',
-                                            textAlign: 'right',
-                                        }}
-                                    >
-                                        {statistics !== null
-                                            ? statistics.dailyMaxStreak
-                                            : 'Indisponibil'}
-                                    </p>
-                                </div>
-                            </div>
-                        </Card>
-                        <input
-                            style={{ marginTop: '10px', width: '250px' }}
-                            type="button"
-                            value="Ieși din cont"
-                            className="connect-button-small"
+            {loggedIn === AccountLoad.LOGGED && statistics ? (
+                <div>
+                    <Statistics statistics={statistics} />
+
+                    <div className="statistics-container">
+                        <button
+                            className="logout-button"
                             onClick={async () => {
                                 await logoutChecked();
                             }}
-                        />
-                        <p
-                            className="exo"
-                            style={{ fontWeight: 'bolder', fontSize: '1.2rem', marginTop: '10px' }}
                         >
-                            Zonă periculoasă!
-                        </p>
+                            Ieși din cont
+                        </button>
+                        <p className="danger-p">Zonă periculoasă!</p>
                         <button
-                            style={{ marginTop: '5px', marginBottom: '45px', width: '250px' }}
                             type="button"
-                            className="connect-button-small button-important"
+                            className="delete-button button-important"
                             onClick={() => {
                                 setModalVisible(true);
                             }}
@@ -607,6 +196,7 @@ const Account = () => {
                             Șterge contul
                         </button>
                     </div>
+
                     <ConfirmModal
                         visible={modalVisible}
                         setVisible={setModalVisible}
@@ -619,31 +209,22 @@ const Account = () => {
                         password={password}
                         setPassword={setPassword}
                     />
-                    <Notification
-                        title={title}
-                        onClose={() => {
-                            setShowNotification(false);
-                        }}
-                        description={description}
-                        visible={showNotification}
-                    />
                 </div>
             ) : loggedIn === AccountLoad.NOT_LOGGED ? (
                 <Loading topMessage={error} bottomMessage={bottomMessage} />
             ) : (
-                <>
-                    <Loading topMessage="Pregătim pagina" bottomMessage="pentru tine" />
-                    <Notification
-                        title={title}
-                        onClose={() => {
-                            setShowNotification(false);
-                        }}
-                        description={description}
-                        visible={showNotification}
-                    />
-                </>
+                <Loading topMessage="Pregătim pagina" bottomMessage="pentru tine" />
             )}
-        </section>
+
+            <Notification
+                title={title}
+                onClose={() => {
+                    setShowNotification(false);
+                }}
+                description={description}
+                visible={showNotification}
+            />
+        </main>
     );
 };
 

@@ -1,0 +1,11 @@
+.footer-container {
+    font-family: var(--font-exo2);
+    font-size: 0.9rem;
+
+    text-align: center;
+    margin: 30px 10px;
+}
+
+.footer-links-section {
+    line-height: 1.4;
+}

@@ -14,6 +14,7 @@ export function usePersistentStats(gameMode: GameMode, demo: boolean = false) {
     const [loadedLocal, setLoadedLocal] = useState(false);
     const [_, setLoadedBackend] = useState(false);
     const [backendResult, setBackendResult] = useState<boolean | null>(null);
+    const [isServerDown, setIsServerDown] = useState<boolean | null>(null);
     const [backendMessage, setBackendMessage] = useState<string>('');
 
     const [currentLevel, setCurrentLevel] = useState(1);
@@ -186,6 +187,7 @@ export function usePersistentStats(gameMode: GameMode, demo: boolean = false) {
             case GameMode.DAILY:
                 getLastDaily().then((result) => {
                     setBackendResult(result.ok);
+                    setIsServerDown(result.ok === null);
                     setBackendMessage(result.message);
                     if (result.ok !== true) {
                         setLoaded(true);
@@ -209,6 +211,7 @@ export function usePersistentStats(gameMode: GameMode, demo: boolean = false) {
             case GameMode.LEVEL:
                 getLastLevel().then((result) => {
                     setBackendResult(result.ok);
+                    setIsServerDown(result.ok === null);
                     setBackendMessage(result.message);
                     if (result.ok !== true) {
                         setLoaded(true);
@@ -231,7 +234,7 @@ export function usePersistentStats(gameMode: GameMode, demo: boolean = false) {
                 });
                 break;
         }
-    }, [loadedLocal, gameMode, demo]);
+    }, [loadedLocal, gameMode, demo, isServerDown]);
 
     // Write to the localStorage based on the current GameType
     useEffect(() => {
@@ -306,6 +309,7 @@ export function usePersistentStats(gameMode: GameMode, demo: boolean = false) {
 
     return {
         loaded,
+        isServerDown,
         backendResult,
         backendMessage,
         signature,

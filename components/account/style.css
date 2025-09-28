@@ -1,0 +1,112 @@
+.verify-h1 {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    text-align: center;
+    font-family: var(--font-exo2);
+    color: white;
+}
+
+h2 {
+    font-family: var(--font-capriola);
+}
+
+.main-container-reset {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+}
+
+.create-account {
+    display: grid;
+    text-align: center;
+    justify-items: center;
+    grid-template-columns: 1fr;
+}
+
+.register-title {
+    font-family: var(--font-capriola);
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.text-field-email-container,
+.text-field-password-container,
+.text-field-username-cotnainer {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.text-field-email-container,
+.text-field-password-container,
+.text-field-confirm-password-container {
+    margin-top: 8px;
+}
+
+.text-field-confirm-password-container,
+.text-field-confirm-email-container {
+    margin-bottom: 16px;
+}
+
+.register-info {
+    font-family: var(--font-exo2);
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-bottom: 10px;
+    max-width: 280px;
+    text-align: justify;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.register-info-normal {
+    font-family: var(--font-exo2);
+    max-width: 280px;
+    text-align: justify;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+}
+
+.connect-button {
+    padding: 15px 30px 15px 30px;
+    border-radius: 10px 10px 10px 10px;
+    color: white;
+    border: white 1px solid;
+    background: #537d5d;
+    cursor: pointer;
+    margin: 5px 0;
+    background: var(--bg-gradient);
+    transition: all 100ms ease-out;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 5px;
+    font-family: var(--font-capriola);
+    font-size: 1.05rem;
+}
+
+.connect-button:active {
+    scale: 0.9;
+}
+
+.connect-button:hover {
+    opacity: 0.5;
+}
+
+.forgot-pass {
+    margin-top: 5px;
+}
+
+.no-account,
+.a-no-account,
+.forgot-pass,
+.text-field {
+    font-family: var(--font-exo2);
+}
+
+.text-field {
+    font-size: 1rem;
+}

@@ -310,7 +310,7 @@ export async function login(emailAddress: string, password: string, phoneNumber:
 
 export async function logout() {
     const csrfToken: string | null = localStorage.getItem('csrfToken');
-    if (csrfToken == null)
+    if (csrfToken === null)
         return newFetchResult(
             false,
             'Sesiunea este invalidă/expirată! Vă rugăm să vă autentificați!'
@@ -343,15 +343,15 @@ export async function logout() {
 
 export async function deleteAccount(emailAddress: string, password: string, phoneNumber: string) {
     const csrfToken: string | null = localStorage.getItem('csrfToken');
-    if (csrfToken == null)
+    if (csrfToken === null)
         return newFetchResult(
             false,
             'Sesiunea este invalidă/expirată! Vă rugăm să vă autentificați!'
         );
 
-    if (emailAddress.trim().length == 0)
+    if (emailAddress.trim().length === 0)
         return newFetchResult(false, 'Adresa de email nu poate fi goală!');
-    if (emailAddress.trim().length != emailAddress.length)
+    if (emailAddress.trim().length !== emailAddress.length)
         return newFetchResult(false, 'Adresa de email nu poate conține spații!');
 
     if (password.trim().length == 0) return newFetchResult(false, 'Parola nu poate fi goală!');
@@ -408,12 +408,6 @@ function extractErrorMessage(data: any): string {
 
 export async function getLastDaily() {
     const csrfToken: string | null = localStorage.getItem('csrfToken');
-    if (csrfToken == null)
-        return newFetchGameResult(
-            false,
-            null,
-            'Sesiunea este invalidă/expirată! Vă rugăm să vă autentificați!'
-        );
 
     try {
         const response = await fetch(`${backendURL}/api/game/last-daily`, {
@@ -421,7 +415,7 @@ export async function getLastDaily() {
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-Token': csrfToken,
+                'X-CSRF-Token': csrfToken === null ? '' : csrfToken,
             },
         });
 
@@ -443,12 +437,6 @@ export async function getLastDaily() {
 
 export async function getLastLevel() {
     const csrfToken: string | null = localStorage.getItem('csrfToken');
-    if (csrfToken == null)
-        return newFetchGameResult(
-            false,
-            null,
-            'Sesiunea este invalidă/expirată! Vă rugăm să vă autentificați!'
-        );
 
     try {
         const response = await fetch(`${backendURL}/api/game/last-level`, {
@@ -456,7 +444,7 @@ export async function getLastLevel() {
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-Token': csrfToken,
+                'X-CSRF-Token': csrfToken === null ? '' : csrfToken,
             },
         });
 
@@ -601,12 +589,6 @@ export async function getStatistics() {
 
 export async function secretWord(gameMode: GameMode) {
     const csrfToken: string | null = localStorage.getItem('csrfToken');
-    if (csrfToken == null)
-        return newFetchResult(
-            false,
-            'Sesiunea este invalidă/expirată! Vă rugăm să vă autentificați!'
-        );
-
     try {
         const response = await fetch(
             `${backendURL}/api/game/${
@@ -617,7 +599,7 @@ export async function secretWord(gameMode: GameMode) {
                 credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-Token': csrfToken,
+                    'X-CSRF-Token': csrfToken === null ? '' : csrfToken,
                 },
             }
         );

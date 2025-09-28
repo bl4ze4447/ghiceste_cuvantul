@@ -1,0 +1,9 @@
+.game-grid {
+    /* Must match the keyboard max-height */
+    padding-bottom: calc(var(--grid-max-height) + 30px);
+}
+
+.daily-word-message {
+    text-align: center;
+    margin: 0;
+}

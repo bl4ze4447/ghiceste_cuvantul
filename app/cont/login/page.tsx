@@ -1,15 +1,15 @@
 'use client';
 
-import '@/components/account/AccountRelated.css';
+import './style.css';
 
 import { TextField } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import Loading from '@/components/Loading';
+import Loading from '@/components/Loading/component';
 import { useRouter } from 'next/navigation';
 import { isLogged, login } from '@/utils/backendUtils';
-import Notification from '@/components/Notification';
-import BackButton from '@/components/BackButton';
+import Notification from '@/components/Notification/component';
+import BackButton from '@/components/BackButton/component';
 
 const Login = () => {
     const router = useRouter();
@@ -92,10 +92,10 @@ const Login = () => {
                 <section className="account-wrapper">
                     <BackButton />
                     <div className="create-account">
-                        <h2 style={{ marginBottom: '20px' }}>Intră în cont</h2>
-                        <div className="ml-20 mr-20">
+                        <h1 className="login-title">Intră în cont</h1>
+                        <div className="text-field-email-container">
                             <TextField
-                                className="google-inputs"
+                                className="text-field"
                                 label="Email"
                                 type="email"
                                 variant="outlined"
@@ -124,9 +124,9 @@ const Login = () => {
                                 }}
                             />
                         </div>
-                        <div className="ml-20 mr-20 mt-8 mb-16">
+                        <div className="text-field-password-container">
                             <TextField
-                                className="google-inputs"
+                                className="text-field"
                                 label="Parolă"
                                 type="password"
                                 variant="outlined"
@@ -162,23 +162,15 @@ const Login = () => {
                             autoComplete="off"
                             tabIndex={-1}
                         />
-                        <button
-                            className="connect-button"
-                            onClick={loginChecked}
-                            style={{ marginTop: '5px' }}
-                        >
+                        <button className="connect-button" onClick={loginChecked}>
                             Conectează-te
                         </button>
-                        <Link
-                            className="p-account"
-                            href="/resetare-parola"
-                            style={{ marginTop: '5px', color: '#93c5fd' }}
-                        >
+                        <Link className="forgot-pass" href="/resetare-parola">
                             Ai uitat parola?
                         </Link>
-                        <p className="p-account" style={{ textDecoration: 'none' }}>
+                        <p className="no-account">
                             Nu ai un cont?{' '}
-                            <Link href="/cont/register" style={{ color: '#93c5fd' }}>
+                            <Link href="/cont/register" className="a-no-account">
                                 Creează-ți unul aici
                             </Link>
                         </p>

@@ -1,15 +1,15 @@
 'use client';
 
-import '@/components/account/AccountRelated.css';
+import './style.css';
 
 import { TextField } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
-import Notification from '@/components/Notification';
+import Notification from '@/components/Notification/component';
 import { useRouter } from 'next/navigation';
-import Loading from '@/components/Loading';
+import Loading from '@/components/Loading/component';
 import { register, isLogged } from '@/utils/backendUtils';
-import TermsCheckbox from '@/components/TermsCheckbox';
-import BackButton from '@/components/BackButton';
+import TermsCheckbox from '@/components/TermsCheckbox/component';
+import BackButton from '@/components/BackButton/component';
 
 const Login = () => {
     const router = useRouter();
@@ -129,32 +129,21 @@ const Login = () => {
                 <section className="account-wrapper">
                     <BackButton />
                     <div className="create-account">
-                        <h2 style={{ marginBottom: '20px' }}>Creează un cont</h2>
-                        <div className="ml-20 mr-20">
-                            <p
-                                className="exo"
-                                style={{
-                                    fontSize: '0.9rem',
-                                    opacity: '0.8',
-                                    marginBottom: '5px',
-                                    maxWidth: '280px',
-                                    textAlign: 'justify',
-                                    marginLeft: 'auto',
-                                    marginRight: 'auto',
-                                }}
-                            >
+                        <h1 className="register-title">Creează un cont</h1>
+                        <div className="text-field-username-container">
+                            <p className="register-info">
                                 Numele de utilizator poate conține doar litere, cifre și underline{' '}
                                 {'( _ )'}
                             </p>
                             <TextField
-                                className="google-inputs"
+                                className="text-field"
                                 label="Nume de utilizator"
                                 type="text"
                                 variant="outlined"
                                 value={username}
                                 onChange={(ev) => setUsername(ev.target.value)}
                                 sx={{
-                                    width: '25ch',
+                                    width: '30ch',
                                     input: { color: 'white' },
                                     label: {
                                         color: 'rgba(255,255,255,0.7)',
@@ -177,16 +166,16 @@ const Login = () => {
                             />
                         </div>
 
-                        <div className="ml-20 mr-20 mt-8">
+                        <div className="text-field-email-container">
                             <TextField
-                                className="google-inputs"
+                                className="text-field"
                                 label="Email"
                                 type="email"
                                 variant="outlined"
                                 value={email}
                                 onChange={(ev) => setEmail(ev.target.value)}
                                 sx={{
-                                    width: '25ch',
+                                    width: '30ch',
                                     input: { color: 'white' },
                                     label: {
                                         color: 'rgba(255,255,255,0.7)',
@@ -209,31 +198,20 @@ const Login = () => {
                             />
                         </div>
 
-                        <div className="ml-20 mr-20 mt-8">
-                            <p
-                                className="exo"
-                                style={{
-                                    fontSize: '0.9rem',
-                                    opacity: '0.8',
-                                    marginBottom: '5px',
-                                    maxWidth: '280px',
-                                    textAlign: 'justify',
-                                    marginLeft: 'auto',
-                                    marginRight: 'auto',
-                                }}
-                            >
-                                Parola trebuie să conțină cel puțin o literă mică, o literă mare și
-                                o cifră, și un minim de 8 caractere
+                        <div className="text-field-password-container">
+                            <p className="register-info">
+                                Parola trebuie să conțină cel puțin o literă mică, o literă mare, o
+                                cifră, și un minim de 8 caractere
                             </p>
                             <TextField
-                                className="google-inputs"
+                                className="text-field"
                                 label="Parolă"
                                 type="password"
                                 variant="outlined"
                                 value={password}
                                 onChange={(ev) => setPassword(ev.target.value)}
                                 sx={{
-                                    width: '25ch',
+                                    width: '30ch',
                                     input: { color: 'white' },
                                     label: {
                                         color: 'rgba(255,255,255,0.7)',
@@ -256,16 +234,16 @@ const Login = () => {
                             />
                         </div>
 
-                        <div className="ml-20 mr-20 mt-8 mb-16">
+                        <div className="text-field-confirm-password-container">
                             <TextField
-                                className="google-inputs"
+                                className="text-field"
                                 label="Confirm parolă"
                                 type="password"
                                 variant="outlined"
                                 value={password2}
                                 onChange={(ev) => setPassword2(ev.target.value)}
                                 sx={{
-                                    width: '25ch',
+                                    width: '30ch',
                                     input: { color: 'white' },
                                     label: {
                                         color: 'rgba(255,255,255,0.7)',
@@ -302,13 +280,6 @@ const Login = () => {
                             Creează contul
                         </button>
                     </div>
-                    <div
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
-                    ></div>
                     <Notification
                         title={title}
                         description={description}

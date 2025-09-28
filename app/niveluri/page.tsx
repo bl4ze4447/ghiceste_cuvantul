@@ -1,14 +1,17 @@
 'use client';
 
-import Keyboard from '@/components/Keyboard';
-import LevelBar from '@/components/game/LevelBar';
-import GameGrid from '@/components/game/GameGrid';
+import './style.css';
+
+import Keyboard from '@/components/Keyboard/component';
+import StatusBar from '@/components/game/StatusBar/component';
+import GameGrid from '@/components/game/GameGrid/component';
 import { usePersistentStats } from '@/hooks/usePersistentStats';
 import { GameMode, GuessState, RunningState, Settings } from '@/constants/constants';
 
 import { useState, useCallback, useEffect } from 'react';
-import BackButton from '@/components/BackButton';
-import GameEndModal from '@/components/game/GameEndModal';
+import BackButton from '@/components/BackButton/component';
+import GameEndModal from '@/components/game/GameEndModal/component';
+import Link from 'next/link';
 
 function LevelGame() {
     // Used by the on-screen keyboard to send input
@@ -40,6 +43,7 @@ function LevelGame() {
 
     const {
         loaded,
+        isServerDown,
         backendResult,
         backendMessage,
         signature,
@@ -66,53 +70,108 @@ function LevelGame() {
         if (loaded) setBlockingAnimation(false);
     }, [loaded]);
 
+    const getOnlineStatusElement = () => {
+        if (backendResult === null) {
+            return <span className="skeleton-status"></span>;
+        }
+
+        if (backendResult === true) {
+            return (
+                <Link href="cont" className="game-link">
+                    Contul meu
+                </Link>
+            );
+        }
+
+        return (
+            <Link href="cont/login" className="game-link">
+                Intră în cont
+            </Link>
+        );
+    };
+
+    const getOnlineDotColor = () => {
+        if (backendResult === null) {
+            return 'game-dot-gray';
+        }
+
+        if (backendResult === true) {
+            return 'game-dot-green';
+        }
+
+        return 'game-dot-red';
+    };
+
     return (
         <section>
-            <BackButton />
+            <div className="game-account-status">
+                <BackButton />
+                <div className="game-account-status-line">
+                    <span className={`game-dot-status ${getOnlineDotColor()}`}></span>
+                    {getOnlineStatusElement()}
+                </div>
+            </div>
 
-            <GameEndModal
-                visible={runningState !== RunningState.PLAYING}
-                isWin={runningState === RunningState.WON}
-                guessGrid={guessStates}
-                level={currentLevel}
-                gameMode={GameMode.LEVEL}
-                onNextLevel={() => {
-                    resetGame();
-                }}
-            />
+            {isServerDown === true ? (
+                <p className="working-on-game-p">
+                    Ne pare rău dar jocul este momentan în mentenanță. Reveniți mai târziu!
+                </p>
+            ) : (
+                <>
+                    <GameEndModal
+                        visible={runningState !== RunningState.PLAYING}
+                        isWin={runningState === RunningState.WON}
+                        guessGrid={guessStates}
+                        level={currentLevel}
+                        gameMode={GameMode.LEVEL}
+                        onNextLevel={() => {
+                            resetGame();
+                        }}
+                    />
 
-            <LevelBar
-                centerText={<p>Nivelul {currentLevel}</p>}
-                won={wonLevels}
-                lost={lostLevels}
-            />
+                    <StatusBar
+                        centerText={
+                            <p>
+                                Nivelul{' '}
+                                <span
+                                    style={{ fontFamily: 'var(--font-exo2)', fontSize: '1.2rem' }}
+                                >
+                                    {currentLevel}
+                                </span>
+                            </p>
+                        }
+                        won={wonLevels}
+                        lost={lostLevels}
+                    />
 
-            <GameGrid
-                loaded={loaded}
-                backendResult={backendResult}
-                backendMessage={backendMessage}
-                gameMode={GameMode.LEVEL}
-                virtualKeys={virtualKeys}
-                consumeFirstKey={consumeFirstKey}
-                blockingAnimation={blockingAnimation}
-                setBlockingAnimation={setBlockingAnimation}
-                setUsedKeys={setUsedKeys}
-                currentRow={currentRow}
-                setCurrentRow={setCurrentRow}
-                words={words}
-                setWords={setWords}
-                signature={signature}
-                setSignature={setSignature}
-                guessStates={guessStates}
-                setGuessStates={setGuessStates}
-                showRow={showRow}
-                setShowRow={setShowRow}
-                runningState={runningState}
-                setGamesWon={setWonLevels}
-                setGamesLost={setLostLevels}
-                setCurrentLevel={setCurrentLevel}
-                setRunningState={setRunningState}
-            />
+                    <GameGrid
+                        loaded={loaded}
+                        backendResult={backendResult}
+                        backendMessage={backendMessage}
+                        gameMode={GameMode.LEVEL}
+                        virtualKeys={virtualKeys}
+                        consumeFirstKey={consumeFirstKey}
+                        blockingAnimation={blockingAnimation}
+                        setBlockingAnimation={setBlockingAnimation}
+                        setUsedKeys={setUsedKeys}
+                        currentRow={currentRow}
+                        setCurrentRow={setCurrentRow}
+                        words={words}
+                        setWords={setWords}
+                        signature={signature}
+                        setSignature={setSignature}
+                        guessStates={guessStates}
+                        setGuessStates={setGuessStates}
+                        showRow={showRow}
+                        setShowRow={setShowRow}
+                        runningState={runningState}
+                        setGamesWon={setWonLevels}
+                        setGamesLost={setLostLevels}
+                        setCurrentLevel={setCurrentLevel}
+                        setRunningState={setRunningState}
+                    />
+                </>
+            )}
 
             <Keyboard setVirtualKeys={setVirtualKeys} usedKeys={usedKeys} />
         </section>

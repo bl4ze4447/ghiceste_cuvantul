@@ -1,0 +1,91 @@
+.game-dot-green,
+.game-dot-gray,
+.game-dot-red {
+    height: 0.6rem;
+    width: 0.6rem;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.game-dot-green {
+    background-color: #2ea200;
+}
+
+.game-dot-red {
+    background-color: #cf3030;
+}
+
+.game-dot-gray {
+    background-color: #4f4f4f;
+}
+
+.game-account-status {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+@media (min-width: 600px) {
+    .game-account-status {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .game-account-status-line {
+        margin-top: -25px;
+        margin-bottom: 25px;
+    }
+}
+
+.game-account-status p {
+    font-family: var(--font-capriola);
+}
+
+.game-account-status-line {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-right: 10px;
+}
+
+.skeleton-status {
+    display: inline-block;
+    height: 1.1rem;
+    width: 6rem;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #3a3a3a 25%, #505050 50%, #3a3a3a 75%);
+    background-size: 200% 100%;
+    animation: shimmerPulse 1s infinite ease-in-out;
+}
+
+@keyframes shimmerPulse {
+    0% {
+        background-position: -200% 0;
+        opacity: 0.7;
+    }
+    50% {
+        background-position: 200% 0;
+        opacity: 1;
+    }
+    100% {
+        background-position: 200% 0;
+        opacity: 0.7;
+    }
+}
+
+.game-link {
+    color: white;
+    font-family: var(--font-capriola);
+}
+
+.working-on-game-p {
+    max-width: 280px;
+    font-family: var(--font-exo2);
+    font-size: 1.2rem;
+    text-align: center;
+    left: 50%;
+    top: 20%;
+    position: absolute;
+    transform: translateX(-50%) translateY(-50%);
+}

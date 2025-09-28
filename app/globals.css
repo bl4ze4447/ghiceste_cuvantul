@@ -1,89 +1,43 @@
 body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #123a47;
+    background-color: rgb(23, 23, 23);
     overflow-x: hidden;
+
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+
+    --bg-gradient: linear-gradient(155deg, #292929 0%, #1d1d1d 100%);
 }
 
 * {
-    font-family: 'Bungee', Helvetica, sans-serif;
     box-sizing: border-box;
     padding: 0;
     margin: 0;
-}
-
-.exo {
-    font-family: 'Exo 2', sans-serif;
-}
-
-.grecaptcha-badge {
-    visibility: hidden !important;
 }
 
 a {
     color: #93c5fd;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    color: white;
-    text-decoration: underline;
-}
-
-.text-blue {
-    color: #1856d4;
-}
-
-.text-yellow {
-    color: #fcd116;
-}
-
-.text-red {
-    color: #cf3030;
-}
-
 p {
     color: white;
 }
 
-.ml-20 {
-    margin-left: 20px;
-}
-.mr-20 {
-    margin-right: 20px;
-}
-.mt-8 {
-    margin-top: 8px;
-}
-.mb-16 {
-    margin-bottom: 16px;
+@keyframes autofillFix {
+    to {
+    }
 }
 
-.connect-button-back {
-    padding: 5px 10px 5px 30px;
-    width: auto;
-    font-size: 0.9rem;
-    border-radius: 100px 0 0 0;
-    color: white;
-    border: white 1px solid;
-    background: #537d5d;
-    cursor: pointer;
-    margin: 5px 0 5px 0;
-    background-size: 1px calc(1.1rem * 16);
-    background: linear-gradient(135deg, #1e4e5f 0%, #0f2f3a 100%);
-    transition: all 100ms ease-out;
-    text-decoration: none;
-    text-align: center;
-}
+input:-webkit-autofill {
+    animation-name: autofillFix;
+    animation-fill-mode: both;
+    animation-duration: 0.01s;
 
-.connect-button-back:active {
-    scale: 0.9;
-}
-
-.connect-button-back:hover {
-    opacity: 0.5;
+    -webkit-box-shadow: 0 0 0 50px rgb(35, 35, 35) inset !important;
+    -webkit-text-fill-color: white !important;
+    transition: background-color 9999s ease-in-out 0s;
+    -webkit-text-size-adjust: auto;
+    font-size: 1rem !important;
+    line-height: normal !important;
 }

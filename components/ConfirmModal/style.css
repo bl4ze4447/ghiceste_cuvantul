@@ -1,0 +1,99 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    font-family: var(--font-exo2);
+    transition: opacity 500ms ease;
+}
+
+.fade-in {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal.confirm-modal {
+    background: rgba(36, 36, 36, 0.98);
+    padding: 36px 24px;
+    border-radius: 12px;
+    max-width: 300px;
+    width: 92%;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    text-align: center;
+}
+
+.modal-answers-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 20px;
+}
+
+.confirm-button {
+    font-family: var(--font-capriola);
+    font-size: 1.1rem;
+    border-radius: 10px;
+    color: white;
+    border: 1px solid white;
+    cursor: pointer;
+    padding: 6px 10px;
+    transition: scale 100ms ease-out;
+}
+
+.confirm-button:hover {
+    opacity: 0.5;
+}
+
+.confirm-button:active {
+    scale: 0.95;
+}
+
+.ma-red {
+    border: 2px solid #4e0c0c;
+    background: linear-gradient(135deg, #8a2121 0%, #6c0909 100%);
+}
+
+.ma-gray {
+    border: 2px solid #123d01;
+    background: linear-gradient(135deg, #2ea200 0%, #1e6a00 100%);
+}
+
+.close-button {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: white;
+}
+
+.close-button:hover {
+    opacity: 0.5;
+}
+
+.cm-action {
+    margin-bottom: 12px;
+    margin-top: -15px;
+    font-family: var(--font-capriola);
+    font-size: 1.7rem;
+    color: white;
+}
+
+.cm-p-credentials {
+    margin-bottom: 20px;
+}

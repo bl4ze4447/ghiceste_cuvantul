@@ -2,12 +2,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0 20px;
+    margin: 0 20px;
 }
 
 .how-to-play-title {
-    margin-bottom: 10px;
-    text-align: center;
+    font-family: var(--font-capriola);
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: white;
 }
 
 .how-to-play-content {
@@ -17,6 +19,7 @@
     width: 100%;
     max-width: 600px;
     gap: 20px;
+    font-family: var(--font-exo2);
 }
 
 .example-section {
@@ -25,50 +28,62 @@
     align-items: center;
     margin-top: 16px;
     width: 100%;
-}
-
-.example-section > p {
-    font-family: 'Exo 2', sans-serif;
-    margin: 0 auto;
-}
-
-.how-to-play-content > p {
-    font-family: 'Exo 2', sans-serif;
-    text-align: justify;
-    margin: 0 auto;
-}
-
-.exo {
-    font-family: 'Exo 2', sans-serif;
-    margin: 0 auto;
+    margin-top: 10px;
 }
 
 .htp-button {
-    width: auto;
     font-size: 1rem;
-    padding: 15px 5px 15px 5px;
     border-radius: 10px 10px 10px 10px;
     color: white;
     border: white 1px solid;
-    background: #537d5d;
     cursor: pointer;
-    margin: 5px 0 5px 0;
+    margin: 5px 0;
     background-size: 1px calc(1.1rem * 16);
-    background: linear-gradient(135deg, #1e4e5f 0%, #0f2f3a 100%);
+    background: var(--bg-gradient);
+    font-family: var(--font-capriola);
     transition: scale 100ms ease-out;
     text-decoration: none;
     text-align: center;
     padding: 5px 30px 5px 30px;
-    width: 100%;
     font-size: 0.9rem;
 }
 .button-row {
     display: flex;
+    margin-bottom: 15px;
+    margin-top: 3px;
 }
 .lh1-5 {
     line-height: 1.5;
 }
-
 .justify {
     text-align: justify;
+}
+
+.progress-text-htp {
+    margin-top: 15px;
+    margin-bottom: 10;
+}
+
+.section-htp-game {
+    margin-top: 15px;
+}
+
+.htp-game-example {
+    margin-left: 20px;
+}
+
+.htp-game-mode {
+    font-family: var(--font-capriola);
+}
+
+.htp-green {
+    color: #2ea200;
+}
+
+.htp-yellow {
+    color: #e6b800;
+}
+
+.htp-gray {
+    color: #a3a3a3;
 }

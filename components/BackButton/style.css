@@ -1,0 +1,40 @@
+.button-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 25px;
+    margin-left: 10px;
+    margin-bottom: 25px;
+    font-family: var(--font-capriola);
+}
+
+@media (min-width: 600px) {
+    .button-container {
+        justify-content: center;
+        margin-left: 0;
+    }
+}
+
+.connect-button-back {
+    color: white;
+    text-decoration: none;
+    font-size: 1.05rem;
+
+    padding: 5px 10px 5px 20px;
+    margin: 5px 0 5px 0;
+
+    border-radius: 100px 0 0 0;
+    border: white 1px solid;
+
+    background: var(--bg-gradient);
+
+    cursor: pointer;
+    transition: all 100ms ease-out;
+}
+
+.connect-button-back:active {
+    scale: 0.9;
+}
+
+.connect-button-back:hover {
+    opacity: 0.5;
+}

@@ -1,9 +1,11 @@
 'use client';
 
+import './style.css';
+
 import { verifyAccount } from '@/utils/backendUtils';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import BackButton from '../BackButton';
+import BackButton from '../BackButton/component';
 
 function Verify() {
     const [result, setResult] = useState('');
@@ -23,19 +25,8 @@ function Verify() {
 
     return (
         <main>
-            <BackButton />=
-            <h1
-                style={{
-                    position: 'absolute',
-                    left: '50%',
-                    top: '50%',
-                    transform: 'translateX(-50%) translateY(-50%)',
-                    textAlign: 'center',
-                }}
-                className="exo"
-            >
-                {result}
-            </h1>
+            <BackButton />
+            <h1 className="verify-h1">{result}</h1>
         </main>
     );
 }

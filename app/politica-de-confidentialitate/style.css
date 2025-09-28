@@ -1,0 +1,27 @@
+.terms-container {
+    padding: 35px;
+    line-height: 1.6;
+    max-width: 900px;
+    margin: 0 auto;
+    color: white;
+    margin-top: -38px;
+    font-family: var(--font-exo2);
+}
+
+.terms-section-container {
+    margin-bottom: 24px;
+}
+
+.terms-section-h2 {
+    font-size: 1.3rem;
+    margin-bottom: 5px;
+}
+
+.terms-h1 {
+    font-size: 2rem;
+}
+
+.terms-last-update {
+    font-style: italic;
+    margin-bottom: 30px;
+}
