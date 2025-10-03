@@ -7,7 +7,7 @@ import { FaCheck } from 'react-icons/fa6';
 import { IoCopy } from 'react-icons/io5';
 import { IoArrowRedo } from 'react-icons/io5';
 import { IoClose } from 'react-icons/io5';
-import { fetchWordDefinition, secretWord } from '@/utils/backendUtils';
+import { secretWord } from '@/utils/backendUtils';
 
 interface GameEndModalProps {
     visible: boolean;
