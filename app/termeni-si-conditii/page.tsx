@@ -9,7 +9,7 @@ const TermsAndConditions = () => {
             <main className="terms-container">
                 <h1 className="terms-h1">Termeni și Condiții de Utilizare - „Ghicește Cuvântul”</h1>
 
-                <p className="terms-last-update">Ultima actualizare: 10 iulie, 2025</p>
+                <p className="terms-last-update">Ultima actualizare: 3 Octombrie, 2025</p>
 
                 <Section title="1. Introducere">
                     <p>
