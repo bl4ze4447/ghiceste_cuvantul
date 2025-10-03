@@ -131,7 +131,7 @@ const PrivacyPolicy = () => {
                     </p>
                     <ul>
                         <li>
-                            <strong>session_id:</strong> cookie HTTP-only, Secure, valabil 7 zile
+                            <strong>session_id:</strong> cookie HTTP-only, Secure, valabil 30 zile
                         </li>
                         <li>
                             <strong>csrf_token:</strong> token de protecție împotriva atacurilor

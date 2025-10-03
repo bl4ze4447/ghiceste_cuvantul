@@ -48,8 +48,8 @@ const TermsAndConditions = () => {
                         <li>Termenii trebuie acceptați la înregistrare.</li>
                         <li>Parolele sunt criptate cu algoritmi siguri, precum bcrypt.</li>
                         <li>
-                            Autentificarea utilizează cookie-uri HTTP-only, secure, valabile 7 zile,
-                            și token-uri CSRF pentru protecție suplimentară.
+                            Autentificarea utilizează cookie-uri HTTP-only, secure, valabile 30
+                            zile, și token-uri CSRF pentru protecție suplimentară.
                         </li>
                         <li>
                             Conturile pot fi suspendate în caz de abuz sau încălcare a Termenilor.

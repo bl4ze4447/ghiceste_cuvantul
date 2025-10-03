@@ -7,7 +7,7 @@ import { FaCheck } from 'react-icons/fa6';
 import { IoCopy } from 'react-icons/io5';
 import { IoArrowRedo } from 'react-icons/io5';
 import { IoClose } from 'react-icons/io5';
-import { secretWord } from '@/utils/backendUtils';
+import { fetchWordDefinition, secretWord } from '@/utils/backendUtils';
 
 interface GameEndModalProps {
     visible: boolean;
@@ -113,6 +113,15 @@ const GameEndModal: React.FC<GameEndModalProps> = ({
         }
     }, [shouldRender]);
 
+    // const [definition, setDefinition] = useState('');
+
+    // useEffect(() => {
+    //     if (word.length === 0) return;
+
+    //     const uncheckedDefinition = fetchWordDefinition(word);
+    //     uncheckedDefinition.then((def) => setDefinition(def));
+    // }, [word]);
+
     return (
         <div
             className={`modal-overlay ${shouldRender ? 'fade-in' : 'fade-out'}`}
@@ -144,6 +153,7 @@ const GameEndModal: React.FC<GameEndModalProps> = ({
                 </div>
                 <p>Cuvântul pentru acest joc era:</p>
                 <p className="modal-secret-word">{word}</p>
+                {/* <p className="modal-definition">{definition}</p> */}
                 <div className="buttons-modal-container">
                     <button
                         className="modal-button"

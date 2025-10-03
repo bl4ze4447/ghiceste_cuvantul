@@ -49,3 +49,19 @@ export function getLetterClass(state: GuessState, isKeyboard: boolean) {
             return `empty-letter${isKeyboard === true ? '-key ' : ''}`;
     }
 }
+
+export function getWordDefinitionFromHtml(rawHtmlText: string) {
+    const fragment = document.createDocumentFragment();
+
+    const html = document.createElement('html');
+    html.innerHTML = rawHtmlText;
+
+    const treeBody = html.querySelector('div.tree-body');
+    const meaningTree = treeBody?.querySelector('ul.meaningTree');
+    const typeMeaningDepth0 = meaningTree?.querySelector('li.type-meaning.depth-0');
+    const meaningContainer = typeMeaningDepth0?.querySelector('div.meaningContainer');
+    const meaningRow = meaningContainer?.querySelector('div.meaning-row');
+    const treeDef = meaningRow?.querySelector('span.tree-def.html');
+
+    return treeDef ? treeDef.textContent : 'Nu am putut găsi o definiție, ne pare rău!';
+}

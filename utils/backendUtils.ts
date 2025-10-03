@@ -3,6 +3,7 @@ import { StatisticsDto } from '@/dto/statistics';
 import { GameLevelDto } from '@/dto/game/gameLevel';
 import { updateGameRequest } from '@/dto/game/updateGameRequest';
 import { GameMode } from '@/constants/constants';
+import { getWordDefinitionFromHtml } from './wordUtils';
 const backendURL = 'https://api.ghicestecuvantul.ro';
 
 export interface FetchResult {
@@ -613,5 +614,21 @@ export async function secretWord(gameMode: GameMode) {
         return newFetchResult(response.ok, data.word);
     } catch (_) {
         return newFetchResult(null, 'Există o problemă de conexiune la noi, încearcă mai târziu!');
+    }
+}
+
+export async function fetchWordDefinition(word: string) {
+    try {
+        const response = await fetch(`https://dexonline.ro/definitie/${word}`, {
+            method: 'GET',
+        });
+
+        console.log(await response.text());
+        return 'AA';
+
+        if (!response.ok) return 'Definiția este momentan indisponibilă!';
+        return getWordDefinitionFromHtml(await response.text());
+    } catch (_) {
+        return 'Definiția este momentan indisponibilă!';
     }
 }
