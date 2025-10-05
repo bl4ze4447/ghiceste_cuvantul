@@ -51,8 +51,6 @@ export function getLetterClass(state: GuessState, isKeyboard: boolean) {
 }
 
 export function getWordDefinitionFromHtml(rawHtmlText: string) {
-    const fragment = document.createDocumentFragment();
-
     const html = document.createElement('html');
     html.innerHTML = rawHtmlText;
 

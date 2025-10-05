@@ -34,7 +34,7 @@ const convertGridToEmoji = (grid: GuessState[][], level: number | null): string 
 
     const resultRows: string[] = [];
     for (const row of grid) {
-        const emojiRow = row.map(stateToEmoji).join('');
+        const emojiRow = row.map(stateToEmoji).join('\u2800');
         resultRows.push(emojiRow);
 
         if (row.every((state) => state === GuessState.GREEN)) break;
