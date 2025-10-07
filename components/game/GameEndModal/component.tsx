@@ -122,6 +122,19 @@ const GameEndModal: React.FC<GameEndModalProps> = ({
     //     uncheckedDefinition.then((def) => setDefinition(def));
     // }, [word]);
 
+    useEffect(() => {
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key == 'Enter' && gameMode === GameMode.LEVEL && onNextLevel && shouldRender) {
+                onNextLevel();
+            }
+        };
+
+        window.addEventListener('keydown', onKeyDown);
+        return () => {
+            window.removeEventListener('keydown', onKeyDown);
+        };
+    });
+
     return (
         <div
             className={`modal-overlay ${shouldRender ? 'fade-in' : 'fade-out'}`}
