@@ -255,7 +255,9 @@ const GameGrid: React.FC<GameGridProps> = ({
             if (audio.current === null) return;
 
             audio.current.currentTime = 0;
-            audio.current.play();
+            audio.current.play().then((val) => {
+                if (audio.current !== null) audio.current.currentTime = 0;
+            });
         }, 2150);
 
         return () => {
