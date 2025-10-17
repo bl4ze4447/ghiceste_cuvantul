@@ -127,6 +127,7 @@ function LevelGame() {
                         onNextLevel={() => {
                             resetGame();
                         }}
+                        local={false}
                     />
 
                     <StatusBar

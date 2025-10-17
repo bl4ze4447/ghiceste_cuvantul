@@ -1554,6 +1554,7 @@ const naughtyWordList = [
     'IRUPE',
     'IMENS',
     'RATAN',
+    'RATAT',
     'INELE',
     'KOGAI',
     'VALUL',

@@ -15,6 +15,7 @@ interface GameEndModalProps {
     guessGrid: GuessState[][];
     level: number | null;
     gameMode: GameMode;
+    local: boolean | null;
     onNextLevel?: () => void;
 }
 
@@ -52,6 +53,7 @@ const GameEndModal: React.FC<GameEndModalProps> = ({
     guessGrid,
     gameMode,
     onNextLevel,
+    local,
 }) => {
     const [shouldRender, setShouldRender] = useState(false);
     const [copied, setCopied] = useState(false);
@@ -66,13 +68,15 @@ const GameEndModal: React.FC<GameEndModalProps> = ({
     }, []);
 
     const secretWordChecked = useCallback(async () => {
-        const value: string | null =
-            gameMode === GameMode.LEVEL
-                ? localStorage.getItem('level-sw')
-                : localStorage.getItem('daily-sw');
-        if (value !== null && value.length === 5) {
-            setWord(value);
-            return;
+        if (local === true) {
+            const value: string | null =
+                gameMode === GameMode.LEVEL
+                    ? localStorage.getItem('level-sw')
+                    : localStorage.getItem('daily-sw');
+            if (value !== null && value.length === 5) {
+                setWord(value);
+                return;
+            }
         }
 
         const result = await secretWord(gameMode);

@@ -62,11 +62,8 @@ const GameGridLocal: React.FC<GameGridLocalProps> = ({
 
         const result = await getSecretWord(GameMode.DAILY);
         setSecretWord(result.message);
-        console.log('Value is: ');
-        console.log(result);
 
         localStorage.setItem('daily-sw', result.message);
-        setSecretWord(result.message);
     }, []);
 
     useEffect(() => {
@@ -192,12 +189,7 @@ const GameGridLocal: React.FC<GameGridLocalProps> = ({
             if (audio.current === null) return;
 
             audio.current.currentTime = 0;
-            audio.current.play().then(() => {
-                if (audio.current !== null) {
-                    audio.current.currentTime = 0;
-                    audio.current.pause();
-                }
-            });
+            audio.current.play();
 
             if (runningState === RunningState.WON) setGamesWon(1);
             else setGamesLost(1);

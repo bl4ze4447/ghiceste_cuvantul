@@ -129,6 +129,7 @@ function DailyGame() {
                         level={null}
                         gameMode={GameMode.DAILY}
                         onNextLevel={() => {}}
+                        local={loggedIn === false}
                     />
                     {loggedIn === false ? (
                         <GameGridLocal
