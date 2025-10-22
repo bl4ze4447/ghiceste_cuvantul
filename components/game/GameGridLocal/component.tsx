@@ -202,11 +202,7 @@ const GameGridLocal: React.FC<GameGridLocalProps> = ({
 
     return (
         <>
-            <section
-                role="list"
-                aria-label="Grilă de joc cu rânduri de cuvinte"
-                className="game-grid"
-            >
+            <div className="game-grid">
                 {words.map((word, index) => (
                     <GameRowDemo
                         key={index}
@@ -225,7 +221,7 @@ const GameGridLocal: React.FC<GameGridLocalProps> = ({
                         row={index}
                     />
                 ))}
-            </section>
+            </div>
         </>
     );
 };
