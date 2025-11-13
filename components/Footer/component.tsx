@@ -24,7 +24,7 @@ const Footer = () => {
                     />{' '}
                     Protecție asigurată de Cloudflare
                 </p>
-                <p style={{ opacity: '0.5' }}>Versiunea 2.0</p>
+                <p style={{ opacity: '0.5' }}>Versiunea 2.1</p>
             </section>
         </footer>
     );

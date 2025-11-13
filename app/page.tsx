@@ -25,10 +25,6 @@ function MainMenu() {
                     <Link href="/cum-se-joaca" className="game-button-small">
                         Cum se joacă
                     </Link>
-                    <Link href="/noutati" className="game-button-account">
-                        Noutăți
-                        <span className="gba-bottom">Coming soon</span>
-                    </Link>
                 </div>
             </div>
             <Footer />
