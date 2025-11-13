@@ -72,8 +72,6 @@ const GameGridLocal: React.FC<GameGridLocalProps> = ({
         const result = await getSecretWord(GameMode.DAILY);
         const secretWord = normalizeString(result.message);
         setSecretWord(secretWord);
-
-        localStorage.setItem('daily-sw', secretWord);
     }, []);
 
     useEffect(() => {
