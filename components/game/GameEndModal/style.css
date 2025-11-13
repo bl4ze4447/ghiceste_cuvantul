@@ -108,3 +108,7 @@
 .close-button:hover {
     color: #000;
 }
+
+.modal-definition {
+    font-weight: bold;
+}

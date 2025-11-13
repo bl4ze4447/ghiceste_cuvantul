@@ -34,6 +34,15 @@ interface GameGridLocalProps {
     setRunningState: React.Dispatch<React.SetStateAction<RunningState>>;
 }
 
+function normalizeString(str: string | null) {
+    if (!str) return '';
+    return str
+        .trim()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase();
+}
+
 const GameGridLocal: React.FC<GameGridLocalProps> = ({
     virtualKeys,
     words,
@@ -54,16 +63,17 @@ const GameGridLocal: React.FC<GameGridLocalProps> = ({
 }) => {
     const [secretWord, setSecretWord] = useState('');
     const secretWordChecked = useCallback(async () => {
-        const value: string | null = localStorage.getItem('daily-sw');
-        if (value !== null && value.length === 5) {
-            setSecretWord(value);
+        const value: any | null = localStorage.getItem('daily-sw');
+        if (value !== null && value.word && value.word.length === 5) {
+            setSecretWord(value.word);
             return;
         }
 
         const result = await getSecretWord(GameMode.DAILY);
-        setSecretWord(result.message);
+        const secretWord = normalizeString(result.message);
+        setSecretWord(secretWord);
 
-        localStorage.setItem('daily-sw', result.message);
+        localStorage.setItem('daily-sw', secretWord);
     }, []);
 
     useEffect(() => {

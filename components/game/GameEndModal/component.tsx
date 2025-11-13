@@ -57,7 +57,7 @@ const GameEndModal: React.FC<GameEndModalProps> = ({
 }) => {
     const [shouldRender, setShouldRender] = useState(false);
     const [copied, setCopied] = useState(false);
-    const [word, setWord] = useState('');
+    const [wordAndDefinition, setWordAndDefinition] = useState({ word: '', definition: '' });
     const timeouts = useRef<NodeJS.Timeout[]>([]);
 
     useEffect(() => {
@@ -69,26 +69,35 @@ const GameEndModal: React.FC<GameEndModalProps> = ({
 
     const secretWordChecked = useCallback(async () => {
         if (local === true) {
-            const value: string | null =
+            const value: any | null =
                 gameMode === GameMode.LEVEL
                     ? localStorage.getItem('level-sw')
                     : localStorage.getItem('daily-sw');
-            if (value !== null && value.length === 5) {
-                setWord(value);
+            if (value !== null && value.word && value.definition && value.word.length === 5) {
+                setWordAndDefinition(JSON.parse(value));
                 return;
             }
         }
 
         const result = await secretWord(gameMode);
         if (result.ok === null || result.ok === false) {
-            setWord(result.message);
+            setWordAndDefinition({ word: result.message, definition: '' });
             return;
         }
 
-        if (gameMode === GameMode.LEVEL) localStorage.setItem('level-sw', result.message);
-        else localStorage.setItem('daily-sw', result.message);
-        setWord(result.message);
-    }, [setWord, gameMode]);
+        if (gameMode === GameMode.LEVEL) {
+            localStorage.setItem(
+                'level-sw',
+                JSON.stringify({ word: result.message, definition: result.additional_message })
+            );
+        } else {
+            localStorage.setItem(
+                'daily-sw',
+                JSON.stringify({ word: result.message, definition: result.additional_message })
+            );
+        }
+        setWordAndDefinition({ word: result.message, definition: result.additional_message });
+    }, [setWordAndDefinition, gameMode]);
 
     useEffect(() => {
         if (visible) {
@@ -116,15 +125,6 @@ const GameEndModal: React.FC<GameEndModalProps> = ({
             setCopied(false);
         }
     }, [shouldRender]);
-
-    // const [definition, setDefinition] = useState('');
-
-    // useEffect(() => {
-    //     if (word.length === 0) return;
-
-    //     const uncheckedDefinition = fetchWordDefinition(word);
-    //     uncheckedDefinition.then((def) => setDefinition(def));
-    // }, [word]);
 
     useEffect(() => {
         const onKeyDown = (e: KeyboardEvent) => {
@@ -169,8 +169,9 @@ const GameEndModal: React.FC<GameEndModalProps> = ({
                     </button>
                 </div>
                 <p>Cuvântul pentru acest joc era:</p>
-                <p className="modal-secret-word">{word}</p>
-                {/* <p className="modal-definition">{definition}</p> */}
+                <p className="modal-secret-word">{wordAndDefinition.word}</p>
+                <p>Definiția acestui cuvânt este:</p>
+                <p className="modal-definition">{wordAndDefinition.definition}</p>
                 <div className="buttons-modal-container">
                     <button
                         className="modal-button"

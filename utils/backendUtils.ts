@@ -4,11 +4,13 @@ import { GameLevelDto } from '@/dto/game/gameLevel';
 import { updateGameRequest } from '@/dto/game/updateGameRequest';
 import { GameMode } from '@/constants/constants';
 import { getWordDefinitionFromHtml } from './wordUtils';
-const backendURL = 'https://api.ghicestecuvantul.ro';
+// const backendURL = 'https://api.ghicestecuvantul.ro';
+const backendURL = 'http://localhost:5239';
 
 export interface FetchResult {
     ok: boolean | null;
     message: string;
+    additional_message: string;
 }
 
 export interface FetchGameResult {
@@ -24,10 +26,11 @@ export interface FetchStatisticsResult {
     message: string;
 }
 
-function newFetchResult(ok: boolean | null, message: string) {
+function newFetchResult(ok: boolean | null, message: string, additional_message: string = '') {
     const result: FetchResult = {
         ok: ok,
         message: message,
+        additional_message: additional_message,
     };
 
     return result;
@@ -611,24 +614,8 @@ export async function secretWord(gameMode: GameMode) {
         const data = await response.json();
         if (!response.ok) return newFetchResult(false, extractErrorMessage(data));
 
-        return newFetchResult(response.ok, data.word);
+        return newFetchResult(response.ok, data.word, data.definition);
     } catch (_) {
         return newFetchResult(null, 'Există o problemă de conexiune la noi, încearcă mai târziu!');
-    }
-}
-
-export async function fetchWordDefinition(word: string) {
-    try {
-        const response = await fetch(`https://dexonline.ro/definitie/${word}`, {
-            method: 'GET',
-        });
-
-        console.log(await response.text());
-        return 'AA';
-
-        if (!response.ok) return 'Definiția este momentan indisponibilă!';
-        return getWordDefinitionFromHtml(await response.text());
-    } catch (_) {
-        return 'Definiția este momentan indisponibilă!';
     }
 }
