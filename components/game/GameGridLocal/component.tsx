@@ -63,9 +63,9 @@ const GameGridLocal: React.FC<GameGridLocalProps> = ({
 }) => {
     const [secretWord, setSecretWord] = useState('');
     const secretWordChecked = useCallback(async () => {
-        const value: any | null = localStorage.getItem('daily-sw');
-        if (value !== null && value.word && value.word.length === 5) {
-            setSecretWord(value.word);
+        const value: string | null = localStorage.getItem('daily-sw');
+        if (value !== null) {
+            setSecretWord(JSON.parse(value));
             return;
         }
 

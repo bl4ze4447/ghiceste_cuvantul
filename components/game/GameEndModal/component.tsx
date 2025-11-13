@@ -69,11 +69,11 @@ const GameEndModal: React.FC<GameEndModalProps> = ({
 
     const secretWordChecked = useCallback(async () => {
         if (local === true) {
-            const value: any | null =
+            const value: string | null =
                 gameMode === GameMode.LEVEL
                     ? localStorage.getItem('level-sw')
                     : localStorage.getItem('daily-sw');
-            if (value !== null && value.word && value.definition && value.word.length === 5) {
+            if (value !== null) {
                 setWordAndDefinition(JSON.parse(value));
                 return;
             }
@@ -97,7 +97,7 @@ const GameEndModal: React.FC<GameEndModalProps> = ({
             );
         }
         setWordAndDefinition({ word: result.message, definition: result.additional_message });
-    }, [setWordAndDefinition, gameMode]);
+    }, [setWordAndDefinition, gameMode, local]);
 
     useEffect(() => {
         if (visible) {
