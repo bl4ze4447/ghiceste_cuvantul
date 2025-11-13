@@ -170,8 +170,13 @@ const GameEndModal: React.FC<GameEndModalProps> = ({
                 </div>
                 <p>Cuvântul pentru acest joc era:</p>
                 <p className="modal-secret-word">{wordAndDefinition.word}</p>
-                <p>Definiția acestui cuvânt este:</p>
-                <p className="modal-definition">{wordAndDefinition.definition}</p>
+                {wordAndDefinition.definition.length !== 0 && (
+                    <>
+                        <p>Definiția acestui cuvânt este:</p>
+                        <p className="modal-definition">{wordAndDefinition.definition}</p>
+                    </>
+                )}
+
                 <div className="buttons-modal-container">
                     <button
                         className="modal-button"
