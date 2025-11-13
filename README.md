@@ -5,7 +5,7 @@ You can try it here: https://ghicestecuvantul.ro
 * Classic Wordle gameplay with Romanian Words
 * Level gamemode for non-stop fun
 * Responsive design, looking fresh on both PC and Mobile
-* Keeps track of your statistics locally (localStorage)
+* Keeps track of your statistics locally (localStorage) and on the backend
 
 ## How to play
 1. You have to guess a word in 6 tries
