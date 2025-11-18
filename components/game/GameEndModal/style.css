@@ -112,3 +112,8 @@
 .modal-definition {
     font-weight: bold;
 }
+
+.modal-definition-source {
+    font-size: 0.9em;
+    color: rgb(243, 243, 243);
+}
