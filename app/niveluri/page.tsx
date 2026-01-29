@@ -8,7 +8,7 @@ import GameGrid from '@/components/game/GameGrid/component';
 import { usePersistentStats } from '@/hooks/usePersistentStats';
 import { GameMode, GuessState, RunningState, Settings } from '@/constants/constants';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import BackButton from '@/components/BackButton/component';
 import GameEndModal from '@/components/game/GameEndModal/component';
 import Link from 'next/link';
@@ -91,11 +91,20 @@ function LevelGame() {
     };
 
     // for safari
-    let audioCtx;
-    useEffect(() => {
-        audioCtx = new AudioContext();
-    }, []);
+    const audioCtx = useRef<AudioContext | null>(null);
 
+    useEffect(() => {
+        if (!audioCtx.current) {
+            const AudioContextClass = window.AudioContext;
+            audioCtx.current = new AudioContextClass();
+        }
+
+        return () => {
+            if (audioCtx.current) {
+                audioCtx.current.close();
+            }
+        };
+    }, []);
     const getOnlineDotColor = () => {
         if (backendResult === null) {
             return 'game-dot-gray';

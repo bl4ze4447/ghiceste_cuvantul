@@ -8,7 +8,7 @@ import Keyboard from '@/components/Keyboard/component';
 import StatusBar from '@/components/game/StatusBar/component';
 import GameGrid from '@/components/game/GameGrid/component';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 
 import { usePersistentStats } from '@/hooks/usePersistentStats';
 import BackButton from '@/components/BackButton/component';
@@ -92,9 +92,19 @@ function DailyGame() {
     };
 
     // for safari
-    let audioCtx;
+    const audioCtx = useRef<AudioContext | null>(null);
+
     useEffect(() => {
-        audioCtx = new AudioContext();
+        if (!audioCtx.current) {
+            const AudioContextClass = window.AudioContext;
+            audioCtx.current = new AudioContextClass();
+        }
+
+        return () => {
+            if (audioCtx.current) {
+                audioCtx.current.close();
+            }
+        };
     }, []);
 
     useEffect(() => {
