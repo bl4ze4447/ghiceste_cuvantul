@@ -23,6 +23,8 @@ body {
         rgb(23, 23, 23) 100%
     );
 
+    z-index: 0;
+
     background-size: 400% 400%;
 
     animation: clean-flow 20s ease-in-out infinite;
