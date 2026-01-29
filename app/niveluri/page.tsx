@@ -90,6 +90,12 @@ function LevelGame() {
         );
     };
 
+    // for safari
+    let audioCtx;
+    useEffect(() => {
+        audioCtx = new AudioContext();
+    }, []);
+
     const getOnlineDotColor = () => {
         if (backendResult === null) {
             return 'game-dot-gray';

@@ -91,6 +91,12 @@ function DailyGame() {
         return 'game-dot-red';
     };
 
+    // for safari
+    let audioCtx;
+    useEffect(() => {
+        audioCtx = new AudioContext();
+    }, []);
+
     useEffect(() => {
         if (isServerDown === true) {
             setLoggedIn(null);

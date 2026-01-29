@@ -17,22 +17,24 @@
 .modal-container {
     display: flex;
     justify-content: center;
-    align-items: center;
     font-family: var(--font-exo2);
 }
 
 .modal-title {
     margin-top: -10px;
     margin-bottom: 10px;
+    text-decoration: underline;
     color: white;
     font-family: var(--font-capriola);
 }
 
 .modal-secret-word {
-    font-size: 1.2rem;
+    font-size: 1.05em;
+    display: inline;
+    font-weight: 600;
+    margin-left: 0.3em;
     font-family: var(--font-capriola);
-    font-weight: bold;
-    text-transform: uppercase;
+    text-transform: capitalize;
 }
 
 .buttons-modal-container {
@@ -54,13 +56,14 @@
 
 .modal {
     background: rgba(49, 49, 49, 0.98);
-    padding: 2rem;
+    padding: 1em;
+    padding-top: 2em;
     border-radius: 12px;
     max-width: 350px;
-    width: 92%;
+    width: 80%;
     position: relative;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    text-align: center;
+    text-align: justify;
     font-family: 'Exo 2', sans-serif;
 }
 
@@ -96,7 +99,7 @@
 .close-button {
     display: inline;
     position: absolute;
-    top: 12px;
+    top: 0.95em;
     right: 12px;
     background: transparent;
     border: none;
@@ -110,10 +113,13 @@
 }
 
 .modal-definition {
-    font-weight: bold;
+    font-style: italic;
+    display: inline;
+    text-align: left;
 }
-
 .modal-definition-source {
+    display: block;
+    text-align: center;
     font-size: 0.9em;
     color: rgb(243, 243, 243);
 }

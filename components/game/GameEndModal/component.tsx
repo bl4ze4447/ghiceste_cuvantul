@@ -168,18 +168,16 @@ const GameEndModal: React.FC<GameEndModalProps> = ({
                         <IoClose />
                     </button>
                 </div>
-                <p>Cuvântul pentru acest joc era:</p>
-                <p className="modal-secret-word">{wordAndDefinition.word}</p>
+                <p className="modal-secret-word">{wordAndDefinition.word.toLowerCase()}: </p>
                 {wordAndDefinition.definition.length !== 0 && (
                     <>
-                        <p>Definiția acestui cuvânt este:</p>
                         <p className="modal-definition">{wordAndDefinition.definition}</p>
                         <a
                             href={`https://dexonline.ro/definitie/${wordAndDefinition.word}`}
                             className="modal-definition-source"
                             target="_blank"
                         >
-                            (dexonline.ro)
+                            Sursă: dexonline.ro
                         </a>
                     </>
                 )}
