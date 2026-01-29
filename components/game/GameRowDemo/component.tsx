@@ -51,15 +51,20 @@ const GameRowDemo: React.FC<GameRowDemoProps> = ({
     }, [guessStates, row, setGuessStates]);
 
     useEffect(() => {
+        if (reveal && isCurrentRow && guessStates.every((gs) => gs === GuessState.GREEN)) {
+            setRunningState(RunningState.WON);
+        } else if (reveal && isLastRow) {
+            setRunningState(RunningState.LOST);
+        }
+
         if (reveal && isCurrentRow) {
-            setTimeout(() => {
-                disableBlockingAnimation();
-                if (guessStates.every((gs) => gs === GuessState.GREEN)) {
-                    setRunningState(RunningState.WON);
-                } else if (reveal && isLastRow) {
-                    setRunningState(RunningState.LOST);
-                }
-            }, TimesCSS.LETTER_FLIP_TRANSITION + (TimesCSS.LETTER_FLIP_DELAY - 1) * Settings.MAX_LETTERS);
+            setTimeout(
+                () => {
+                    disableBlockingAnimation();
+                },
+                TimesCSS.LETTER_FLIP_TRANSITION +
+                    (TimesCSS.LETTER_FLIP_DELAY - 1) * Settings.MAX_LETTERS
+            );
         }
 
         if (shouldBounce) {

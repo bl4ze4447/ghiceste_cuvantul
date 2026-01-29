@@ -177,6 +177,8 @@ const GameGrid: React.FC<GameGridProps> = ({
 
                     if (result.faultyWord) {
                         setIsInvalidWord(true);
+                        setBlockingAnimation(true);
+                        return;
                     }
 
                     if (result.game) {

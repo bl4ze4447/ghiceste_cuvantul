@@ -66,11 +66,7 @@ function newFetchStatisticsResult(
 
 export async function isLogged() {
     const csrfToken: string | null = localStorage.getItem('csrfToken');
-    if (csrfToken == null)
-        return newFetchResult(
-            false,
-            'Sesiunea este invalidă/expirată! Vă rugăm să vă autentificați!'
-        );
+    if (csrfToken == null) return newFetchResult(false, 'Beep boop, nu am găsit vreun cont!');
 
     try {
         const response = await fetch(`${backendURL}/api/auth/logged-in`, {
@@ -312,11 +308,7 @@ export async function login(emailAddress: string, password: string, phoneNumber:
 
 export async function logout() {
     const csrfToken: string | null = localStorage.getItem('csrfToken');
-    if (csrfToken === null)
-        return newFetchResult(
-            false,
-            'Sesiunea este invalidă/expirată! Vă rugăm să vă autentificați!'
-        );
+    if (csrfToken === null) return newFetchResult(false, 'Beep boop, nu am găsit vreun cont!');
 
     try {
         const response = await fetch(`${backendURL}/api/auth/logout`, {
@@ -345,11 +337,7 @@ export async function logout() {
 
 export async function deleteAccount(emailAddress: string, password: string, phoneNumber: string) {
     const csrfToken: string | null = localStorage.getItem('csrfToken');
-    if (csrfToken === null)
-        return newFetchResult(
-            false,
-            'Sesiunea este invalidă/expirată! Vă rugăm să vă autentificați!'
-        );
+    if (csrfToken === null) return newFetchResult(false, 'Beep boop, nu am găsit vreun cont!');
 
     if (emailAddress.trim().length === 0)
         return newFetchResult(false, 'Adresa de email nu poate fi goală!');
@@ -469,11 +457,7 @@ export async function getLastLevel() {
 export async function updateLastDaily(word: string, signature: string) {
     const csrfToken: string | null = localStorage.getItem('csrfToken');
     if (csrfToken == null)
-        return newFetchGameResult(
-            false,
-            null,
-            'Sesiunea este invalidă/expirată! Vă rugăm să vă autentificați!'
-        );
+        return newFetchGameResult(false, null, 'Beep boop, nu am găsit vreun cont!');
 
     try {
         const request: updateGameRequest = {
@@ -512,11 +496,7 @@ export async function updateLastDaily(word: string, signature: string) {
 export async function updateLastLevel(word: string, signature: string) {
     const csrfToken: string | null = localStorage.getItem('csrfToken');
     if (csrfToken == null)
-        return newFetchGameResult(
-            false,
-            null,
-            'Sesiunea este invalidă/expirată! Vă rugăm să vă autentificați!'
-        );
+        return newFetchGameResult(false, null, 'Beep boop, nu am găsit vreun cont!');
 
     try {
         const request: updateGameRequest = {
@@ -555,11 +535,7 @@ export async function updateLastLevel(word: string, signature: string) {
 export async function getStatistics() {
     const csrfToken: string | null = localStorage.getItem('csrfToken');
     if (csrfToken == null)
-        return newFetchStatisticsResult(
-            false,
-            null,
-            'Sesiunea este invalidă/expirată! Vă rugăm să vă autentificați!'
-        );
+        return newFetchStatisticsResult(false, null, 'Beep boop, nu am găsit vreun cont!');
 
     try {
         const response = await fetch(`${backendURL}/api/game/statistics`, {

@@ -1,15 +1,23 @@
 {
-  "short_name": "Ghicește cuvântul",
-  "name": "Ghicește cuvântul - Nenumărate nivele sau cuvântul zilei!",
-  "icons": [
-    {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    }
-  ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+    "name": "Ghicește Cuvântul",
+    "short_name": "G. Cuvântul",
+    "description": "Descoperă cuvântul zilei sau încearcă să ajungi la nivele mai mari ca prietenii tai!",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#121213",
+    "icons": [
+        {
+            "src": "/icons/web-app-manifest-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/icons/web-app-manifest-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ]
 }
