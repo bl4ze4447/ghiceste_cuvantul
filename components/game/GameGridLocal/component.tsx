@@ -205,7 +205,7 @@ const GameGridLocal: React.FC<GameGridLocalProps> = ({
 
             if (runningState === RunningState.WON) setGamesWon(1);
             else setGamesLost(1);
-        }, 2150);
+        }, 1950);
 
         return () => {
             clearTimeout(timeout);

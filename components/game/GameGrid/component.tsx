@@ -258,7 +258,7 @@ const GameGrid: React.FC<GameGridProps> = ({
 
             audio.current.currentTime = 0;
             audio.current.play();
-        }, 2150);
+        }, 1950);
 
         return () => {
             clearTimeout(timeout);
